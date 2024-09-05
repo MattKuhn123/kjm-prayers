@@ -35,12 +35,12 @@ public class MyServlet extends HttpServlet {
 			throw getContentTypeError();
 		}
 
-		Document doc = getHTMLResponseDocument();
+		Document doc = getHtmlResponseDocument();
 		String html = doc.html();
 		resp.getWriter().append(html).flush();
 	}
 
-	private static Document getHTMLResponseDocument() {
+	private static Document getHtmlResponseDocument() {
 		Document doc = createDocument();
 		doc = addTitle(doc, title);
 		doc = addAnchor(doc, anchorText, anchorHref);
