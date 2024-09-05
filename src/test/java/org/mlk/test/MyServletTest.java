@@ -27,7 +27,7 @@ public class MyServletTest extends TestCase {
         MyServlet servlet = new MyServlet();
         servlet.service(req, resp);
 
-        String resAsString = resp.getResAsString();
+        String resAsString = resp.getResponseAsString();
         Document actualDoc = Jsoup.parse(resAsString);
         
         // Html

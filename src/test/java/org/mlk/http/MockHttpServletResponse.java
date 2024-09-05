@@ -33,7 +33,7 @@ public class MockHttpServletResponse implements HttpServletResponse {
         headers = new HashMap<String, String>();
     }
 
-    public String getResAsString() {
+    public String getResponseAsString() {
         MockServletOutputStream os = null;
         try {
             os = getOutputStream();
