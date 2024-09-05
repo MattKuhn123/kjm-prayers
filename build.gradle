@@ -1,0 +1,31 @@
+plugins {
+	id 'war'
+}
+
+repositories {
+    mavenLocal()
+	mavenCentral()
+
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+dependencies {
+    implementation 'org.jsoup:jsoup:1.18.1'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+tasks.named('war', War) {
+	archiveFileName = 'ROOT.war'
+	from ('WebContent') {
+		into ('')
+	}
+}
+
+group = 'org.mlk'
+version = '1.0.0-SNAPSHOT'
+description = 'MLK Demo'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+

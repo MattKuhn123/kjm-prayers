@@ -1,0 +1,8 @@
+/target/
+/.apt_generated/
+/bin/
+application.local.properties
+/WebContent/terms
+.vscode/settings.json
+/build/
+/.gradle/
