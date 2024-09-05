@@ -28,7 +28,7 @@ public class ServletHtmlUtils {
 		return new UnsupportedOperationException(message);
 	}
     
-    public static boolean respondWithHtml(HttpServletRequest req) {
+    public static boolean requestingHtml(HttpServletRequest req) {
 		if (req.getContentType() == null) {
 			return true;
 		}

@@ -31,19 +31,19 @@ public class MyServlet extends HttpServlet {
 	}
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (!respondWithHtml(req)) {
+		if (!requestingHtml(req)) {
 			throw getContentTypeError();
 		}
 
-		String html = getHTMLResponseDocument();
-		resp.getWriter().append(html).flush();
+		Document doc = getHTMLResponseDocument();
+		resp.getWriter().append(doc.html()).flush();
 	}
 
-	private static String getHTMLResponseDocument() {
+	private static Document getHTMLResponseDocument() {
 		Document doc = createDocument();
 		doc = addTitle(doc, title);
 		doc = addAnchor(doc, anchorText, anchorHref);
-		return doc.html();
+		return doc;
 	}
 
 	private static Document addTitle(Document doc, String title) {
