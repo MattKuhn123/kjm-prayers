@@ -28,30 +28,30 @@ public class MyServletTest extends TestCase {
         servlet.service(req, res);
 
         String resAsString = res.getResAsString();
-        Document doc = Jsoup.parse(resAsString);
+        Document actualDoc = Jsoup.parse(resAsString);
         
         // Html
         String expectedLang = "en";
-        String actualLang = doc.select(htmlTag).attr(langAttr);
+        String actualLang = actualDoc.select(htmlTag).attr(langAttr);
         assertEquals(expectedLang, actualLang);
 
         // Head
-        Element actualHead = doc.selectFirst(headTag);
+        Element actualHead = actualDoc.selectFirst(headTag);
         assertNotNull(actualHead);
         assertTrue(actualHead.child(0).is(titleTag));
         
         // Title
-        Element actualTitle = doc.selectFirst(titleTag);
+        Element actualTitle = actualDoc.selectFirst(titleTag);
         assertNotNull(actualTitle);
         assertEquals(actualTitle.text(), MyServlet.title);
         
         // Body
-        Element actualBody = doc.selectFirst(bodyTag);
+        Element actualBody = actualDoc.selectFirst(bodyTag);
         assertNotNull(actualBody);
         assertTrue(actualBody.child(0).is(anchorTag));
         
         // Anchor
-        Element actualAnchor = doc.selectFirst(anchorTag);
+        Element actualAnchor = actualDoc.selectFirst(anchorTag);
         assertNotNull(actualAnchor);
         assertEquals(actualAnchor.text(), MyServlet.anchorText);
         assertEquals(actualAnchor.attr(hrefAttr), MyServlet.anchorHref);
