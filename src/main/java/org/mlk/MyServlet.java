@@ -47,13 +47,13 @@ public class MyServlet extends HttpServlet {
 	}
 
 	private static Document addTitle(Document doc, String title) {
-		Element element = doc.selectFirst(headTag);
+		Element element = getHead(doc);
 		element.appendElement(titleTag).text(title);
 		return doc;
 	}
 
 	private static Document addAnchor(Document doc, String text, String href) {
-		Element element = doc.selectFirst(bodyTag);
+		Element element = getBody(doc);
 		element.appendElement(anchorTag).text(text).attr(hrefAttr, href);
 		return doc;
 	}

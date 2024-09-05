@@ -2,6 +2,7 @@ package org.mlk;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -47,5 +48,13 @@ public class ServletHtmlUtils {
 			+ "</" + htmlTag + ">";
 		Document doc = Jsoup.parse(html);
 		return doc;
+	}
+
+	public static Element getHead(Document doc) {
+		return doc.selectFirst(headTag);
+	}
+
+	public static Element getBody(Document doc) {
+		return doc.selectFirst(bodyTag);
 	}
 }
