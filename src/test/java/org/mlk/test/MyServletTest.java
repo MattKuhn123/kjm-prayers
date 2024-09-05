@@ -22,12 +22,12 @@ public class MyServletTest extends TestCase {
         String contentType = "text/html";
         
         MockHttpServletRequest req = new MockHttpServletRequest(method, contentType);
-        MockHttpServletResponse res = new MockHttpServletResponse();
+        MockHttpServletResponse resp = new MockHttpServletResponse();
         
         MyServlet servlet = new MyServlet();
-        servlet.service(req, res);
+        servlet.service(req, resp);
 
-        String resAsString = res.getResAsString();
+        String resAsString = resp.getResAsString();
         Document actualDoc = Jsoup.parse(resAsString);
         
         // Html
