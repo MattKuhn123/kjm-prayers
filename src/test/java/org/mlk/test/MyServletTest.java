@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 import org.mlk.MyServlet;
+import org.mlk.ServletHtmlUtils;
 import org.mlk.http.MockHttpServletRequest;
 import org.mlk.http.MockHttpServletResponse;
 
@@ -31,34 +32,35 @@ public class MyServletTest extends TestCase {
         Document actualDoc = Jsoup.parse(resAsString);
         
         // Html
-        String expectedLang = "en";
         String actualLang = actualDoc.select(htmlTag).attr(langAttr);
-        assertEquals(expectedLang, actualLang);
+        assertEquals(langAttrVal, actualLang);
 
         // Head
         Element actualHead = actualDoc.selectFirst(headTag);
         assertNotNull(actualHead);
-        assertEquals(actualHead.children().size(), 1);
+        int expectedHeadChildrenCount = 1;
+        assertEquals(expectedHeadChildrenCount, actualHead.children().size());
         int titleChildIndex = 0;
         assertTrue(actualHead.child(titleChildIndex).is(titleTag));
         
         // Title
         Element actualTitle = actualDoc.selectFirst(titleTag);
         assertNotNull(actualTitle);
-        assertEquals(actualTitle.text(), MyServlet.title);
+        assertEquals(MyServlet.title, actualTitle.text());
         
         // Body
         Element actualBody = actualDoc.selectFirst(bodyTag);
         assertNotNull(actualBody);
-        assertEquals(actualBody.children().size(), 1);
+        int expectedBodyChildrenCount = 1;
+        assertEquals(expectedBodyChildrenCount, actualBody.children().size());
         int anchorChildIndex = 0;
         assertTrue(actualBody.child(anchorChildIndex).is(anchorTag));
         
         // Anchor
         Element actualAnchor = actualDoc.selectFirst(anchorTag);
         assertNotNull(actualAnchor);
-        assertEquals(actualAnchor.text(), MyServlet.anchorText);
-        assertEquals(actualAnchor.attr(hrefAttr), MyServlet.anchorHref);
+        assertEquals(MyServlet.anchorText, actualAnchor.text());
+        assertEquals(MyServlet.anchorHref, actualAnchor.attr(hrefAttr));
     }
 
     @Test
