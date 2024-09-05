@@ -36,7 +36,8 @@ public class MyServlet extends HttpServlet {
 		}
 
 		Document doc = getHTMLResponseDocument();
-		resp.getWriter().append(doc.html()).flush();
+		String html = doc.html();
+		resp.getWriter().append(html).flush();
 	}
 
 	private static Document getHTMLResponseDocument() {
