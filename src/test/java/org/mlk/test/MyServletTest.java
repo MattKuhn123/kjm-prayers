@@ -37,7 +37,6 @@ public class MyServletTest extends TestCase {
 
         // Head
         Element actualHead = actualDoc.selectFirst(headTag);
-        assertNotNull(actualHead);
         int expectedHeadChildrenCount = 1;
         assertEquals(expectedHeadChildrenCount, actualHead.children().size());
         int titleChildIndex = 0;
@@ -45,12 +44,10 @@ public class MyServletTest extends TestCase {
         
         // Title
         Element actualTitle = actualDoc.selectFirst(titleTag);
-        assertNotNull(actualTitle);
         assertEquals(MyServlet.title, actualTitle.text());
         
         // Body
         Element actualBody = actualDoc.selectFirst(bodyTag);
-        assertNotNull(actualBody);
         int expectedBodyChildrenCount = 1;
         assertEquals(expectedBodyChildrenCount, actualBody.children().size());
         int anchorChildIndex = 0;
@@ -58,7 +55,6 @@ public class MyServletTest extends TestCase {
         
         // Anchor
         Element actualAnchor = actualDoc.selectFirst(anchorTag);
-        assertNotNull(actualAnchor);
         assertEquals(MyServlet.anchorText, actualAnchor.text());
         assertEquals(MyServlet.anchorHref, actualAnchor.attr(hrefAttr));
     }
