@@ -19,10 +19,9 @@ public class MyServletTest extends TestCase {
     @Test
     public void test_Get_MyServlet_ExpectTitle_ExpectAnchor() throws Exception {
         String method = "GET";
-        String pathInfo = "/MyServlet";
         String contentType = "text/html";
         
-        MockHttpServletRequest req = new MockHttpServletRequest(method, pathInfo, contentType);
+        MockHttpServletRequest req = new MockHttpServletRequest(method, contentType);
         MockHttpServletResponse res = new MockHttpServletResponse();
         
         MyServlet servlet = new MyServlet();
@@ -61,10 +60,9 @@ public class MyServletTest extends TestCase {
     @Test
     public void test_Get_MyServlet_ApplicationJson_ExpectError() throws Exception {
         String method = "GET";
-        String pathInfo = "/MyServlet";
         String contentType = "application/json";
         
-        MockHttpServletRequest req = new MockHttpServletRequest(method, pathInfo, contentType);
+        MockHttpServletRequest req = new MockHttpServletRequest(method, contentType);
         MockHttpServletResponse res = new MockHttpServletResponse();
         
         MyServlet servlet = new MyServlet();

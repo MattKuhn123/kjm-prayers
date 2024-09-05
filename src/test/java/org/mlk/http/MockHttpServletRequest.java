@@ -35,14 +35,12 @@ public class MockHttpServletRequest implements HttpServletRequest {
     private final HttpSession session;
     private final Cookie[] cookies;
     private final String method;
-    private final String pathInfo;
     private final String contentType;
 
     public MockHttpServletRequest(
         String method,
-        String pathInfo,
         String contentType) {
-        this(Optional.empty(), Optional.empty(), Optional.empty(), new Cookie[0], method, pathInfo, contentType);
+        this(Optional.empty(), Optional.empty(), Optional.empty(), new Cookie[0], method, contentType);
     }
 
     public MockHttpServletRequest(
@@ -51,7 +49,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
         Optional<HttpSession> session,
         Cookie[] cookies,
         String method,
-        String pathInfo,
         String contentType) {
         if (attributes.isPresent()) {
             this.attributes = attributes.get();
@@ -73,7 +70,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
         this.cookies = cookies;
         this.method = method;
-        this.pathInfo = pathInfo;
         this.contentType = contentType;
     }
     
@@ -111,7 +107,7 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public ServletContext getServletContext() { return session.getServletContext();  }
 
     @Override
-    public String getPathInfo() { return pathInfo; }
+    public String getPathInfo() { throw new UnsupportedOperationException("This is useless in a test context"); }
     
     @Override
     public ServletInputStream getInputStream() throws IOException { return null; }
