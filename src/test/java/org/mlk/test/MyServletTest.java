@@ -12,6 +12,8 @@ import org.mlk.http.MockHttpServletResponse;
 
 import junit.framework.TestCase;
 
+import static org.mlk.ServletHtmlUtils.*;
+
 public class MyServletTest extends TestCase {
 
     @Test
@@ -31,29 +33,29 @@ public class MyServletTest extends TestCase {
         
         // Html
         String expectedLang = "en";
-        String actualLang = doc.select(MyServlet.htmlTag).attr(MyServlet.langAttr);
+        String actualLang = doc.select(htmlTag).attr(langAttr);
         assertEquals(expectedLang, actualLang);
 
         // Head
-        Element actualHead = doc.selectFirst(MyServlet.headTag);
+        Element actualHead = doc.selectFirst(headTag);
         assertNotNull(actualHead);
-        assertTrue(actualHead.child(0).is(MyServlet.titleTag));
+        assertTrue(actualHead.child(0).is(titleTag));
         
         // Title
-        Element actualTitle = doc.selectFirst(MyServlet.titleTag);
+        Element actualTitle = doc.selectFirst(titleTag);
         assertNotNull(actualTitle);
         assertEquals(actualTitle.text(), MyServlet.title);
         
         // Body
-        Element actualBody = doc.selectFirst(MyServlet.bodyTag);
+        Element actualBody = doc.selectFirst(bodyTag);
         assertNotNull(actualBody);
-        assertTrue(actualBody.child(0).is(MyServlet.anchorTag));
+        assertTrue(actualBody.child(0).is(anchorTag));
         
         // Anchor
-        Element actualAnchor = doc.selectFirst(MyServlet.anchorTag);
+        Element actualAnchor = doc.selectFirst(anchorTag);
         assertNotNull(actualAnchor);
         assertEquals(actualAnchor.text(), MyServlet.anchorText);
-        assertEquals(actualAnchor.attr(MyServlet.hrefAttr), MyServlet.anchorHref);
+        assertEquals(actualAnchor.attr(hrefAttr), MyServlet.anchorHref);
     }
 
     @Test
@@ -67,6 +69,6 @@ public class MyServletTest extends TestCase {
         
         MyServlet servlet = new MyServlet();
         Exception e = assertThrows(Exception.class, () -> servlet.service(req, res));
-        assertEquals(e.getMessage(), MyServlet.getContentTypeError().getMessage());
+        assertEquals(e.getMessage(), getContentTypeError().getMessage());
     }
 }
