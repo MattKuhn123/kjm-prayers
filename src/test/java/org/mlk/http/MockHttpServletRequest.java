@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
-import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;

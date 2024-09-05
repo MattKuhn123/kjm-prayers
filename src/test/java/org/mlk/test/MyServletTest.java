@@ -38,7 +38,9 @@ public class MyServletTest extends TestCase {
         // Head
         Element actualHead = actualDoc.selectFirst(headTag);
         assertNotNull(actualHead);
-        assertTrue(actualHead.child(0).is(titleTag));
+        assertEquals(actualHead.children().size(), 1);
+        int titleChildIndex = 0;
+        assertTrue(actualHead.child(titleChildIndex).is(titleTag));
         
         // Title
         Element actualTitle = actualDoc.selectFirst(titleTag);
@@ -48,7 +50,9 @@ public class MyServletTest extends TestCase {
         // Body
         Element actualBody = actualDoc.selectFirst(bodyTag);
         assertNotNull(actualBody);
-        assertTrue(actualBody.child(0).is(anchorTag));
+        assertEquals(actualBody.children().size(), 1);
+        int anchorChildIndex = 0;
+        assertTrue(actualBody.child(anchorChildIndex).is(anchorTag));
         
         // Anchor
         Element actualAnchor = actualDoc.selectFirst(anchorTag);
