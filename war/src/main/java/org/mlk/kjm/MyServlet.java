@@ -1,4 +1,6 @@
-package org.mlk;
+package org.mlk.kjm;
+
+import static org.mlk.kjm.ServletHtmlUtils.*;
 
 import java.io.IOException;
 
@@ -9,8 +11,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import static org.mlk.ServletHtmlUtils.*;
 
 public class MyServlet extends HttpServlet {
 	public static final String title = "MLK Demo";

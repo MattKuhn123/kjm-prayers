@@ -1,19 +1,16 @@
-package org.mlk.test;
+package org.mlk.kjm;
 
 import static org.junit.Assert.assertThrows;
+import static org.mlk.kjm.ServletHtmlUtils.*;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
-import org.mlk.MyServlet;
-import org.mlk.ServletHtmlUtils;
 import org.mlk.http.MockHttpServletRequest;
 import org.mlk.http.MockHttpServletResponse;
 
 import junit.framework.TestCase;
-
-import static org.mlk.ServletHtmlUtils.*;
 
 public class MyServletTest extends TestCase {
 

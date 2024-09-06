@@ -2,12 +2,11 @@ plugins {
 	id 'war'
 }
 
+group = 'org.mlk'
+version = '1.0.0'
+
 repositories {
-    mavenLocal()
 	mavenCentral()
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
 }
 
 dependencies {
@@ -22,8 +21,3 @@ tasks.named('war', War) {
 		into ('')
 	}
 }
-
-group = 'org.mlk'
-version = '1.0.0-SNAPSHOT'
-description = 'KJM Prayer Board'
-

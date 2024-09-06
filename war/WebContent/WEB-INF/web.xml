@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 	<servlet>
 		<servlet-name>MyServlet</servlet-name>
-		<servlet-class>org.mlk.MyServlet</servlet-class>
+		<servlet-class>org.mlk.kjm.MyServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>MyServlet</servlet-name>
