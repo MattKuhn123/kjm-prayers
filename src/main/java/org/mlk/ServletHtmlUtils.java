@@ -23,12 +23,7 @@ public class ServletHtmlUtils {
 		return new UnsupportedOperationException(message);
 	}
 
-	public static UnsupportedOperationException getRequestMethodError() {
-		final String message = "Request method is not supported";
-		return new UnsupportedOperationException(message);
-	}
-    
-    public static boolean requestingHtml(HttpServletRequest req) {
+    public static boolean isRequestingHtml(HttpServletRequest req) {
 		if (req.getContentType() == null) {
 			return true;
 		}
@@ -50,11 +45,29 @@ public class ServletHtmlUtils {
 		return doc;
 	}
 
-	public static Element getHead(Document doc) {
-		return doc.selectFirst(headTag);
+	public static Element createTitle(String text) {
+		Element titleEmpty = createEmptyElement(titleTag);
+		Element titleResult = titleEmpty.text(text);
+		return titleResult;
 	}
 
-	public static Element getBody(Document doc) {
-		return doc.selectFirst(bodyTag);
+	public static Element createAnchor(String text, String href) {
+		Element anchorEmpty = createEmptyElement(anchorTag);
+		Element anchorResult = anchorEmpty.text(text).attr(hrefAttr, href);
+		return anchorResult;
+	}
+
+	private static String toOpenTag(String tag) {
+		return "<" + tag + ">";
+	}
+
+	private static String toCloseTag(String tag) {
+		return "</" + tag + ">";
+	}
+
+	private static Element createEmptyElement(String tag) {
+		String html = toOpenTag(tag) + toCloseTag(tag);
+		Element emptyElement = Jsoup.parseBodyFragment(html).body().selectFirst(tag);
+		return emptyElement;
 	}
 }

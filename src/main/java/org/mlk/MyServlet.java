@@ -19,7 +19,7 @@ public class MyServlet extends HttpServlet {
 	public static final String anchorHref = "/";
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (!requestingHtml(req)) {
+		if (!isRequestingHtml(req)) {
 			throw getContentTypeError();
 		}
 
@@ -35,15 +35,15 @@ public class MyServlet extends HttpServlet {
 		return doc;
 	}
 
-	private static Document addTitle(Document doc, String title) {
-		Element element = getHead(doc);
-		element.appendElement(titleTag).text(title);
+	private static Document addTitle(Document doc, String text) {
+		Element title = createTitle(text);
+		doc.head().appendChild(title);
 		return doc;
 	}
 
 	private static Document addAnchor(Document doc, String text, String href) {
-		Element element = getBody(doc);
-		element.appendElement(anchorTag).text(text).attr(hrefAttr, href);
+		Element anchor = createAnchor(text, href);
+		doc.body().appendChild(anchor);
 		return doc;
 	}
 }
