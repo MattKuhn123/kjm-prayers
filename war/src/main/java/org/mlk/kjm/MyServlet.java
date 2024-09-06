@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 public class MyServlet extends HttpServlet {
 	public static final String title = "MLK Demo";
 	public static final String anchorText = "Home";
+
+	// TODO : use context path because this only works is the war is ROOT
 	public static final String anchorHref = "/";
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

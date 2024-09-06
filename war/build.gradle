@@ -14,10 +14,3 @@ dependencies {
     providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     testImplementation 'junit:junit:4.13.2'
 }
-
-tasks.named('war', War) {
-	archiveFileName = 'ROOT.war'
-	from ('WebContent') {
-		into ('')
-	}
-}
