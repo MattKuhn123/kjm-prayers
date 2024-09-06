@@ -18,18 +18,6 @@ public class MyServlet extends HttpServlet {
 	public static final String anchorText = "Home";
 	public static final String anchorHref = "/";
 
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		throw getRequestMethodError();
-	}
-
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		throw getRequestMethodError();
-	}
-
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		throw getRequestMethodError();
-	}
-
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if (!requestingHtml(req)) {
 			throw getContentTypeError();

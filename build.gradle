@@ -5,7 +5,6 @@ plugins {
 repositories {
     mavenLocal()
 	mavenCentral()
-
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
@@ -26,6 +25,5 @@ tasks.named('war', War) {
 
 group = 'org.mlk'
 version = '1.0.0-SNAPSHOT'
-description = 'MLK Demo'
-java.sourceCompatibility = JavaVersion.VERSION_1_8
+description = 'KJM Prayer Board'
 
