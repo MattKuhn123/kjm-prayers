@@ -38,8 +38,6 @@ public class ServletHtmlUtils {
     public static Document createDocument() {
 		String html = "<!DOCTYPE html>"
 			+ "<" + htmlTag + " " + langAttr + "='" + langAttrVal + "'>"
-			+ "<" + headTag + "></" + headTag + ">"
-			+ "<" + bodyTag + "></" + bodyTag + ">"
 			+ "</" + htmlTag + ">";
 		Document doc = Jsoup.parse(html);
 		return doc;
