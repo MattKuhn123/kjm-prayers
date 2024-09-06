@@ -1,7 +1,6 @@
 package org.mlk;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
