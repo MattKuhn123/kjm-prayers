@@ -65,7 +65,9 @@ public class ServletHtmlUtils {
 
 	private static Element createEmptyElement(String tag) {
 		String html = toOpenTag(tag) + toCloseTag(tag);
-		Element emptyElement = Jsoup.parseBodyFragment(html).body().selectFirst(tag);
+		Document bodyFragment = Jsoup.parseBodyFragment(html); 
+		Element body = bodyFragment.body();
+		Element emptyElement = body.selectFirst(tag);
 		return emptyElement;
 	}
 }
