@@ -30,20 +30,18 @@ public class MyServlet extends HttpServlet {
 
 	private static Document getHtmlResponseDocument() {
 		Document doc = createDocument();
-		doc = addTitle(doc, title);
-		doc = addAnchor(doc, anchorText, anchorHref);
+		addTitle(doc, title);
+		addAnchor(doc, anchorText, anchorHref);
 		return doc;
 	}
 
-	private static Document addTitle(Document doc, String text) {
+	private static void addTitle(Document doc, String text) {
 		Element title = createTitle(text);
 		doc.head().appendChild(title);
-		return doc;
 	}
 
-	private static Document addAnchor(Document doc, String text, String href) {
+	private static void addAnchor(Document doc, String text, String href) {
 		Element anchor = createAnchor(text, href);
 		doc.body().appendChild(anchor);
-		return doc;
 	}
 }
