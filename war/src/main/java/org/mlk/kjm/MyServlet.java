@@ -13,36 +13,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class MyServlet extends HttpServlet {
-	public static final String title = "MLK Demo";
-	public static final String anchorText = "Home";
-
-	// TODO : use context path because this only works is the war is ROOT
-	public static final String anchorHref = "/";
+	public static final String htmlResource = "MyServlet.html";
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		if (!isRequestingHtml(req)) {
 			throw getContentTypeError();
 		}
 
-		Document doc = getHtmlResponseDocument();
+		Document doc = getHtmlDocument(htmlResource);
 		String html = doc.html();
 		resp.getWriter().append(html).flush();
-	}
-
-	private static Document getHtmlResponseDocument() {
-		Document doc = createDocument();
-		addTitle(doc, title);
-		addAnchor(doc, anchorText, anchorHref);
-		return doc;
-	}
-
-	private static void addTitle(Document doc, String text) {
-		Element title = createTitle(text);
-		doc.head().appendChild(title);
-	}
-
-	private static void addAnchor(Document doc, String text, String href) {
-		Element anchor = createAnchor(text, href);
-		doc.body().appendChild(anchor);
 	}
 }

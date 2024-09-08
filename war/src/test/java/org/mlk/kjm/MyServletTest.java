@@ -13,9 +13,10 @@ import org.mlk.http.MockHttpServletResponse;
 import junit.framework.TestCase;
 
 public class MyServletTest extends TestCase {
+	public static final String pTag = "p";
 
     @Test
-    public void test_Get_MyServlet_ExpectTitle_ExpectAnchor() throws Exception {
+    public void test_Get_MyServlet() throws Exception {
         String method = "GET";
         String contentType = "text/html";
         
@@ -28,32 +29,9 @@ public class MyServletTest extends TestCase {
         String resAsString = resp.getResponseAsString();
         Document actualDoc = Jsoup.parse(resAsString);
         
-        // Html
-        String actualLang = actualDoc.select(htmlTag).attr(langAttr);
-        assertEquals(langAttrVal, actualLang);
-
-        // Head
-        Element actualHead = actualDoc.selectFirst(headTag);
-        int expectedHeadChildrenCount = 1;
-        assertEquals(expectedHeadChildrenCount, actualHead.children().size());
-        int titleChildIndex = 0;
-        assertTrue(actualHead.child(titleChildIndex).is(titleTag));
-        
-        // Title
-        Element actualTitle = actualDoc.selectFirst(titleTag);
-        assertEquals(MyServlet.title, actualTitle.text());
-        
-        // Body
-        Element actualBody = actualDoc.selectFirst(bodyTag);
-        int expectedBodyChildrenCount = 1;
-        assertEquals(expectedBodyChildrenCount, actualBody.children().size());
-        int anchorChildIndex = 0;
-        assertTrue(actualBody.child(anchorChildIndex).is(anchorTag));
-        
-        // Anchor
-        Element actualAnchor = actualDoc.selectFirst(anchorTag);
-        assertEquals(MyServlet.anchorText, actualAnchor.text());
-        assertEquals(MyServlet.anchorHref, actualAnchor.attr(hrefAttr));
+        Element actualP = actualDoc.selectFirst(pTag);
+        String expectedPText = "Hello, World!!";
+        assertEquals(expectedPText, actualP.text());
     }
 
     @Test
