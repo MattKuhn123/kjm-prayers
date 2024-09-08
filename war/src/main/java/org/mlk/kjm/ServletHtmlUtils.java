@@ -14,17 +14,12 @@ public class ServletHtmlUtils {
     private static final String contentTypeHtml = "text/html";
 
 	public static Document getHtmlDocument(String file) throws IOException {
-		try {
-			String filePath = templatesDirectory + "/" + file;
-			InputStream abc = ServletHtmlUtils.class.getResourceAsStream(filePath);
-			byte[] bytes = abc.readAllBytes();
-			String html = new String(bytes);
-			Document htmlDocument = Jsoup.parseBodyFragment(html);
-			return htmlDocument;
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
+		String filePath = templatesDirectory + "/" + file;
+		InputStream inputStream = ServletHtmlUtils.class.getResourceAsStream(filePath);
+		byte[] bytes = inputStream.readAllBytes();
+		String html = new String(bytes);
+		Document htmlDocument = Jsoup.parseBodyFragment(html);
+		return htmlDocument;
 
 	}
 
