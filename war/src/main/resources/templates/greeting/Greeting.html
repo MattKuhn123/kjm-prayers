@@ -1,1 +1,15 @@
-<p id="greeting">Hello, <span id="greetingsTo">World</span>!!</p>
+<div id="greetingsContainer" class="container">
+    <form id="GreetingRequest" hx-post="/GreetingServlet" hx-target="#greetingResponse">
+        <div class="mb-3">
+            <label for="greetingsTo" class="form-label">Greetings To:</label>
+            <input required id="greetingsTo" name="greetingsTo" type="text" class="form-control" />
+            <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                <button class="btn btn-primary">Greet</button>
+                <span class="pull-right" id="greetingResponse"></span>
+            </div>
+        </div>
+    </form>
+    <h2>Greetings!</h2>
+    <ul id="greetingsList"></ul>
+    <button hx-get="/GreetingServlet" hx-target="#greetingsContainer" class="btn btn-primary">Refresh</button>
+</div>

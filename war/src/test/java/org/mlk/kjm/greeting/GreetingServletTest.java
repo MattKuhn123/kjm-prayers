@@ -10,7 +10,6 @@ import org.mlk.http.MockHttpServletResponse;
 import junit.framework.TestCase;
 
 public class GreetingServletTest extends TestCase {
-	public static final String pTag = "p";
 
     @Test
     public void test_Get_GreetingServlet() throws Exception {
@@ -26,8 +25,9 @@ public class GreetingServletTest extends TestCase {
         String resAsString = resp.getResponseAsString();
         Document actualDoc = Jsoup.parse(resAsString);
         
-        Element actualP = actualDoc.selectFirst(pTag);
-        String expectedPText = "Hello, World!!";
-        assertEquals(expectedPText, actualP.text());
+        String ul = "ul";
+        Element actualUl = actualDoc.selectFirst(ul);
+        int expectedChildren = 0;
+        assertEquals(expectedChildren, actualUl.childrenSize());
     }
 }
