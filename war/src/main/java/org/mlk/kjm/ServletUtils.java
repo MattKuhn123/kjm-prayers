@@ -43,6 +43,8 @@ public class ServletUtils {
 	// TODO : Can we enforce having a constructor with a Map parameter?
 	public static <T> T getPostBody(HttpServletRequest req, Class<T> clazz) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		Map<String, Optional<String>> postBody = getPostBodyMap(req);
+		
+		@SuppressWarnings("rawtypes")
 		Class[] cArg = new Class[] { Map.class };
 		T result = clazz.getDeclaredConstructor(cArg).newInstance(postBody);
 		return result;
