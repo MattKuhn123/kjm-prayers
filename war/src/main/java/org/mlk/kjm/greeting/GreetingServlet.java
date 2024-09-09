@@ -15,8 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class GreetingServlet extends HttpServlet {
-	private static final String greetingHtml = "Greeting.html";
-	private static final String formHtml = "GreetingForm.html";
+	private static final String directory = "greeting/";
+	private static final String greetingHtml = directory + "Greeting.html";
+	private static final String formHtml = directory + "GreetingForm.html";
 
     private static final String greetingsToId = "greetingsTo";
 

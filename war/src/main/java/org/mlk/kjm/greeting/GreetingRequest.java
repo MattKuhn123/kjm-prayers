@@ -4,10 +4,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class GreetingRequest {
+    private final String greetingsToKey = "GreetingRequest_greetingsTo";
     private final Optional<String> greetingsTo;
 
     public GreetingRequest(Map<String, Optional<String>> postBody) {
-        this.greetingsTo = postBody.get("greetingsTo");
+        this.greetingsTo = postBody.get(greetingsToKey);
     }
 
     public Optional<String> getGreetingsTo() {
