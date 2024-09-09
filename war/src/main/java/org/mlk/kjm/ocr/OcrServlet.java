@@ -23,7 +23,8 @@ public class OcrServlet extends HttpServlet {
             String textContent = this.ocrService.parseTextContentFromImage(inputStream);
             resp.getWriter().append(textContent).flush();
         } catch (TesseractException e) {
-
+            e.printStackTrace(resp.getWriter());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 	}
 }
