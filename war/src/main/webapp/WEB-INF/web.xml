@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 	<servlet>
-		<servlet-name>MyServlet</servlet-name>
-		<servlet-class>org.mlk.kjm.my.MyServlet</servlet-class>
+		<servlet-name>GreetingServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.greeting.GreetingServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>MyServlet</servlet-name>
-		<url-pattern>/MyServlet</url-pattern>
+		<servlet-name>GreetingServlet</servlet-name>
+		<url-pattern>/GreetingServlet</url-pattern>
 	</servlet-mapping>
 </web-app>
