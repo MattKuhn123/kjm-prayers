@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation 'org.jsoup:jsoup:1.18.1'
+    implementation 'net.sourceforge.tess4j:tess4j:5.13.0'
     providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     testImplementation 'junit:junit:4.13.2'
 }

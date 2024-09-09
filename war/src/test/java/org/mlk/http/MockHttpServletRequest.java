@@ -35,11 +35,14 @@ public class MockHttpServletRequest implements HttpServletRequest {
     private final Cookie[] cookies;
     private final String method;
     private final String contentType;
+    private final Map<String, Part> parts;
 
-    public MockHttpServletRequest(
-        String method,
-        String contentType) {
-        this(Optional.empty(), Optional.empty(), Optional.empty(), new Cookie[0], method, contentType);
+    public MockHttpServletRequest(String method) {
+        this(Optional.empty(), Optional.empty(), Optional.empty(), new Cookie[0], method, Optional.empty(), Optional.empty(), Optional.empty());
+    }
+
+    public MockHttpServletRequest(String method, String partName, Part part) {
+        this(Optional.empty(), Optional.empty(), Optional.empty(), new Cookie[0], method, Optional.empty(), Optional.of(partName), Optional.of(part));
     }
 
     public MockHttpServletRequest(
@@ -48,7 +51,9 @@ public class MockHttpServletRequest implements HttpServletRequest {
         Optional<HttpSession> session,
         Cookie[] cookies,
         String method,
-        String contentType) {
+        Optional<String> contentType,
+        Optional<String> partName,
+        Optional<Part> part) {
         if (attributes.isPresent()) {
             this.attributes = attributes.get();
         } else {
@@ -69,7 +74,17 @@ public class MockHttpServletRequest implements HttpServletRequest {
 
         this.cookies = cookies;
         this.method = method;
-        this.contentType = contentType;
+
+        if (contentType.isPresent()) {
+            this.contentType = contentType.get();
+        } else {
+            this.contentType = null;
+        }
+
+        this.parts = new HashMap<String, Part>();
+        if (part.isPresent() && partName.isPresent()) {
+            this.parts.put(partName.get(), part.get());
+        }
     }
     
     @Override
@@ -112,20 +127,15 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public ServletInputStream getInputStream() throws IOException { return null; }
 
     @Override
-    public RequestDispatcher getRequestDispatcher(String arg0) { 
-        return new RequestDispatcher() {
-          public void forward(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-            MockHttpServletResponse mock = (MockHttpServletResponse) res;
-            mock.encodedRedirectUrl = arg0;
-          }
-          public void include(ServletRequest arg0, ServletResponse arg1) throws ServletException, IOException { throw new UnsupportedOperationException("Unimplemented method 'include'");}
-      }; 
-    }
-
-    @Override
     public String getMethod() { return method; }
-
+    
+    @Override
+    public Part getPart(String arg0) throws IOException, ServletException {
+        return this.parts.get(arg0);
+    }
+    
     // ===== Do not need to implement =====
+    public RequestDispatcher getRequestDispatcher(String arg0) { return null; }
     public AsyncContext getAsyncContext() { return null; }
     public Enumeration<String> getParameterNames() { return null; }
     public String[] getParameterValues(String arg0) { return null; }
@@ -162,7 +172,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public Enumeration<String> getHeaderNames() { return null; }
     public Enumeration<String> getHeaders(String arg0) { return null; }
     public int getIntHeader(String arg0) { return 0; }
-    public Part getPart(String arg0) throws IOException, ServletException {return null; }
     public Collection<Part> getParts() throws IOException, ServletException { return null; }
     public String getPathTranslated() { return null; }
     public String getQueryString() { return null; }

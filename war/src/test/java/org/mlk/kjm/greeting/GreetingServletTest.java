@@ -14,9 +14,8 @@ public class GreetingServletTest extends TestCase {
     @Test
     public void test_Get_GreetingServlet() throws Exception {
         String method = "GET";
-        String contentType = "text/html";
         
-        MockHttpServletRequest req = new MockHttpServletRequest(method, contentType);
+        MockHttpServletRequest req = new MockHttpServletRequest(method);
         MockHttpServletResponse resp = new MockHttpServletResponse();
         
         GreetingServlet servlet = new GreetingServlet();
