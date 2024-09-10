@@ -28,14 +28,6 @@ public class GetPrayersResultServlet extends HttpServlet {
     private static final String county = "county";
     private static final String date = "date";
 
-    private static enum GetPrayersTr {
-        inmateFirstName,
-        inmateLastName,
-        county,
-        date,
-        view
-    }
-
     private final PrayerRepository prayers;
 
     public GetPrayersResultServlet() {
@@ -69,10 +61,10 @@ public class GetPrayersResultServlet extends HttpServlet {
         Element tbody = getPrayersDocument.selectFirst(tbodyTag);
         for (Prayer prayer : prayers) {
             Element tr = tbody.selectFirst(trTag).clone();
-            tr.getElementById(GetPrayersTr.inmateFirstName.toString()).text(prayer.getInmate().getFirstName());
-            tr.getElementById(GetPrayersTr.inmateLastName.toString()).text(prayer.getInmate().getLastName());
-            tr.getElementById(GetPrayersTr.county.toString()).text(prayer.getInmate().getJail().getCounty());
-            tr.getElementById(GetPrayersTr.date.toString()).text(ServletUtils.dateToString(prayer.getDate()));
+            tr.getElementById(inmateFirstName).text(prayer.getInmate().getFirstName());
+            tr.getElementById(inmateLastName).text(prayer.getInmate().getLastName());
+            tr.getElementById(county).text(prayer.getInmate().getJail().getCounty());
+            tr.getElementById(date).text(ServletUtils.dateToString(prayer.getDate()));
 			
             // TODO : Link to detail view
             

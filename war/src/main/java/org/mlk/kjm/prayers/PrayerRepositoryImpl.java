@@ -7,17 +7,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.time.LocalDate;
 
-import org.mlk.kjm.ServletUtils;
-import org.mlk.kjm.inmates.Inmate;
-import org.mlk.kjm.jails.Jail;
-
 public class PrayerRepositoryImpl implements PrayerRepository {
     private static PrayerRepository instance;
 
     public static PrayerRepository getInstance() {
         if (instance == null) {
             instance = new PrayerRepositoryImpl();
-            initPrayers(instance);
         }
 
         return instance;
@@ -50,7 +45,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         }
 
         return input.stream()
-            .filter(p -> p.getInmate().getFirstName().indexOf(firstName.get()) > 0)
+            .filter(p -> p.getInmate().getFirstName().toLowerCase().indexOf(firstName.get().toLowerCase()) > -1)
             .collect(toList());
     }
 
@@ -59,8 +54,11 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             return input;
         }
 
+        String test = input.get(0).getInmate().getLastName().toLowerCase();
+        int idx = test.indexOf(lastName.get().toLowerCase());
+
         return input.stream()
-            .filter(p -> p.getInmate().getLastName().indexOf(lastName.get()) > 0)
+            .filter(p -> p.getInmate().getLastName().toLowerCase().indexOf(lastName.get().toLowerCase()) > -1)
             .collect(toList());
     }
 
@@ -70,7 +68,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         }
 
         return input.stream()
-            .filter(p -> p.getInmate().getJail().getCounty().indexOf(county.get()) > 0)
+            .filter(p -> p.getInmate().getJail().getCounty().toLowerCase().indexOf(county.get().toLowerCase()) > -1)
             .collect(toList());
     }
 
@@ -82,13 +80,5 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         return input.stream()
             .filter(p -> p.getDate().isEqual(date.get()))
             .collect(toList());
-    }
-
-    private static void initPrayers(PrayerRepository pr) {
-        for (int x = 0; x < 10; x++) {
-            Jail j = new Jail("County: " + x);
-            Inmate i = new Inmate("Inmate: " + x, "Smith", j);
-            pr.createPrayer(new Prayer(i, ServletUtils.stringToDate("01/01/1990"), "Prayer: " + x));
-        }
     }
 }
