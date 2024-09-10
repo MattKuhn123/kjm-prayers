@@ -53,10 +53,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         if (lastName.isEmpty()) {
             return input;
         }
-
-        String test = input.get(0).getInmate().getLastName().toLowerCase();
-        int idx = test.indexOf(lastName.get().toLowerCase());
-
+        
         return input.stream()
             .filter(p -> p.getInmate().getLastName().toLowerCase().indexOf(lastName.get().toLowerCase()) > -1)
             .collect(toList());
