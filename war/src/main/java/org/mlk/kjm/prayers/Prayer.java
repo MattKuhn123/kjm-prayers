@@ -5,9 +5,9 @@ import java.time.LocalDate;
 import org.mlk.kjm.inmates.Inmate;
 
 public class Prayer {
-    public final Inmate inmate;
-    public final LocalDate date;
-    public final String prayer;
+    private final Inmate inmate;
+    private final LocalDate date;
+    private final String prayer;
 
     public Prayer(Inmate inmate, LocalDate date, String prayer) {
         this.inmate = inmate;

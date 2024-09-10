@@ -64,4 +64,13 @@ public class ServletUtils {
 		T result = clazz.getDeclaredConstructor(cArg).newInstance(postBody);
 		return result;
 	}
+
+	public static Optional<String> getOptionalParameter(HttpServletRequest req, String parameter) {
+		String result = req.getParameter(parameter);
+		if (result == null || "".equals(result)) {
+			return Optional.empty();
+		}
+
+		return Optional.of(result);
+	}
 }

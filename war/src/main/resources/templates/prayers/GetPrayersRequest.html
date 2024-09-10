@@ -1,0 +1,25 @@
+<form id="PrayerRequest" hx-get="/getPrayersResult" hx-target="#getPrayersResultTarget">
+    <h3>Search parameters</h3>
+    <div class="row g-3">
+        <div class="col-sm">
+            <label for="inmateFirstName" class="form-label">Inmate First Name</label>
+            <input id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="inmateLastName" class="form-label">Inmate Last Name</label>
+            <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="county" class="form-label">County</label>
+            <input id="county" name="county" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="date" class="form-label">Date</label>
+            <input id="date" name="date" type="text" class="form-control" />
+        </div>
+    </div>
+    <div>
+        <button class="btn btn-primary">Search</button>
+    </div>
+</form>
+<div id="getPrayersResultTarget"></div>

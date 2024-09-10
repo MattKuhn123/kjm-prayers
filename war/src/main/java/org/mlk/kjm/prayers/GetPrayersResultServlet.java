@@ -4,6 +4,8 @@ import static org.mlk.kjm.ServletUtils.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.time.LocalDate;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,10 +18,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class GetPrayersResultServlet extends HttpServlet {
     private static final String directory = "prayers/";
-	private static final String getPrayersHtml = directory + "GetPrayersResult.html";
+	private static final String getPrayersResultHtml = directory + "GetPrayersResult.html";
 	private static final String getPrayersResultEmptyHtml = directory + "GetPrayersResultEmpty.html";
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
+
+    private static final String inmateFirstName = "inmateFirstName";
+    private static final String inmateLastName = "inmateLastName";
+    private static final String county = "county";
+    private static final String date = "date";
 
     private static enum GetPrayersTr {
         inmateFirstName,
@@ -40,9 +47,15 @@ public class GetPrayersResultServlet extends HttpServlet {
     }
     
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // TODO : Get query parameters
+        Optional<String> queryFirstName = getOptionalParameter(req, inmateFirstName);
+        Optional<String> queryLastName = getOptionalParameter(req, inmateLastName);
+        Optional<String> queryCounty = getOptionalParameter(req, county);
+        Optional<String> queryDateString = getOptionalParameter(req, date);
+        Optional<LocalDate> queryDate = queryDateString.isPresent() 
+            ? Optional.of(stringToDate(queryDateString.get())) 
+            : Optional.empty();
 
-        List<Prayer> prayers = this.prayers.getPrayers();
+        List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate);
         Document doc = (prayers.size() > 0) 
             ? getPrayersDocument(prayers) 
             : getPrayersEmptyDocument();
@@ -52,7 +65,7 @@ public class GetPrayersResultServlet extends HttpServlet {
     }
 
     private Document getPrayersDocument(List<Prayer> prayers) throws IOException {
-        Document getPrayersDocument = getHtmlDocument(getPrayersHtml);
+        Document getPrayersDocument = getHtmlDocument(getPrayersResultHtml);
         Element tbody = getPrayersDocument.selectFirst(tbodyTag);
         for (Prayer prayer : prayers) {
             Element tr = tbody.selectFirst(trTag).clone();
