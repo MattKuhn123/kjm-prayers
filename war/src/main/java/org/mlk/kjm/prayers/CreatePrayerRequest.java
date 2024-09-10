@@ -1,12 +1,13 @@
 package org.mlk.kjm.prayers;
 
 import java.util.Optional;
+
+import org.mlk.kjm.ServletUtils;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
-public class PrayerRequest {
-
+public class CreatePrayerRequest {
     private final static String inmateFirstNameKey = "inmateFirstName";
     private final static String inmateLastNameKey = "inmateLastName";
     private final static String countyKey = "county";
@@ -19,13 +20,12 @@ public class PrayerRequest {
     private final LocalDate date;
     private final String prayer;
 
-    public PrayerRequest(Map<String, Optional<String>> postBody) {
+    public CreatePrayerRequest(Map<String, Optional<String>> postBody) {
         inmateFirstName = postBody.get(inmateFirstNameKey).get();
         inmateLastName = postBody.get(inmateLastNameKey).get();
         county = postBody.get(countyKey).get();
         String dateString = postBody.get(dateKey).get();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        date = LocalDate.parse(dateString, formatter);
+        date = ServletUtils.stringToDate(dateString);
         prayer = postBody.get(prayerKey).get();
     }
 

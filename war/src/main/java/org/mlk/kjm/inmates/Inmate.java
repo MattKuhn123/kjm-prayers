@@ -3,9 +3,9 @@ package org.mlk.kjm.inmates;
 import org.mlk.kjm.jails.Jail;
 
 public class Inmate {
-    public final String firstName;
-    public final String lastName;
-    public final Jail jail;
+    private final String firstName;
+    private final String lastName;
+    private final Jail jail;
 
     public Inmate(String firstName, String lastName, Jail jail) {
         this.firstName = firstName;

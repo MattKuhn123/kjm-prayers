@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+
 import java.nio.charset.StandardCharsets;
 
 import org.jsoup.Jsoup;
@@ -15,6 +18,16 @@ import org.jsoup.nodes.Document;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ServletUtils {
+	private static final String pattern = "MM/dd/yyyy";
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+	public static String dateToString(LocalDate date) {
+		return date.format(formatter);
+	}
+
+	public static LocalDate stringToDate(String string) {
+		return LocalDate.parse(string, formatter);
+	}
+
     private static final String templatesDirectory = "/templates";
 
 	public static Document getHtmlDocument(String file) throws IOException {
