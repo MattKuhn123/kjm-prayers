@@ -39,6 +39,16 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         return filteredDate;
     }
 
+    @Override 
+    public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) {
+        Optional<Prayer> result = prayers.stream().filter(p -> true
+            && firstName.equals(p.getInmate().getFirstName())
+            && lastName.equals(p.getInmate().getLastName())
+            && date.isEqual(p.getDate())).findFirst();
+
+        return result;
+    }
+
     private static List<Prayer> filterFirstName(List<Prayer> input, Optional<String> firstName) {
         if (firstName.isEmpty()) {
             return input;
@@ -53,7 +63,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         if (lastName.isEmpty()) {
             return input;
         }
-        
+
         return input.stream()
             .filter(p -> p.getInmate().getLastName().toLowerCase().indexOf(lastName.get().toLowerCase()) > -1)
             .collect(toList());

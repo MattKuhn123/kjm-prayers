@@ -10,4 +10,6 @@ public interface PrayerRepository {
 
     List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
             Optional<LocalDate> date);
+
+    Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date);
 }

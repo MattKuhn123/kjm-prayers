@@ -4,6 +4,8 @@ import static org.mlk.kjm.ServletUtils.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 import java.time.LocalDate;
 
@@ -27,6 +29,7 @@ public class GetPrayersResultServlet extends HttpServlet {
     private static final String inmateLastName = "inmateLastName";
     private static final String county = "county";
     private static final String date = "date";
+    private static final String view = "view";
 
     private final PrayerRepository prayers;
 
@@ -66,7 +69,14 @@ public class GetPrayersResultServlet extends HttpServlet {
             tr.getElementById(county).text(prayer.getInmate().getJail().getCounty());
             tr.getElementById(date).text(ServletUtils.dateToString(prayer.getDate()));
 			
-            // TODO : Link to detail view
+            String attrKey = "hx-get";
+            Map<String, String> params = new HashMap<String, String>();
+            params.put(GetPrayerServlet.inmateFirstNameParam, prayer.getInmate().getFirstName());
+            params.put(GetPrayerServlet.inmateLastNameParam, prayer.getInmate().getLastName());
+            params.put(GetPrayerServlet.dateParam, dateToString(prayer.getDate()));
+
+            String attrValue = createLink(GetPrayerServlet.contextPath, params);
+            tr.getElementById(view).attr(attrKey, attrValue);
             
             tbody.appendChild(tr);
         }
