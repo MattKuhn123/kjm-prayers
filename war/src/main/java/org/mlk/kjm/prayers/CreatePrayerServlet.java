@@ -41,6 +41,10 @@ public class CreatePrayerServlet extends HttpServlet {
             Inmate inmate = new Inmate(postBody.getInmateFirstName(), postBody.getInmateLastName(), jail);
             Prayer prayer = new Prayer(inmate, postBody.getDate(), postBody.getPrayer());
             this.prayers.createPrayer(prayer);
+
+            String successMessage = "<p>Success!</p>";
+            resp.getWriter().append(successMessage);
+
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | IOException e) {
             e.printStackTrace(resp.getWriter());
