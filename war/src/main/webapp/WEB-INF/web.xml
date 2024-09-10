@@ -6,8 +6,16 @@
 		<servlet-name>GreetingServlet</servlet-name>
 		<servlet-class>org.mlk.kjm.greeting.GreetingServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>PrayerServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.prayers.PrayerServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>GreetingServlet</servlet-name>
 		<url-pattern>/GreetingServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>PrayerServlet</servlet-name>
+		<url-pattern>/prayer</url-pattern>
 	</servlet-mapping>
 </web-app>

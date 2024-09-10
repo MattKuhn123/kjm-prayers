@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import java.nio.charset.StandardCharsets;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -32,7 +34,7 @@ public class ServletUtils {
 			String[] keyValue = parameter.split("=");
 			String key = keyValue[0];
 			Optional<String> value = (keyValue.length == 2) 
-				? Optional.of(keyValue[1]) 
+				? Optional.of(java.net.URLDecoder.decode(keyValue[1], StandardCharsets.UTF_8.name())) 
 				: Optional.empty();
 			result.put(key, value);
 		}
