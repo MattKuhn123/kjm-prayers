@@ -36,7 +36,7 @@ public class GetPrayersServlet extends HttpServlet {
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
-    public static final String requestForDocument = "/document";
+    public static final String requestForQueryDocument = "/document";
     public static final String requestForList = "/list";
     public static final String requestForSingle = "/single";
 
@@ -52,7 +52,7 @@ public class GetPrayersServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        if (requestForDocument.equals(pathInfo)) {
+        if (requestForQueryDocument.equals(pathInfo)) {
             Document queryDocument = getQueryDocument();
             String html = queryDocument.html();
             resp.getWriter().append(html).flush();
