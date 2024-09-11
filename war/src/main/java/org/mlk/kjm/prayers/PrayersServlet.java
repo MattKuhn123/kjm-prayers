@@ -13,14 +13,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.mlk.kjm.ServletUtils;
+import org.mlk.kjm.inmates.Inmate;
+import org.mlk.kjm.jails.Jail;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class GetPrayersServlet extends HttpServlet {
-    public static final String contextPath = "/getPrayers";
+public class PrayersServlet extends HttpServlet {
+    public static final String contextPath = "/prayers";
     public static final String inmateFirstNameId = "inmateFirstName";
     public static final String inmateLastNameId = "inmateLastName";
     public static final String countyId = "county";
@@ -32,21 +34,23 @@ public class GetPrayersServlet extends HttpServlet {
 	private static final String getPrayersQueryHtml = directory + "GetPrayersQuery.html";
     private static final String getPrayersResultTableHtml = directory + "GetPrayersResultTable.html";
     private static final String getPrayersResultCardHtml = directory + "GetPrayersResultCard.html";
+    private static final String createPrayerHtml = directory + "CreatePrayer.html";
     
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
-    public static final String requestForQueryDocument = "/document";
+    public static final String requestForQueryDocument = "/queryDocument";
     public static final String requestForList = "/list";
     public static final String requestForSingle = "/single";
+    public static final String requestForCreateDocument = "/createDocument";
 
     private final PrayerRepository prayers;
 
-    public GetPrayersServlet() {
+    public PrayersServlet() {
         this(PrayerRepositoryImpl.getInstance());
     }
 
-    public GetPrayersServlet(PrayerRepository prayers) {
+    public PrayersServlet(PrayerRepository prayers) {
         this.prayers = prayers;
     }
 
@@ -67,9 +71,38 @@ public class GetPrayersServlet extends HttpServlet {
             String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
             return;
+        } else if (requestForCreateDocument.equals(pathInfo)) {
+            Document createPrayerDocument = getHtmlDocument(createPrayerHtml);
+            String html = createPrayerDocument.html();
+            resp.getWriter().append(html).flush();
+            return;
         }
 
         throw new IllegalArgumentException("Invalid request!");
+    }
+
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Map<String, Optional<String>> postBody = getPostBodyMap(req);
+            String inmateFirstName = getRequiredFromPostBody(postBody, inmateFirstNameId);
+            String inmateLastName = getRequiredFromPostBody(postBody, inmateLastNameId);
+            String county = getRequiredFromPostBody(postBody, countyId);
+            String dateString = getRequiredFromPostBody(postBody, dateId);
+            LocalDate date = stringToDate(dateString);
+            String prayerString = getRequiredFromPostBody(postBody, prayerId);
+
+            Jail jail = new Jail(county);
+            Inmate inmate = new Inmate(inmateFirstName, inmateLastName, jail);
+            Prayer prayer = new Prayer(inmate, date, prayerString);
+            this.prayers.createPrayer(prayer);
+
+            String successMessage = "<p>Success!</p>";
+            resp.getWriter().append(successMessage).flush();
+
+        } catch (IllegalArgumentException e) {
+            String failMessage = "<p>" + e.getMessage() + "</p>";
+            resp.getWriter().append(failMessage).flush();
+        }
     }
 
     private Document getQueryDocument() throws IOException {
