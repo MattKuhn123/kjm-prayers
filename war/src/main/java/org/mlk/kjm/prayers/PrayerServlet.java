@@ -62,17 +62,23 @@ public class PrayerServlet extends HttpServlet {
             String html = queryPrayersDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (listName.equals(pathInfo)) {
+        }
+        
+        if (listName.equals(pathInfo)) {
             Document resultListDocument = getPrayerListDocument(req);
             String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (singleName.equals(pathInfo)) {
+        }
+        
+        if (singleName.equals(pathInfo)) {
             Document resultListDocument = getPrayerSingleDocument(req);
             String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (createName.equals(pathInfo)) {
+        }
+        
+        if (createName.equals(pathInfo)) {
             Document createPrayerDocument = getCreatePrayerDocument();
             String html = createPrayerDocument.html();
             resp.getWriter().append(html).flush();
