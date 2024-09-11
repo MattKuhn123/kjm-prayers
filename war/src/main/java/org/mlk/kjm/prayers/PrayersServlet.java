@@ -72,7 +72,7 @@ public class PrayersServlet extends HttpServlet {
             resp.getWriter().append(html).flush();
             return;
         } else if (requestForCreateDocument.equals(pathInfo)) {
-            Document createPrayerDocument = getHtmlDocument(createPrayerHtml);
+            Document createPrayerDocument = getCreateDocument();
             String html = createPrayerDocument.html();
             resp.getWriter().append(html).flush();
             return;
@@ -106,8 +106,13 @@ public class PrayersServlet extends HttpServlet {
     }
 
     private Document getQueryDocument() throws IOException {
-        Document doc = getHtmlDocument(getPrayersQueryHtml);
-        return doc;
+        Document queryPrayersDocument = getHtmlDocument(getPrayersQueryHtml);
+        return queryPrayersDocument;
+    }
+
+    private Document getCreateDocument() throws IOException {
+        Document createPrayerDocument = getHtmlDocument(createPrayerHtml);
+        return createPrayerDocument;
     }
 
     private Document getPrayerListDocument(HttpServletRequest req) throws IOException {
