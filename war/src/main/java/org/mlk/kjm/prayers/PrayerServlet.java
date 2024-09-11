@@ -32,15 +32,15 @@ public class PrayerServlet extends HttpServlet {
     
     private static final String directory = "prayers/";
 	
-    public static final String requestForQueryDocument = "/QueryPrayers";
-    public static final String requestForList = "/ListPrayers";
-    public static final String requestForSingle = "/SinglePrayer";
-    public static final String requestForCreateDocument = "/CreatePrayer";
+    public static final String queryDocument = "/QueryPrayers";
+    public static final String listDocument = "/ListPrayers";
+    public static final String singleDocument = "/SinglePrayer";
+    public static final String createDocument = "/CreatePrayer";
 
-    private static final String getPrayersQueryHtml = directory + requestForQueryDocument + ".html";
-    private static final String getPrayersResultTableHtml = directory + requestForList + ".html";
-    private static final String getPrayersResultCardHtml = directory + requestForSingle + ".html";
-    private static final String createPrayerHtml = directory + requestForCreateDocument + ".html";
+    private static final String getPrayersQueryHtml = directory + queryDocument + ".html";
+    private static final String getPrayersResultTableHtml = directory + listDocument + ".html";
+    private static final String getPrayersResultCardHtml = directory + singleDocument + ".html";
+    private static final String createPrayerHtml = directory + createDocument + ".html";
     
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
@@ -57,22 +57,22 @@ public class PrayerServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        if (requestForQueryDocument.equals(pathInfo)) {
+        if (queryDocument.equals(pathInfo)) {
             Document queryPrayersDocument = getQueryDocument();
             String html = queryPrayersDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (requestForList.equals(pathInfo)) {
+        } else if (listDocument.equals(pathInfo)) {
             Document resultListDocument = getPrayerListDocument(req);
             String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (requestForSingle.equals(pathInfo)) {
+        } else if (singleDocument.equals(pathInfo)) {
             Document resultListDocument = getPrayerSingleDocument(req);
             String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
             return;
-        } else if (requestForCreateDocument.equals(pathInfo)) {
+        } else if (createDocument.equals(pathInfo)) {
             Document createPrayerDocument = getCreateDocument();
             String html = createPrayerDocument.html();
             resp.getWriter().append(html).flush();
@@ -147,7 +147,7 @@ public class PrayerServlet extends HttpServlet {
             params.put(inmateLastNameId, prayer.getInmate().getLastName());
             params.put(dateId, dateToString(prayer.getDate()));
 
-            String attrValue = createLink(contextPath + requestForSingle, params);
+            String attrValue = createLink(contextPath + singleDocument, params);
             tr.getElementById(viewId).attr(attrKey, attrValue);
             
             tbody.appendChild(tr);
