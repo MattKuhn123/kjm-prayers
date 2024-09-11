@@ -3,10 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 	<servlet>
-		<servlet-name>GetPrayerServlet</servlet-name>
-		<servlet-class>org.mlk.kjm.prayers.GetPrayerServlet</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>GetPrayersServlet</servlet-name>
 		<servlet-class>org.mlk.kjm.prayers.GetPrayersServlet</servlet-class>
 	</servlet>
@@ -14,11 +10,6 @@
 		<servlet-name>CreatePrayerServlet</servlet-name>
 		<servlet-class>org.mlk.kjm.prayers.CreatePrayerServlet</servlet-class>
 	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>GetPrayerServlet</servlet-name>
-		<url-pattern>/getPrayer</url-pattern>
-	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>GetPrayersServlet</servlet-name>
 		<url-pattern>/getPrayers/*</url-pattern>

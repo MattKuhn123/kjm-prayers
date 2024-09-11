@@ -20,19 +20,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class GetPrayersServlet extends HttpServlet {
+    public static final String contextPath = "/getPrayers";
     public static final String inmateFirstNameId = "inmateFirstName";
     public static final String inmateLastNameId = "inmateLastName";
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
+    public static final String prayerId = "prayer";
     
     private static final String directory = "prayers/";
 	private static final String getPrayersRequestHtml = directory + "GetPrayersQuery.html";
     private static final String getPrayersResultTableHtml = directory + "GetPrayersResultTable.html";
+    private static final String getPrayersResultCardHtml = directory + "GetPrayersResultCard.html";
+    
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
     public static final String requestForDocument = "/document";
+    public static final String requestForList = "/list";
+    public static final String requestForSingle = "/single";
 
     private final PrayerRepository prayers;
 
@@ -50,11 +56,20 @@ public class GetPrayersServlet extends HttpServlet {
             Document queryDocument = getQueryDocument();
             String html = queryDocument.html();
             resp.getWriter().append(html).flush();
-        } else if (null == pathInfo) {
-            Document resultDocument = getResultDocument(req);
-            String html = resultDocument.html();
+            return;
+        } else if (requestForList.equals(pathInfo)) {
+            Document resultListDocument = getPrayerListDocument(req);
+            String html = resultListDocument.html();
             resp.getWriter().append(html).flush();
+            return;
+        } else if (requestForSingle.equals(pathInfo)) {
+            Document resultListDocument = getPrayerSingleDocument(req);
+            String html = resultListDocument.html();
+            resp.getWriter().append(html).flush();
+            return;
         }
+
+        throw new IllegalArgumentException("Invalid request!");
     }
 
     private Document getQueryDocument() throws IOException {
@@ -62,7 +77,7 @@ public class GetPrayersServlet extends HttpServlet {
         return doc;
     }
 
-    private Document getResultDocument(HttpServletRequest req) throws IOException {
+    private Document getPrayerListDocument(HttpServletRequest req) throws IOException {
         Optional<String> queryFirstName = getOptionalParameter(req, inmateFirstNameId);
         Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
@@ -72,14 +87,12 @@ public class GetPrayersServlet extends HttpServlet {
             : Optional.empty();
 
         List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate);
-        Document doc = (prayers.size() > 0) 
-            ? getPrayersDocument(prayers) 
-            : getPrayersEmptyDocument();
+        if (prayers.size() == 0) {
+            String html = "<p>No prayers found!</p>";
+            Document empty = Jsoup.parse(html);
+            return empty;
+        }
 
-        return doc;
-    }
-
-    private Document getPrayersDocument(List<Prayer> prayers) throws IOException {
         Document getPrayersDocument = getHtmlDocument(getPrayersResultTableHtml);
         Element tbody = getPrayersDocument.selectFirst(tbodyTag);
         for (Prayer prayer : prayers) {
@@ -88,14 +101,14 @@ public class GetPrayersServlet extends HttpServlet {
             tr.getElementById(inmateLastNameId).text(prayer.getInmate().getLastName());
             tr.getElementById(countyId).text(prayer.getInmate().getJail().getCounty());
             tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
-			
+            
             String attrKey = "hx-get";
             Map<String, String> params = new HashMap<String, String>();
-            params.put(GetPrayerServlet.inmateFirstNameParam, prayer.getInmate().getFirstName());
-            params.put(GetPrayerServlet.inmateLastNameParam, prayer.getInmate().getLastName());
-            params.put(GetPrayerServlet.dateParam, dateToString(prayer.getDate()));
+            params.put(inmateFirstNameId, prayer.getInmate().getFirstName());
+            params.put(inmateLastNameId, prayer.getInmate().getLastName());
+            params.put(dateId, dateToString(prayer.getDate()));
 
-            String attrValue = createLink(GetPrayerServlet.contextPath, params);
+            String attrValue = createLink(contextPath + requestForSingle, params);
             tr.getElementById(viewId).attr(attrKey, attrValue);
             
             tbody.appendChild(tr);
@@ -109,9 +122,24 @@ public class GetPrayersServlet extends HttpServlet {
         return getPrayersDocument;
     }
 
-    private Document getPrayersEmptyDocument() throws IOException {
-        String html = "<p>No prayers found!</p>";
-        Document getPrayersEmptyDocument = Jsoup.parse(html);
-        return getPrayersEmptyDocument;
+    private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException {
+        String queryInmateFirstName = getRequiredParameter(req, inmateFirstNameId);
+        String queryInmateLastName = getRequiredParameter(req, inmateLastNameId);
+        String queryDateString = getRequiredParameter(req, dateId);
+        LocalDate queryDate = stringToDate(queryDateString);
+
+        Optional<Prayer> prayer = this.prayers.getPrayer(queryInmateFirstName, queryInmateLastName, queryDate);
+        if (prayer.isEmpty()) {
+            String html = "<p>Prayer not found!</p>";
+            Document empty = Jsoup.parse(html);
+            return empty;
+        }
+
+        Document getPrayerDocument = getHtmlDocument(getPrayersResultCardHtml);
+        getPrayerDocument.getElementById(inmateFirstNameId).text(prayer.get().getInmate().getFirstName());
+        getPrayerDocument.getElementById(inmateLastNameId).text(prayer.get().getInmate().getLastName());
+        getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
+        getPrayerDocument.getElementById(prayerId).text(prayer.get().getPrayer());
+        return getPrayerDocument;
     }
 }
