@@ -31,18 +31,19 @@ public class PrayerServlet extends HttpServlet {
     public static final String prayerId = "prayer";
     
     private static final String directory = "prayers/";
-	private static final String getPrayersQueryHtml = directory + "GetPrayersQuery.html";
-    private static final String getPrayersResultTableHtml = directory + "GetPrayersResultTable.html";
-    private static final String getPrayersResultCardHtml = directory + "GetPrayersResultCard.html";
-    private static final String createPrayerHtml = directory + "CreatePrayer.html";
+	
+    public static final String requestForQueryDocument = "/QueryPrayers";
+    public static final String requestForList = "/ListPrayers";
+    public static final String requestForSingle = "/SinglePrayer";
+    public static final String requestForCreateDocument = "/CreatePrayer";
+
+    private static final String getPrayersQueryHtml = directory + requestForQueryDocument + ".html";
+    private static final String getPrayersResultTableHtml = directory + requestForList + ".html";
+    private static final String getPrayersResultCardHtml = directory + requestForSingle + ".html";
+    private static final String createPrayerHtml = directory + requestForCreateDocument + ".html";
     
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
-
-    public static final String requestForQueryDocument = "/queryDocument";
-    public static final String requestForList = "/list";
-    public static final String requestForSingle = "/single";
-    public static final String requestForCreateDocument = "/createDocument";
 
     private final PrayerRepository prayers;
 
@@ -57,8 +58,8 @@ public class PrayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         if (requestForQueryDocument.equals(pathInfo)) {
-            Document queryDocument = getQueryDocument();
-            String html = queryDocument.html();
+            Document queryPrayersDocument = getQueryDocument();
+            String html = queryPrayersDocument.html();
             resp.getWriter().append(html).flush();
             return;
         } else if (requestForList.equals(pathInfo)) {
