@@ -12,6 +12,7 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.mlk.kjm.ApplicationPropertiesImpl;
 import org.mlk.kjm.ServletUtils;
 import org.mlk.kjm.inmates.Inmate;
 import org.mlk.kjm.jails.Jail;
@@ -48,7 +49,7 @@ public class PrayerServlet extends HttpServlet {
     private final PrayerRepository prayers;
 
     public PrayerServlet() {
-        this(PrayerRepositoryImpl.getInstance());
+        this(PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
     }
 
     public PrayerServlet(PrayerRepository prayers) {

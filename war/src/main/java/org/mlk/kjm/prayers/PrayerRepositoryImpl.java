@@ -1,91 +1,107 @@
 package org.mlk.kjm.prayers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import static java.util.stream.Collectors.toList;
-
 import java.time.LocalDate;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import org.mlk.kjm.ApplicationProperties;
+
+import java.sql.*;
 
 public class PrayerRepositoryImpl implements PrayerRepository {
-    private static PrayerRepository instance;
+    private static PrayerRepositoryImpl instance;
 
-    public static PrayerRepository getInstance() {
+    public static PrayerRepositoryImpl getInstance(ApplicationProperties appProps) {
         if (instance == null) {
-            instance = new PrayerRepositoryImpl();
+            String dbUrl = appProps.getDbUrl();
+            String dbUser = appProps.getDbUser();
+            String dbPassword = appProps.getDbPassword();
+            instance = new PrayerRepositoryImpl(dbUrl, dbUser, dbPassword);
         }
 
         return instance;
     }
 
-    private final List<Prayer> prayers;
+    private final String driverName = "com.mysql.cj.jdbc.Driver";
+    private final String url;
+    private final String user;
+    private final String password;
 
-    private PrayerRepositoryImpl() {
-        prayers = new ArrayList<Prayer>();
+    public PrayerRepositoryImpl(String url, String user, String password) {
+        this.url = url;
+        this.user = user;
+        this.password = password;
+        String sql = "SELECT * FROM kjm.Test;";
+        String[] columns = { "id", "name" };
+        try {
+            List<Map<String, Object>> result = query(sql, columns);
+            System.out.println("ok!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+            
     }
 
     @Override
     public void createPrayer(Prayer prayer) {
-        prayers.add(prayer);
+        throw new UnsupportedOperationException("Unimplemented method 'createPrayer'");
     }
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
             Optional<LocalDate> date) {
-        List<Prayer> filteredFirstName = filterFirstName(prayers, firstName);
-        List<Prayer> filteredLastName = filterLastName(filteredFirstName, lastName);
-        List<Prayer> filteredCounty = filterCounty(filteredLastName, county);
-        List<Prayer> filteredDate = filterDate(filteredCounty, date);
-        return filteredDate;
+        throw new UnsupportedOperationException("Unimplemented method 'getPrayers'");
     }
 
-    @Override 
+    @Override
     public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) {
-        Optional<Prayer> result = prayers.stream().filter(p -> true
-            && firstName.equals(p.getInmate().getFirstName())
-            && lastName.equals(p.getInmate().getLastName())
-            && date.isEqual(p.getDate())).findFirst();
-
-        return result;
+        throw new UnsupportedOperationException("Unimplemented method 'getPrayer'");
     }
 
-    private static List<Prayer> filterFirstName(List<Prayer> input, Optional<String> firstName) {
-        if (firstName.isEmpty()) {
-            return input;
+    private List<Map<String, Object>> query(String sql, String[] columns)
+            throws SQLException, ClassNotFoundException {
+        Optional<Connection> connection = Optional.empty();
+        Optional<Statement> statement = Optional.empty();
+        Optional<ResultSet> resultSet = Optional.empty();
+        try {
+            Class.forName(driverName);
+            connection = Optional.of(DriverManager.getConnection(url, user, password));
+            statement = Optional.of(connection.get().createStatement());
+            resultSet = Optional.of(statement.get().executeQuery(sql));
+            List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+            while (resultSet.get().next()) {
+                Map<String, Object> row = new HashMap<String, Object>();
+                for (String column : columns) {
+                    Object field = resultSet.get().getObject(column);
+                    row.put(column, field);
+                }
+
+                rows.add(row);
+            }
+
+            return rows;
+        } finally {
+            try {
+                if (resultSet.isPresent()) {
+                    resultSet.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (statement.isPresent()) {
+                    statement.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (connection.isPresent()) {
+                    connection.get().close();
+                }
+            } catch (SQLException e) {
+            }
         }
-
-        return input.stream()
-            .filter(p -> p.getInmate().getFirstName().toLowerCase().indexOf(firstName.get().toLowerCase()) > -1)
-            .collect(toList());
-    }
-
-    private static List<Prayer> filterLastName(List<Prayer> input, Optional<String> lastName) {
-        if (lastName.isEmpty()) {
-            return input;
-        }
-
-        return input.stream()
-            .filter(p -> p.getInmate().getLastName().toLowerCase().indexOf(lastName.get().toLowerCase()) > -1)
-            .collect(toList());
-    }
-
-    private static List<Prayer> filterCounty(List<Prayer> input, Optional<String> county) {
-        if (county.isEmpty()) {
-            return input;
-        }
-
-        return input.stream()
-            .filter(p -> p.getInmate().getJail().getCounty().toLowerCase().indexOf(county.get().toLowerCase()) > -1)
-            .collect(toList());
-    }
-
-    private static List<Prayer> filterDate(List<Prayer> input, Optional<LocalDate> date) {
-        if (date.isEmpty()) {
-            return input;
-        }
-
-        return input.stream()
-            .filter(p -> p.getDate().isEqual(date.get()))
-            .collect(toList());
     }
 }
