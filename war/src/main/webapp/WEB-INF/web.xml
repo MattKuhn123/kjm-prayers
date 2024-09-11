@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
 	<servlet>
-		<servlet-name>PrayersServlet</servlet-name>
-		<servlet-class>org.mlk.kjm.prayers.PrayersServlet</servlet-class>
+		<servlet-name>PrayerServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.prayers.PrayerServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>PrayersServlet</servlet-name>
+		<servlet-name>PrayerServlet</servlet-name>
 		<url-pattern>/prayers/*</url-pattern>
 	</servlet-mapping>
 </web-app>

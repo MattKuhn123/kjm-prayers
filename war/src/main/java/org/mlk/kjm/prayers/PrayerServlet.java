@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class PrayersServlet extends HttpServlet {
+public class PrayerServlet extends HttpServlet {
     public static final String contextPath = "/prayers";
     public static final String inmateFirstNameId = "inmateFirstName";
     public static final String inmateLastNameId = "inmateLastName";
@@ -46,11 +46,11 @@ public class PrayersServlet extends HttpServlet {
 
     private final PrayerRepository prayers;
 
-    public PrayersServlet() {
+    public PrayerServlet() {
         this(PrayerRepositoryImpl.getInstance());
     }
 
-    public PrayersServlet(PrayerRepository prayers) {
+    public PrayerServlet(PrayerRepository prayers) {
         this.prayers = prayers;
     }
 
