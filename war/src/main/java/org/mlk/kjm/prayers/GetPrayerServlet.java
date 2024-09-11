@@ -22,10 +22,10 @@ public class GetPrayerServlet extends HttpServlet {
     public static final String inmateLastNameParam = "inmateLastName";
     public static final String dateParam = "date";
 
-    private static final String inmateFirstNameId = "inmateFirstName";
-    private static final String inmateLastNameId = "inmateLastName";
-    private static final String dateId = "date";
-    private static final String prayerId = "prayer";
+    public static final String inmateFirstNameId = "inmateFirstName";
+    public static final String inmateLastNameId = "inmateLastName";
+    public static final String dateId = "date";
+    public static final String prayerId = "prayer";
 
     private final PrayerRepository prayers;
 

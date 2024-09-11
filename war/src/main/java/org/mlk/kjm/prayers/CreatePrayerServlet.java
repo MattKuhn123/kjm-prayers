@@ -3,7 +3,9 @@ package org.mlk.kjm.prayers;
 import static org.mlk.kjm.ServletUtils.*;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
+import java.util.Map;
+import java.util.Optional;
 
 import org.jsoup.nodes.Document;
 import org.mlk.kjm.inmates.Inmate;
@@ -15,6 +17,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class CreatePrayerServlet extends HttpServlet {
+    public static final String inmateFirstNameId = "inmateFirstName";
+    public static final String inmateLastNameId = "inmateLastName";
+    public static final String countyId = "county";
+    public static final String dateId = "date";
+    public static final String prayerId = "prayer";
+    public static final String requestForDocument = "/document";
+    
     private static final String directory = "prayers/";
 	private static final String createPrayerHtml = directory + "CreatePrayer.html";
 
@@ -29,25 +38,35 @@ public class CreatePrayerServlet extends HttpServlet {
     }
     
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Document createPrayerDocument = getHtmlDocument(createPrayerHtml);
-		String html = createPrayerDocument.html();
-		resp.getWriter().append(html).flush();
+        String pathInfo = req.getPathInfo();
+        if (requestForDocument.equals(pathInfo)) {
+            Document createPrayerDocument = getHtmlDocument(createPrayerHtml);
+            String html = createPrayerDocument.html();
+            resp.getWriter().append(html).flush();
+        }
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
-            CreatePrayerRequest postBody = getPostBody(req, CreatePrayerRequest.class);
-            Jail jail = new Jail(postBody.getCounty());
-            Inmate inmate = new Inmate(postBody.getInmateFirstName(), postBody.getInmateLastName(), jail);
-            Prayer prayer = new Prayer(inmate, postBody.getDate(), postBody.getPrayer());
+            Map<String, Optional<String>> postBody = getPostBodyMap(req);
+            String inmateFirstName = getRequiredFromPostBody(postBody, inmateFirstNameId);
+            String inmateLastName = getRequiredFromPostBody(postBody, inmateLastNameId);
+            String county = getRequiredFromPostBody(postBody, countyId);
+            String dateString = getRequiredFromPostBody(postBody, dateId);
+            LocalDate date = stringToDate(dateString);
+            String prayerString = getRequiredFromPostBody(postBody, prayerId);
+
+            Jail jail = new Jail(county);
+            Inmate inmate = new Inmate(inmateFirstName, inmateLastName, jail);
+            Prayer prayer = new Prayer(inmate, date, prayerString);
             this.prayers.createPrayer(prayer);
 
             String successMessage = "<p>Success!</p>";
-            resp.getWriter().append(successMessage);
+            resp.getWriter().append(successMessage).flush();
 
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-                | NoSuchMethodException | SecurityException | IOException e) {
-            e.printStackTrace(resp.getWriter());
+        } catch (IllegalArgumentException e) {
+            String failMessage = "<p>" + e.getMessage() + "</p>";
+            resp.getWriter().append(failMessage).flush();
         }
     }
 }

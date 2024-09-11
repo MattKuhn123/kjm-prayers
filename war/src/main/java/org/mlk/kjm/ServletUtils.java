@@ -45,7 +45,21 @@ public class ServletUtils {
 		return htmlDocument;
 	}
 
-	private static Map<String, Optional<String>> getPostBodyMap(HttpServletRequest req) throws IOException {
+	public static String getRequiredFromPostBody(Map<String, Optional<String>> postBody, String parameter) throws IOException {
+		Optional<String> value = postBody.get(parameter);
+		if (value.isEmpty()) {
+			throw new IllegalArgumentException(parameter + " is required!");
+		}
+
+		return value.get();
+	}
+
+	public static Optional<String> getOptionalFromPostBody(Map<String, Optional<String>> postBody, String parameter) throws IOException {
+		Optional<String> value = postBody.get(parameter);
+		return value;
+	}
+
+	public static Map<String, Optional<String>> getPostBodyMap(HttpServletRequest req) throws IOException {
 		String postBody = req.getReader().lines().reduce("", (accumulator, actual) -> accumulator + actual);
 		String[] parameters = postBody.split("&");
 		Map<String, Optional<String>> result = new HashMap<String, Optional<String>>();
@@ -58,16 +72,6 @@ public class ServletUtils {
 			result.put(key, value);
 		}
 
-		return result;
-	}
-
-	// TODO : Can we enforce having a constructor with a Map parameter?
-	public static <T> T getPostBody(HttpServletRequest req, Class<T> clazz) throws IOException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		Map<String, Optional<String>> postBody = getPostBodyMap(req);
-		
-		@SuppressWarnings("rawtypes")
-		Class[] cArg = new Class[] { Map.class };
-		T result = clazz.getDeclaredConstructor(cArg).newInstance(postBody);
 		return result;
 	}
 

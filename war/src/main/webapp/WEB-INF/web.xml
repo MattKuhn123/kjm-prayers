@@ -7,12 +7,8 @@
 		<servlet-class>org.mlk.kjm.prayers.GetPrayerServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>GetPrayersRequestServlet</servlet-name>
-		<servlet-class>org.mlk.kjm.prayers.GetPrayersRequestServlet</servlet-class>
-	</servlet>
-	<servlet>
-		<servlet-name>GetPrayersResultServlet</servlet-name>
-		<servlet-class>org.mlk.kjm.prayers.GetPrayersResultServlet</servlet-class>
+		<servlet-name>GetPrayersServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.prayers.GetPrayersServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>CreatePrayerServlet</servlet-name>
@@ -24,15 +20,11 @@
 		<url-pattern>/getPrayer</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>GetPrayersRequestServlet</servlet-name>
-		<url-pattern>/getPrayersRequest</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>GetPrayersResultServlet</servlet-name>
-		<url-pattern>/getPrayersResult</url-pattern>
+		<servlet-name>GetPrayersServlet</servlet-name>
+		<url-pattern>/getPrayers/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>CreatePrayerServlet</servlet-name>
-		<url-pattern>/createPrayer</url-pattern>
+		<url-pattern>/createPrayer/*</url-pattern>
 	</servlet-mapping>
 </web-app>
