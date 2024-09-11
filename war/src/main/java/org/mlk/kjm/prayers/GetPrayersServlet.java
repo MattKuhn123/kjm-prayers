@@ -29,7 +29,7 @@ public class GetPrayersServlet extends HttpServlet {
     public static final String prayerId = "prayer";
     
     private static final String directory = "prayers/";
-	private static final String getPrayersRequestHtml = directory + "GetPrayersQuery.html";
+	private static final String getPrayersQueryHtml = directory + "GetPrayersQuery.html";
     private static final String getPrayersResultTableHtml = directory + "GetPrayersResultTable.html";
     private static final String getPrayersResultCardHtml = directory + "GetPrayersResultCard.html";
     
@@ -73,7 +73,7 @@ public class GetPrayersServlet extends HttpServlet {
     }
 
     private Document getQueryDocument() throws IOException {
-        Document doc = getHtmlDocument(getPrayersRequestHtml);
+        Document doc = getHtmlDocument(getPrayersQueryHtml);
         return doc;
     }
 
