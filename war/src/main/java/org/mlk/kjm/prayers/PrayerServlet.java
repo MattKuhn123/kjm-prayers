@@ -30,9 +30,9 @@ public class PrayerServlet extends HttpServlet {
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerId = "prayer";
-    
+
     private static final String directory = "prayers/";
-	
+
     public static final String createName = "/CreatePrayer";
     public static final String listName = "/ListPrayers";
     public static final String queryName = "/QueryPrayers";
@@ -42,7 +42,7 @@ public class PrayerServlet extends HttpServlet {
     private static final String listFile = directory + listName + ".html";
     private static final String queryFile = directory + queryName + ".html";
     private static final String singleFile = directory + singleName + ".html";
-    
+
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
@@ -50,7 +50,8 @@ public class PrayerServlet extends HttpServlet {
     private final PrayerRepository prayers;
 
     public PrayerServlet() {
-        this(ApplicationPropertiesImpl.getInstance(), PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
+        this(ApplicationPropertiesImpl.getInstance(),
+                PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
     }
 
     public PrayerServlet(ApplicationProperties props, PrayerRepository prayers) {
@@ -67,21 +68,21 @@ public class PrayerServlet extends HttpServlet {
                 resp.getWriter().append(html).flush();
                 return;
             }
-            
+
             if (listName.equals(pathInfo)) {
                 Document resultListDocument = getPrayerListDocument(req);
                 String html = resultListDocument.html();
                 resp.getWriter().append(html).flush();
                 return;
             }
-            
+
             if (singleName.equals(pathInfo)) {
                 Document resultListDocument = getPrayerSingleDocument(req);
                 String html = resultListDocument.html();
                 resp.getWriter().append(html).flush();
                 return;
             }
-            
+
             if (createName.equals(pathInfo)) {
                 Document createPrayerDocument = getCreatePrayerDocument();
                 String html = createPrayerDocument.html();
@@ -144,11 +145,14 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
-        Optional<LocalDate> queryDate = queryDateString.isPresent() 
-            ? Optional.of(stringToDate(queryDateString.get())) 
-            : Optional.empty();
+        int page = 0;
+        int pageLength = 100;
+        Optional<LocalDate> queryDate = queryDateString.isPresent()
+                ? Optional.of(stringToDate(queryDateString.get()))
+                : Optional.empty();
 
-        List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate);
+        List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
+                pageLength, Optional.empty(), Optional.empty());
         if (prayers.size() == 0) {
             String html = "<p>No prayers found!</p>";
             Document empty = Jsoup.parse(html);
@@ -163,7 +167,7 @@ public class PrayerServlet extends HttpServlet {
             tr.getElementById(inmateLastNameId).text(prayer.getLastName());
             tr.getElementById(countyId).text(prayer.getCounty());
             tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
-            
+
             String attrKey = "hx-get";
             Map<String, String> params = new HashMap<String, String>();
             params.put(inmateFirstNameId, prayer.getFirstName());
@@ -172,7 +176,7 @@ public class PrayerServlet extends HttpServlet {
 
             String attrValue = createLink(contextPath + singleName, params);
             tr.getElementById(viewId).attr(attrKey, attrValue);
-            
+
             tbody.appendChild(tr);
         }
 

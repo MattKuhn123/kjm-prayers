@@ -4,13 +4,14 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.inmates.Inmate;
-import org.mlk.kjm.jails.Jail;
+import org.mlk.kjm.QueryParameter;
+import org.mlk.kjm.QueryParameter.QueryOperator;
 
 import static org.mlk.kjm.RepositoryUtils.*;
 
@@ -32,15 +33,15 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     private final String user;
     private final String password;
 
-    private final String comma = ",";
     private final String firstNameColumn = "first_name";
     private final String lastNameColumn = "last_name";
     private final String countyColumn = "county";
     private final String dateColumn = "date";
     private final String prayerColumn = "prayer";
+    private final String table = "kjm.prayers";
     private final String[] columns = { firstNameColumn, lastNameColumn, countyColumn, dateColumn, prayerColumn };
 
-    public PrayerRepositoryImpl(String url, String user, String password) {
+    private PrayerRepositoryImpl(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -53,11 +54,12 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date) throws SQLException {
-        String sql = "SELECT " + String.join(comma, columns) + " FROM "
-                + "kjm.prayers";
+            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderBy, Optional<Boolean> orderAsc)
+            throws SQLException {
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
 
-        List<Map<String, Object>> queryResults = query(sql, columns, url, user, password);
+        List<Map<String, Object>> queryResults = query(table, columns, parameters, page, pageLength, orderBy, orderAsc,
+                url, user, password);
         List<Prayer> results = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;
@@ -69,6 +71,32 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     @Override
     public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) throws SQLException {
         throw new UnsupportedOperationException("Unimplemented method 'getPrayer'");
+    }
+
+    private List<QueryParameter> toQueryParameters(Optional<String> firstName, Optional<String> lastName,
+            Optional<String> county, Optional<LocalDate> date) {
+        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        if (firstName.isPresent()) {
+            QueryParameter qp = new QueryParameter(firstNameColumn, QueryOperator.like, firstName.get());
+            parameters.add(qp);
+        }
+
+        if (lastName.isPresent()) {
+            QueryParameter qp = new QueryParameter(lastNameColumn, QueryOperator.like, lastName.get());
+            parameters.add(qp);
+        }
+
+        if (county.isPresent()) {
+            QueryParameter qp = new QueryParameter(countyColumn, QueryOperator.equals, county.get());
+            parameters.add(qp);
+        }
+
+        if (date.isPresent()) {
+            QueryParameter qp = new QueryParameter(dateColumn, QueryOperator.equals, date.get());
+            parameters.add(qp);
+        }
+
+        return parameters;
     }
 
     private Prayer mapToPrayer(Map<String, Object> map) {

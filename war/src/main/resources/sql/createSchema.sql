@@ -1,8 +1,4 @@
-DROP TABLE IF EXISTS `kjm`.`prayers`;
-DROP TABLE IF EXISTS `kjm`.`inmates`;
-DROP TABLE IF EXISTS `kjm`.`jails`;
-
-CREATE TABLE `kjm`.`prayers` (
+CREATE TABLE IF NOT EXISTS `kjm`.`prayers` (
   `first_name` VARCHAR(32) NOT NULL,
   `last_name` VARCHAR(32) NOT NULL,
   `county` VARCHAR(16) NOT NULL,
@@ -10,7 +6,7 @@ CREATE TABLE `kjm`.`prayers` (
   `prayer` VARCHAR(512) NULL,
   PRIMARY KEY (`first_name`, `last_name`, `county`, `date`));
 
-CREATE TABLE `kjm`.`inmates` (
+CREATE TABLE IF NOT EXISTS `kjm`.`inmates` (
   `first_name` VARCHAR(32) NOT NULL,
   `last_name` VARCHAR(32) NOT NULL,
   `county` VARCHAR(16) NOT NULL,
@@ -19,7 +15,7 @@ CREATE TABLE `kjm`.`inmates` (
   `info` VARCHAR(256) NULL,
   PRIMARY KEY (`first_name`, `last_name`, `county`));
   
-CREATE TABLE `kjm`.`jails` (
+CREATE TABLE IF NOT EXISTS `kjm`.`jails` (
   `county` VARCHAR(16) NOT NULL,
   PRIMARY KEY (`county`));
 

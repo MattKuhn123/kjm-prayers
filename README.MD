@@ -5,6 +5,8 @@
 
 ## Environment
 
+application.test.properties has all secrets, and has been ignored from the repo.
+
 ### application.env.properties
 1. dbUrl=
 

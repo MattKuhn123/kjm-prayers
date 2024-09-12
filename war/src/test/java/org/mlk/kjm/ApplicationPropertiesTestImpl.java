@@ -3,25 +3,23 @@ package org.mlk.kjm;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ApplicationPropertiesImpl implements ApplicationProperties {
-    private static ApplicationPropertiesImpl instance;
-    public static ApplicationPropertiesImpl getInstance() {
+public class ApplicationPropertiesTestImpl implements ApplicationProperties {
+    private static ApplicationPropertiesTestImpl instance;
+    public static ApplicationPropertiesTestImpl getInstance() {
         if (instance == null) {
-            instance = new ApplicationPropertiesImpl();
+            instance = new ApplicationPropertiesTestImpl();
         }
 
         return instance;
     }
 
-    private ApplicationPropertiesImpl() {
+    private ApplicationPropertiesTestImpl() { }
 
-    }
-
-    private final String environmentProperty = "env";
     private final String dbUrlProperty = "dbUrl";
     private final String dbUserProperty = "dbUser";
     private final String dbPasswordProperty = "dbPassword";
 
+    @Override
     public String getDbUrl() {
         try {
             String result = getProperty(dbUrlProperty);
@@ -30,34 +28,38 @@ public class ApplicationPropertiesImpl implements ApplicationProperties {
             return null;
         }
     }
-    
+
+    @Override
     public String getDbUser() {
-        String result = System.getProperty(dbUserProperty);
-        return result;
+        try {
+            String result = getProperty(dbUserProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
+    @Override
     public String getDbPassword() {
-        String result = System.getProperty(dbPasswordProperty);
-        return result;
+        try {
+            String result = getProperty(dbPasswordProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
+    @Override
     public boolean isProduction() {
-        String environment = getEnvironment();
-        boolean result = "prod".equals(environment);
-        return result;
+        return false;
     }
-
+    
     private String getProperty(String property) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream("application." + getEnvironment() + ".properties");
+        InputStream is = classLoader.getResourceAsStream("application.test.properties");
         Properties properties = new Properties();
         properties.load(is);
         String result = properties.getProperty(property);
-        return result;
-    }
-
-    private String getEnvironment() {
-        String result = System.getProperty(environmentProperty);
         return result;
     }
 }
