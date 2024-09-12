@@ -8,14 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
 import org.mlk.kjm.ServletUtils;
-import org.mlk.kjm.inmates.Inmate;
-import org.mlk.kjm.jails.Jail;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -46,47 +46,57 @@ public class PrayerServlet extends HttpServlet {
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
+    private final ApplicationProperties props;
     private final PrayerRepository prayers;
 
     public PrayerServlet() {
-        this(PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
+        this(ApplicationPropertiesImpl.getInstance(), PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
     }
 
-    public PrayerServlet(PrayerRepository prayers) {
+    public PrayerServlet(ApplicationProperties props, PrayerRepository prayers) {
+        this.props = props;
         this.prayers = prayers;
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
-        if (queryName.equals(pathInfo)) {
-            Document queryPrayersDocument = getQueryPrayersDocument();
-            String html = queryPrayersDocument.html();
-            resp.getWriter().append(html).flush();
-            return;
-        }
-        
-        if (listName.equals(pathInfo)) {
-            Document resultListDocument = getPrayerListDocument(req);
-            String html = resultListDocument.html();
-            resp.getWriter().append(html).flush();
-            return;
-        }
-        
-        if (singleName.equals(pathInfo)) {
-            Document resultListDocument = getPrayerSingleDocument(req);
-            String html = resultListDocument.html();
-            resp.getWriter().append(html).flush();
-            return;
-        }
-        
-        if (createName.equals(pathInfo)) {
-            Document createPrayerDocument = getCreatePrayerDocument();
-            String html = createPrayerDocument.html();
-            resp.getWriter().append(html).flush();
-            return;
-        }
+        try {
+            if (queryName.equals(pathInfo)) {
+                Document queryPrayersDocument = getQueryPrayersDocument();
+                String html = queryPrayersDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+            
+            if (listName.equals(pathInfo)) {
+                Document resultListDocument = getPrayerListDocument(req);
+                String html = resultListDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+            
+            if (singleName.equals(pathInfo)) {
+                Document resultListDocument = getPrayerSingleDocument(req);
+                String html = resultListDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+            
+            if (createName.equals(pathInfo)) {
+                Document createPrayerDocument = getCreatePrayerDocument();
+                String html = createPrayerDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+        } catch (SQLException se) {
+            if (props.isProduction()) {
+                String failMessage = "<p>Error! Please try again later</p>";
+                resp.getWriter().append(failMessage).flush();
+                return;
+            }
 
-        throw new IllegalArgumentException("Invalid request!");
+            se.printStackTrace(resp.getWriter());
+        }
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -99,9 +109,7 @@ public class PrayerServlet extends HttpServlet {
             LocalDate date = stringToDate(dateString);
             String prayerString = getRequiredFromPostBody(postBody, prayerId);
 
-            Jail jail = new Jail(county);
-            Inmate inmate = new Inmate(inmateFirstName, inmateLastName, jail);
-            Prayer prayer = new Prayer(inmate, date, prayerString);
+            Prayer prayer = new Prayer(inmateFirstName, inmateLastName, county, date, prayerString);
             this.prayers.createPrayer(prayer);
 
             String successMessage = "<p>Success!</p>";
@@ -110,6 +118,14 @@ public class PrayerServlet extends HttpServlet {
         } catch (IllegalArgumentException e) {
             String failMessage = "<p>" + e.getMessage() + "</p>";
             resp.getWriter().append(failMessage).flush();
+        } catch (SQLException se) {
+            if (props.isProduction()) {
+                String failMessage = "<p>Error! Please try again later</p>";
+                resp.getWriter().append(failMessage).flush();
+                return;
+            }
+
+            se.printStackTrace(resp.getWriter());
         }
     }
 
@@ -123,7 +139,7 @@ public class PrayerServlet extends HttpServlet {
         return createPrayerDocument;
     }
 
-    private Document getPrayerListDocument(HttpServletRequest req) throws IOException {
+    private Document getPrayerListDocument(HttpServletRequest req) throws IOException, SQLException {
         Optional<String> queryFirstName = getOptionalParameter(req, inmateFirstNameId);
         Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
@@ -143,15 +159,15 @@ public class PrayerServlet extends HttpServlet {
         Element tbody = getPrayersDocument.selectFirst(tbodyTag);
         for (Prayer prayer : prayers) {
             Element tr = tbody.selectFirst(trTag).clone();
-            tr.getElementById(inmateFirstNameId).text(prayer.getInmate().getFirstName());
-            tr.getElementById(inmateLastNameId).text(prayer.getInmate().getLastName());
-            tr.getElementById(countyId).text(prayer.getInmate().getJail().getCounty());
+            tr.getElementById(inmateFirstNameId).text(prayer.getFirstName());
+            tr.getElementById(inmateLastNameId).text(prayer.getLastName());
+            tr.getElementById(countyId).text(prayer.getCounty());
             tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
             
             String attrKey = "hx-get";
             Map<String, String> params = new HashMap<String, String>();
-            params.put(inmateFirstNameId, prayer.getInmate().getFirstName());
-            params.put(inmateLastNameId, prayer.getInmate().getLastName());
+            params.put(inmateFirstNameId, prayer.getFirstName());
+            params.put(inmateLastNameId, prayer.getLastName());
             params.put(dateId, dateToString(prayer.getDate()));
 
             String attrValue = createLink(contextPath + singleName, params);
@@ -168,7 +184,7 @@ public class PrayerServlet extends HttpServlet {
         return getPrayersDocument;
     }
 
-    private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException {
+    private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
         String queryInmateFirstName = getRequiredParameter(req, inmateFirstNameId);
         String queryInmateLastName = getRequiredParameter(req, inmateLastNameId);
         String queryDateString = getRequiredParameter(req, dateId);
@@ -182,8 +198,8 @@ public class PrayerServlet extends HttpServlet {
         }
 
         Document getPrayerDocument = getHtmlDocument(singleFile);
-        getPrayerDocument.getElementById(inmateFirstNameId).text(prayer.get().getInmate().getFirstName());
-        getPrayerDocument.getElementById(inmateLastNameId).text(prayer.get().getInmate().getLastName());
+        getPrayerDocument.getElementById(inmateFirstNameId).text(prayer.get().getFirstName());
+        getPrayerDocument.getElementById(inmateLastNameId).text(prayer.get().getLastName());
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
         getPrayerDocument.getElementById(prayerId).text(prayer.get().getPrayer());
         return getPrayerDocument;

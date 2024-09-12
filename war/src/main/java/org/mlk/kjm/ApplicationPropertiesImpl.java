@@ -37,6 +37,12 @@ public class ApplicationPropertiesImpl implements ApplicationProperties {
         return result;
     }
 
+    public boolean isProduction() {
+        String environment = getEnvironment();
+        boolean result = "prod".equals(environment);
+        return result;
+    }
+
     private String getProperty(String property) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream is = classLoader.getResourceAsStream("application." + getEnvironment() + ".properties");
@@ -46,7 +52,7 @@ public class ApplicationPropertiesImpl implements ApplicationProperties {
         return result;
     }
 
-    private String getEnvironment() throws Exception {
+    private String getEnvironment() {
         String result = System.getProperty(environmentProperty);
         return result;
     }

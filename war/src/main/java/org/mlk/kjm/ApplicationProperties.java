@@ -4,4 +4,5 @@ public interface ApplicationProperties {
     String getDbUrl();
     String getDbUser();
     String getDbPassword();
+    boolean isProduction();
 }

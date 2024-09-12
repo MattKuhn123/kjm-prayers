@@ -1,15 +1,18 @@
 package org.mlk.kjm.prayers;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Optional;
 
+import static java.util.stream.Collectors.toList;
 import org.mlk.kjm.ApplicationProperties;
+import org.mlk.kjm.inmates.Inmate;
+import org.mlk.kjm.jails.Jail;
 
-import java.sql.*;
+import static org.mlk.kjm.RepositoryUtils.*;
 
 public class PrayerRepositoryImpl implements PrayerRepository {
     private static PrayerRepositoryImpl instance;
@@ -25,83 +28,57 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         return instance;
     }
 
-    private final String driverName = "com.mysql.cj.jdbc.Driver";
     private final String url;
     private final String user;
     private final String password;
+
+    private final String comma = ",";
+    private final String firstNameColumn = "first_name";
+    private final String lastNameColumn = "last_name";
+    private final String countyColumn = "county";
+    private final String dateColumn = "date";
+    private final String prayerColumn = "prayer";
+    private final String[] columns = { firstNameColumn, lastNameColumn, countyColumn, dateColumn, prayerColumn };
 
     public PrayerRepositoryImpl(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
-        String sql = "SELECT * FROM kjm.Test;";
-        String[] columns = { "id", "name" };
-        try {
-            List<Map<String, Object>> result = query(sql, columns);
-            System.out.println("ok!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-            
     }
 
     @Override
-    public void createPrayer(Prayer prayer) {
+    public void createPrayer(Prayer prayer) throws SQLException {
         throw new UnsupportedOperationException("Unimplemented method 'createPrayer'");
     }
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date) {
-        throw new UnsupportedOperationException("Unimplemented method 'getPrayers'");
+            Optional<LocalDate> date) throws SQLException {
+        String sql = "SELECT " + String.join(comma, columns) + " FROM "
+                + "kjm.prayers";
+
+        List<Map<String, Object>> queryResults = query(sql, columns, url, user, password);
+        List<Prayer> results = queryResults.stream().map(queryResult -> {
+            Prayer prayer = mapToPrayer(queryResult);
+            return prayer;
+        }).collect(toList());
+
+        return results;
     }
 
     @Override
-    public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) {
+    public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) throws SQLException {
         throw new UnsupportedOperationException("Unimplemented method 'getPrayer'");
     }
 
-    private List<Map<String, Object>> query(String sql, String[] columns)
-            throws SQLException, ClassNotFoundException {
-        Optional<Connection> connection = Optional.empty();
-        Optional<Statement> statement = Optional.empty();
-        Optional<ResultSet> resultSet = Optional.empty();
-        try {
-            Class.forName(driverName);
-            connection = Optional.of(DriverManager.getConnection(url, user, password));
-            statement = Optional.of(connection.get().createStatement());
-            resultSet = Optional.of(statement.get().executeQuery(sql));
-            List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
-            while (resultSet.get().next()) {
-                Map<String, Object> row = new HashMap<String, Object>();
-                for (String column : columns) {
-                    Object field = resultSet.get().getObject(column);
-                    row.put(column, field);
-                }
-
-                rows.add(row);
-            }
-
-            return rows;
-        } finally {
-            try {
-                if (resultSet.isPresent()) {
-                    resultSet.get().close();
-                }
-            } catch (SQLException e) {
-            }
-            try {
-                if (statement.isPresent()) {
-                    statement.get().close();
-                }
-            } catch (SQLException e) {
-            }
-            try {
-                if (connection.isPresent()) {
-                    connection.get().close();
-                }
-            } catch (SQLException e) {
-            }
-        }
+    private Prayer mapToPrayer(Map<String, Object> map) {
+        String firstName = (String) map.get(firstNameColumn);
+        String lastName = (String) map.get(lastNameColumn);
+        String county = (String) map.get(countyColumn);
+        Date dateSql = (Date) map.get(dateColumn);
+        LocalDate date = dateSql.toLocalDate();
+        String prayer = (String) map.get(prayerColumn);
+        Prayer result = new Prayer(firstName, lastName, county, date, prayer);
+        return result;
     }
 }

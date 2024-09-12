@@ -2,21 +2,31 @@ package org.mlk.kjm.prayers;
 
 import java.time.LocalDate;
 
-import org.mlk.kjm.inmates.Inmate;
-
 public class Prayer {
-    private final Inmate inmate;
+    private final String firstName;
+    private final String lastName;
+    private final String county;
     private final LocalDate date;
     private final String prayer;
 
-    public Prayer(Inmate inmate, LocalDate date, String prayer) {
-        this.inmate = inmate;
+    public Prayer(String firstName, String lastName, String county, LocalDate date, String prayer) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.county = county;
         this.date = date;
         this.prayer = prayer;
     }
 
-    public Inmate getInmate() {
-        return inmate;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getCounty() {
+        return county;
     }
 
     public LocalDate getDate() {
