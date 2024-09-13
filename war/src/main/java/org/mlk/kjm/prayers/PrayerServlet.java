@@ -45,7 +45,7 @@ public class PrayerServlet extends HttpServlet {
     private static final String listFile = directory + listName + ".html";
     private static final String singleFile = directory + singleName + ".html";
 
-    private static final String tableTag = "tale";
+    private static final String tableTag = "table";
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
@@ -155,7 +155,6 @@ public class PrayerServlet extends HttpServlet {
         prayerDocument.getElementById(countyId).val(queryCounty.orElse(""));
         prayerDocument.getElementById(dateId).val(queryDateString.orElse(""));
 
-        
         if (prayers.size() == 0) {
             prayerDocument.selectFirst(tableTag).remove();
         } else {
