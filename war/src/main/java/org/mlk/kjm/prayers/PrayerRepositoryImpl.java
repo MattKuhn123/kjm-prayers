@@ -71,7 +71,15 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) throws SQLException {
-        throw new UnsupportedOperationException("Unimplemented method 'getPrayer'");
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, date);
+        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, 0, 1, Optional.empty(),
+                Optional.empty(), url, user, password);
+        Optional<Prayer> result = queryResults.stream().map(queryResult -> {
+            Prayer prayer = mapToPrayer(queryResult);
+            return prayer;
+        }).findFirst();
+
+        return result;
     }
 
     private List<QueryParameter> toQueryParameters(Optional<String> firstName, Optional<String> lastName,
@@ -97,6 +105,17 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             parameters.add(qp);
         }
 
+        return parameters;
+    }
+
+    private List<QueryParameter> toQueryParameters(String firstName, String lastName, LocalDate date) {
+        List<QueryParameter> parameters = new ArrayList<QueryParameter>();
+        QueryParameter qp1 = new QueryParameter(firstNameColumn, QueryOperator.like, firstName);
+        parameters.add(qp1);
+        QueryParameter qp2 = new QueryParameter(lastNameColumn, QueryOperator.like, lastName);
+        parameters.add(qp2);
+        QueryParameter qp3 = new QueryParameter(dateColumn, QueryOperator.equals, date);
+        parameters.add(qp3);
         return parameters;
     }
 

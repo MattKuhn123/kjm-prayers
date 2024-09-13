@@ -1,5 +1,6 @@
 package org.mlk.kjm.prayers;
 
+import static org.mlk.kjm.ServletUtils.dateToString;
 import static org.mlk.kjm.ServletUtils.stringToDate;
 
 import java.time.LocalDate;
@@ -204,5 +205,20 @@ public class PrayerRepositoryTests extends TestCase {
         String actualSecondLastName = results.get(secondIdx).getLastName();
         assertEquals(expectedSecondFirstName, actualSecondFirstName);
         assertEquals(expectedSecondLastName, actualSecondLastName);
+    }
+
+    @Test
+    public void test_getSingle() throws Exception {
+        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+        String firstName = "Ralf";
+        String lastName = "Grigoriev";
+        String dateString = "12/26/2023";
+        LocalDate date = stringToDate(dateString);
+        Optional<Prayer> actual = test.getPrayer(firstName, lastName, date);
+
+        assertTrue(actual.isPresent());
+        assertEquals(firstName, actual.get().getFirstName());
+        assertEquals(lastName, actual.get().getLastName());
+        assertEquals(dateString, dateToString(actual.get().getDate()));
     }
 }
