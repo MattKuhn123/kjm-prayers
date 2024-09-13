@@ -18,7 +18,25 @@
             <input id="date" name="date" type="text" class="form-control" />
         </div>
     </div>
-    <div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <label for="orderBy" class="form-label">Sort Order</label>
+            <select id="orderBy" name="orderBy" class="form-select">
+                <option selected value="last_name">last name</option>
+                <option value="first_name">first name</option>
+                <option value="date">date</option>
+            </select>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
+                <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
         <button class="btn btn-primary">Search</button>
     </div>
 </form>

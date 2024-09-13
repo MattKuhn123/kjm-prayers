@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
 import org.mlk.kjm.ServletUtils;
+import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -26,6 +27,8 @@ public class PrayerServlet extends HttpServlet {
     public static final String contextPath = "/prayers";
     public static final String inmateFirstNameId = "inmateFirstName";
     public static final String inmateLastNameId = "inmateLastName";
+    public static final String orderById = "orderBy";
+    public static final String orderByIsAscId = "orderByIsAsc";
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
@@ -145,6 +148,10 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
+        Optional<String> queryOrderByString = getOptionalParameter(req, orderById);
+        Optional<String> queryOrderByStringIsAsc = getOptionalParameter(req, orderByIsAscId);
+        Optional<OrderBy> orderBy = getOrderBy(queryOrderByString);
+        Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
         int page = 0;
         int pageLength = 100;
         Optional<LocalDate> queryDate = queryDateString.isPresent()
@@ -152,7 +159,7 @@ public class PrayerServlet extends HttpServlet {
                 : Optional.empty();
 
         List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
-                pageLength, Optional.empty(), Optional.empty());
+                pageLength, orderBy, orderByIsAsc);
         if (prayers.size() == 0) {
             String html = "<p>No prayers found!</p>";
             Document empty = Jsoup.parse(html);
@@ -207,5 +214,24 @@ public class PrayerServlet extends HttpServlet {
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
         getPrayerDocument.getElementById(prayerId).text(prayer.get().getPrayer());
         return getPrayerDocument;
+    }
+
+    private Optional<OrderBy> getOrderBy(Optional<String> orderByString) {
+        if (orderByString.isEmpty()) {
+            return Optional.empty();
+        }
+
+        OrderBy orderBy = OrderBy.valueOf(orderByString.get());
+        return Optional.of(orderBy);
+    }
+
+    private Optional<Boolean> getOrderByIsAsc(Optional<String> orderByIsAscString) {
+        if (orderByIsAscString.isEmpty()) {
+            boolean defaultValue = false;
+            return Optional.of(defaultValue);
+        }
+
+        boolean orderByIsAsc = "on".equals(orderByIsAscString.get());
+        return Optional.of(orderByIsAsc);
     }
 }
