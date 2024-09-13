@@ -54,12 +54,11 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderBy, Optional<Boolean> orderAsc)
+            Optional<LocalDate> date, int page, int pageLength, Optional<OrderBy> orderByEnum, Optional<Boolean> orderAsc)
             throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
-
-        List<Map<String, Object>> queryResults = query(table, columns, parameters, page, pageLength, orderBy, orderAsc,
-                url, user, password);
+        Optional<String> orderBy = orderByEnum.isEmpty() ? Optional.empty() : Optional.of(orderByEnum.get().toString());
+        List<Map<String, Object>> queryResults = query(table, columns, parameters, page, pageLength,orderBy, orderAsc,url, user, password);
         List<Prayer> results = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;

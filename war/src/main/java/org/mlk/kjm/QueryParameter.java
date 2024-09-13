@@ -40,27 +40,22 @@ public class QueryParameter {
         }
     }
 
-    public String getStringValue() {
-        if (value instanceof LocalDate) {
-            return dateToString((LocalDate) value);
-        }
+    public String toPreparedStatementValue() {
+        String wildcard = operator == QueryOperator.like 
+            ? "%" 
+            : "";
         
-        return (String) value;
+        String str = (value instanceof LocalDate)
+            ? dateToString((LocalDate) value)
+            : (String) value;
+        
+        return wildcard + str + wildcard;
     }
 
-    public String toSqlString() {
-        return column + " " + getOperator() + " " + getSqlValue();
-    }
-
-    private String getSqlValue() {
-        if (value instanceof LocalDate) {
-            return " STR_TO_DATE(" + dateToString((LocalDate) value) + ", '%m/%d/%Y') ";
-        }
-
-        if (operator == QueryOperator.like) {
-            return "%" + value + "%";
-        }
-
-        return (String) value;
+    public String toSqlStringValue() {
+        String abc = (value instanceof LocalDate) 
+            ? " STR_TO_DATE(?, '%m/%d/%Y') " 
+            : "?";
+        return column + " " + getOperator() + " " + abc;
     }
 }

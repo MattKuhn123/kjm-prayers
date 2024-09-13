@@ -123,15 +123,15 @@ public class RepositoryUtils {
 
         PreparedStatement statement = connection.prepareStatement(sql);
         for (int i = 0; i < parameters.size(); i++) {
-            statement.setString(i, parameters.get(i).getStringValue());
+            statement.setString(i + 1, parameters.get(i).toPreparedStatementValue());
         }
 
         return statement;
     }
 
     private static String toSelectClause(String[] projection) {
-        String comma = ",";
-        return " SELECT " + String.join(comma, projection) + " ";
+        String comma = "`,`";
+        return " SELECT `" + String.join(comma, projection) + "` ";
     }
 
     private static String toFromClause(String table) {
@@ -143,7 +143,7 @@ public class RepositoryUtils {
             return "";
         }
 
-        List<String> list = parameters.stream().map(qp -> qp.toSqlString()).collect(toList());
+        List<String> list = parameters.stream().map(qp -> qp.toSqlStringValue()).collect(toList());
         String and = " AND ";
         String whereClause = String.join(and, list);
         return " WHERE " + whereClause;
