@@ -45,7 +45,7 @@ public class RepositoryUtils {
         connection.close();
     } 
 
-    public static List<Map<String, Object>> query(
+    public static List<Map<String, Object>> queryTable(
             String table,
             String[] projection,
             List<QueryParameter> parameters,

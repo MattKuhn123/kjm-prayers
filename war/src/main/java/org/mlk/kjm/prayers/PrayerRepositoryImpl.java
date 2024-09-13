@@ -58,7 +58,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
         Optional<String> orderBy = orderByEnum.isEmpty() ? Optional.empty() : Optional.of(orderByEnum.get().toString());
-        List<Map<String, Object>> queryResults = query(table, columns, parameters, page, pageLength,orderBy, orderAsc,url, user, password);
+        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength,orderBy, orderAsc,url, user, password);
         List<Prayer> results = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;
