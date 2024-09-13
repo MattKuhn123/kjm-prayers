@@ -1,21 +1,80 @@
-<table class="table">
-    <thead>
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>County</th>
-            <th>Date</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td id="inmateFirstName">First Name</td>
-            <td id="inmateLastName">Last Name</td>
-            <td id="county">County</td>
-            <td id="date">Date</td>
-            <td><a id="view" hx-get="" hx-target="#prayer" class="btn btn-primary">View</a></td>
-        </tr>
-    </tbody>
-</table>
-<div id="prayer"></div>
+<form id="PrayerRequest" hx-get="/prayers/ListPrayers">
+    <h3>Search</h3>
+    <div class="row g-3">
+        <div class="col-sm">
+            <label for="inmateFirstName" class="form-label">Inmate First Name</label>
+            <input id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="inmateLastName" class="form-label">Inmate Last Name</label>
+            <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="county" class="form-label">County</label>
+            <input id="county" name="county" type="text" class="form-control" />
+        </div>
+        <div class="col-sm">
+            <label for="date" class="form-label">Date</label>
+            <input id="date" name="date" type="text" class="form-control" />
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <label for="orderBy" class="form-label">Sort Order</label>
+            <select id="orderBy" name="orderBy" class="form-select">
+                <option selected value="last_name">last name</option>
+                <option value="first_name">first name</option>
+                <option value="date">date</option>
+            </select>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
+                <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
+            </div>
+        </div>
+    </div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>County</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td id="inmateFirstName">First Name</td>
+                <td id="inmateLastName">Last Name</td>
+                <td id="county">County</td>
+                <td id="date">Date</td>
+                <td><a id="view" hx-get="" hx-target="#prayer" class="btn btn-primary">View</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="noResult">
+        <p>No prayers found!</p>
+    </div>
+    <div class="row g-3">
+        <div class="col-sm">
+            <label for="pageLength" class="form-label">Page</label>
+            <select id="pageLength" name="pageLength" class="form-select">
+                <option>10</option>
+                <option>20</option>
+                <option>30</option>
+            </select>
+            <button class="btn btn-secondary">Previous</button>
+            <button class="btn btn-primary">Next</button>
+        </div>
+    </div>
+    <div id="prayer"></div>
+</form>

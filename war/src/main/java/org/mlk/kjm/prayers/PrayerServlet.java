@@ -33,19 +33,19 @@ public class PrayerServlet extends HttpServlet {
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerId = "prayer";
+    public static final String noResultId = "noResult";
 
     private static final String directory = "prayers/";
 
     public static final String createName = "/CreatePrayer";
     public static final String listName = "/ListPrayers";
-    public static final String queryName = "/QueryPrayers";
     public static final String singleName = "/SinglePrayer";
 
     private static final String createFile = directory + createName + ".html";
     private static final String listFile = directory + listName + ".html";
-    private static final String queryFile = directory + queryName + ".html";
     private static final String singleFile = directory + singleName + ".html";
 
+    private static final String tableTag = "tale";
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
 
@@ -65,13 +65,6 @@ public class PrayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         try {
-            if (queryName.equals(pathInfo)) {
-                Document queryPrayersDocument = getQueryPrayersDocument();
-                String html = queryPrayersDocument.html();
-                resp.getWriter().append(html).flush();
-                return;
-            }
-
             if (listName.equals(pathInfo)) {
                 Document resultListDocument = getPrayerListDocument(req);
                 String html = resultListDocument.html();
@@ -133,11 +126,6 @@ public class PrayerServlet extends HttpServlet {
         }
     }
 
-    private Document getQueryPrayersDocument() throws IOException {
-        Document queryPrayersDocument = getHtmlDocument(queryFile);
-        return queryPrayersDocument;
-    }
-
     private Document getCreatePrayerDocument() throws IOException {
         Document createPrayerDocument = getHtmlDocument(createFile);
         return createPrayerDocument;
@@ -160,39 +148,45 @@ public class PrayerServlet extends HttpServlet {
 
         List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
                 pageLength, orderBy, orderByIsAsc);
+
+        Document prayerDocument = getHtmlDocument(listFile);
+        prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(""));
+        prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(""));
+        prayerDocument.getElementById(countyId).text(queryCounty.orElse(""));
+        prayerDocument.getElementById(dateId).text(queryDateString.orElse(""));
+
+        
         if (prayers.size() == 0) {
-            String html = "<p>No prayers found!</p>";
-            Document empty = Jsoup.parse(html);
-            return empty;
+            prayerDocument.selectFirst(tableTag).remove();
+        } else {
+            prayerDocument.select(noResultId).remove();
+            Element tbody = prayerDocument.selectFirst(tbodyTag);
+            for (Prayer prayer : prayers) {
+                Element tr = tbody.selectFirst(trTag).clone();
+                tr.getElementById(inmateFirstNameId).text(prayer.getFirstName());
+                tr.getElementById(inmateLastNameId).text(prayer.getLastName());
+                tr.getElementById(countyId).text(prayer.getCounty());
+                tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
+    
+                String attrKey = "hx-get";
+                Map<String, String> params = new HashMap<String, String>();
+                params.put(inmateFirstNameId, prayer.getFirstName());
+                params.put(inmateLastNameId, prayer.getLastName());
+                params.put(dateId, dateToString(prayer.getDate()));
+    
+                String attrValue = createLink(contextPath + singleName, params);
+                tr.getElementById(viewId).attr(attrKey, attrValue);
+    
+                tbody.appendChild(tr);
+            }
+
+            // The existing tr was there as a template.
+            // Now, it has to be removed.
+            int first = 0;
+            tbody.children().remove(first);
         }
 
-        Document getPrayersDocument = getHtmlDocument(listFile);
-        Element tbody = getPrayersDocument.selectFirst(tbodyTag);
-        for (Prayer prayer : prayers) {
-            Element tr = tbody.selectFirst(trTag).clone();
-            tr.getElementById(inmateFirstNameId).text(prayer.getFirstName());
-            tr.getElementById(inmateLastNameId).text(prayer.getLastName());
-            tr.getElementById(countyId).text(prayer.getCounty());
-            tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
-
-            String attrKey = "hx-get";
-            Map<String, String> params = new HashMap<String, String>();
-            params.put(inmateFirstNameId, prayer.getFirstName());
-            params.put(inmateLastNameId, prayer.getLastName());
-            params.put(dateId, dateToString(prayer.getDate()));
-
-            String attrValue = createLink(contextPath + singleName, params);
-            tr.getElementById(viewId).attr(attrKey, attrValue);
-
-            tbody.appendChild(tr);
-        }
-
-        // The existing tr was there as a template.
-        // Now, it has to be removed.
-        int first = 0;
-        tbody.children().remove(first);
-
-        return getPrayersDocument;
+        return prayerDocument;
     }
 
     private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
