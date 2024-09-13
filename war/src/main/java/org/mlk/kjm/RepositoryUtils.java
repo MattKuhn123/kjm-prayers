@@ -65,7 +65,7 @@ public class RepositoryUtils {
             Class.forName(driverName);
             connection = Optional.of(DriverManager.getConnection(url, user, password));
             statement = Optional.of(
-                    getPreparedStatement(connection.get(), table, projection, parameters, page, pageLength, orderBy,
+                    getQueryPreparedStatement(connection.get(), table, projection, parameters, page, pageLength, orderBy,
                             orderAsc));
             resultSet = Optional.of(statement.get().executeQuery());
 
@@ -106,7 +106,7 @@ public class RepositoryUtils {
         }
     }
 
-    private static PreparedStatement getPreparedStatement(
+    private static PreparedStatement getQueryPreparedStatement(
             Connection connection,
             String table,
             String[] projection,
