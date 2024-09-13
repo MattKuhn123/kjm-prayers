@@ -152,8 +152,8 @@ public class PrayerServlet extends HttpServlet {
         Document prayerDocument = getHtmlDocument(listFile);
         prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(""));
         prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(""));
-        prayerDocument.getElementById(countyId).text(queryCounty.orElse(""));
-        prayerDocument.getElementById(dateId).text(queryDateString.orElse(""));
+        prayerDocument.getElementById(countyId).val(queryCounty.orElse(""));
+        prayerDocument.getElementById(dateId).val(queryDateString.orElse(""));
 
         
         if (prayers.size() == 0) {
