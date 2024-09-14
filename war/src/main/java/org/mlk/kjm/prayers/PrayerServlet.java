@@ -29,17 +29,23 @@ public class PrayerServlet extends HttpServlet {
     public static final String inmateLastNameId = "inmateLastName";
     public static final String orderById = "orderBy";
     public static final String orderByIsAscId = "orderByIsAsc";
+    public static final String pageId = "page";
+    public static final String pageLengthId = "pageLength";
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerId = "prayer";
     public static final String noResultId = "noResult";
+    public static final String pagesId = "pages";
+
+    public static final String defaultPage = "0";
+    public static final String defaultPageLength = "1";
 
     private static final String directory = "prayers/";
 
-    public static final String createName = "/CreatePrayer";
-    public static final String listName = "/ListPrayers";
-    public static final String singleName = "/SinglePrayer";
+    private static final String createName = "/CreatePrayer";
+    private static final String listName = "/ListPrayers";
+    private static final String singleName = "/SinglePrayer";
 
     private static final String createFile = directory + createName + ".html";
     private static final String listFile = directory + listName + ".html";
@@ -48,6 +54,11 @@ public class PrayerServlet extends HttpServlet {
     private static final String tableTag = "table";
     private static final String tbodyTag = "tbody";
     private static final String trTag = "tr";
+
+    private static final String hxGetAttr = "hx-get";
+    private static final String idAttr = "id";
+
+    private static final String emptyString = "";
 
     private final ApplicationProperties props;
     private final PrayerRepository prayers;
@@ -65,7 +76,11 @@ public class PrayerServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         try {
-            if (listName.equals(pathInfo)) {
+            if (pathInfo == null) {
+                return;
+            }
+
+            if (pathInfo.startsWith(listName)) {
                 Document resultListDocument = getPrayerListDocument(req);
                 String html = resultListDocument.html();
                 resp.getWriter().append(html).flush();
@@ -140,8 +155,14 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryOrderByStringIsAsc = getOptionalParameter(req, orderByIsAscId);
         Optional<OrderBy> orderBy = getOrderBy(queryOrderByString);
         Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
-        int page = 0;
-        int pageLength = 100;
+        Optional<String> pageString = getOptionalParameter(req, orderByIsAscId);
+
+        int pageOffset = getPageOffset(req.getPathInfo());
+        int page = Integer.parseInt(pageString.orElse(defaultPage)) + pageOffset;
+
+        Optional<String> pageLengthString = getOptionalParameter(req, orderByIsAscId);
+        int pageLength = Integer.parseInt(pageLengthString.orElse(defaultPageLength));
+
         Optional<LocalDate> queryDate = queryDateString.isPresent()
                 ? Optional.of(stringToDate(queryDateString.get()))
                 : Optional.empty();
@@ -150,32 +171,58 @@ public class PrayerServlet extends HttpServlet {
                 pageLength, orderBy, orderByIsAsc);
 
         Document prayerDocument = getHtmlDocument(listFile);
-        prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(""));
-        prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(""));
-        prayerDocument.getElementById(countyId).val(queryCounty.orElse(""));
-        prayerDocument.getElementById(dateId).val(queryDateString.orElse(""));
+        prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(emptyString));
+        prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(emptyString));
+        prayerDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
+        prayerDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
+
+        int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
+        int pageCount = (int) Math.ceil((double) totalResults / (double) pageLength);
+
+        // TODO : How to indicate if paging?
+        Element pageElement = prayerDocument.getElementById(pageId);
+        for (int i = 0; i < pageCount; i++) {
+            String option = "<option value='" + i + "'>" + (i + 1) + "</option>";
+            pageElement.append(option);
+        }
+
+        prayerDocument.getElementById(pageId).val(String.valueOf(page));
+        prayerDocument.getElementById(pageLengthId).val(String.valueOf(pageLength));
 
         if (prayers.size() == 0) {
+            String noPrayersFoundHtml = "<p>No prayers found!</p>";
+            prayerDocument.selectFirst(noResultId).text(noPrayersFoundHtml);
             prayerDocument.selectFirst(tableTag).remove();
+            prayerDocument.selectFirst(pagesId).remove();
         } else {
-            prayerDocument.select(noResultId).remove();
             Element tbody = prayerDocument.selectFirst(tbodyTag);
             for (Prayer prayer : prayers) {
                 Element tr = tbody.selectFirst(trTag).clone();
-                tr.getElementById(inmateFirstNameId).text(prayer.getFirstName());
-                tr.getElementById(inmateLastNameId).text(prayer.getLastName());
-                tr.getElementById(countyId).text(prayer.getCounty());
-                tr.getElementById(dateId).text(ServletUtils.dateToString(prayer.getDate()));
-    
-                String attrKey = "hx-get";
+
+                Element inmateFirstNameElement = tr.getElementById(inmateFirstNameId);
+                inmateFirstNameElement.text(prayer.getFirstName());
+                inmateFirstNameElement.removeAttr(idAttr);
+
+                Element inmateLastNameElement = tr.getElementById(inmateLastNameId);
+                inmateLastNameElement.text(prayer.getLastName());
+                inmateLastNameElement.removeAttr(idAttr);
+
+                Element countyElement = tr.getElementById(countyId);
+                countyElement.text(prayer.getCounty());
+                countyElement.removeAttr(idAttr);
+
+                Element dateElement = tr.getElementById(dateId);
+                dateElement.text(ServletUtils.dateToString(prayer.getDate()));
+                dateElement.removeAttr(idAttr);
+
                 Map<String, String> params = new HashMap<String, String>();
                 params.put(inmateFirstNameId, prayer.getFirstName());
                 params.put(inmateLastNameId, prayer.getLastName());
                 params.put(dateId, dateToString(prayer.getDate()));
-    
-                String attrValue = createLink(contextPath + singleName, params);
-                tr.getElementById(viewId).attr(attrKey, attrValue);
-    
+
+                String hxGetValue = createLink(contextPath + singleName, params);
+                tr.getElementById(viewId).attr(hxGetAttr, hxGetValue);
+
                 tbody.appendChild(tr);
             }
 
@@ -226,5 +273,9 @@ public class PrayerServlet extends HttpServlet {
 
         boolean orderByIsAsc = "on".equals(orderByIsAscString.get());
         return Optional.of(orderByIsAsc);
+    }
+
+    private int getPageOffset(String pathInfo) {
+        return 0;
     }
 }

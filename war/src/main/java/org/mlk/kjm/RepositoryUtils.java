@@ -19,13 +19,13 @@ public class RepositoryUtils {
         executeFromFile(url, user, password, createSchema);
     }
 
-    public static void executeFromFile(String url, String user, String password, String file) throws IOException, SQLException {
+    public static void executeFromFile(String url, String user, String password, String file)
+            throws IOException, SQLException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(file);
         byte[] bytes = inputStream.readAllBytes();
         String sql = new String(bytes).replaceAll("/n", "");
         String[] statementSqls = sql.split(";");
-
 
         Connection connection = DriverManager.getConnection(url, user, password);
         for (String statementSql : statementSqls) {
@@ -43,7 +43,46 @@ public class RepositoryUtils {
         }
 
         connection.close();
-    } 
+    }
+
+    public static int queryTableCount(String table, List<QueryParameter> parameters, String url, String user,
+            String password) throws SQLException {
+        Optional<Connection> connection = Optional.empty();
+        Optional<PreparedStatement> statement = Optional.empty();
+        Optional<ResultSet> resultSet = Optional.empty();
+        try {
+            Class.forName(driverName);
+            connection = Optional.of(DriverManager.getConnection(url, user, password));
+            statement = Optional.of(getQueryCountPreparedStatement(connection.get(), table, parameters));
+            resultSet = Optional.of(statement.get().executeQuery());
+            resultSet.get().next();
+            int columnIndex = 1;
+            int result = resultSet.get().getInt(columnIndex);
+            return result;
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        } finally {
+            try {
+                if (resultSet.isPresent()) {
+                    resultSet.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (statement.isPresent()) {
+                    statement.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (connection.isPresent()) {
+                    connection.get().close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+    }
 
     public static List<Map<String, Object>> queryTable(
             String table,
@@ -65,8 +104,8 @@ public class RepositoryUtils {
             Class.forName(driverName);
             connection = Optional.of(DriverManager.getConnection(url, user, password));
             statement = Optional.of(
-                    getQueryPreparedStatement(connection.get(), table, projection, parameters, page, pageLength, orderBy,
-                            orderAsc));
+                    getQueryPreparedStatement(connection.get(), table, projection, parameters, page, pageLength,
+                            orderBy, orderAsc));
             resultSet = Optional.of(statement.get().executeQuery());
 
             List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
@@ -120,6 +159,22 @@ public class RepositoryUtils {
                 + toWhereClause(parameters)
                 + toOrderByClause(orderBy, orderAsc)
                 + toLimitClause(page, pageLength);
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        for (int i = 0; i < parameters.size(); i++) {
+            statement.setString(i + 1, parameters.get(i).toPreparedStatementValue());
+        }
+
+        return statement;
+    }
+
+    private static PreparedStatement getQueryCountPreparedStatement(
+            Connection connection,
+            String table,
+            List<QueryParameter> parameters) throws SQLException {
+        String sql = "SELECT COUNT(*) " 
+                + toFromClause(table)
+                + toWhereClause(parameters);
 
         PreparedStatement statement = connection.prepareStatement(sql);
         for (int i = 0; i < parameters.size(); i++) {

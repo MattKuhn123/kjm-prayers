@@ -72,13 +72,23 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     @Override
     public Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, date);
-        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, 0, 1, Optional.empty(),
+        int page = 0;
+        int pageLength = 1;
+        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength, Optional.empty(),
                 Optional.empty(), url, user, password);
         Optional<Prayer> result = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;
         }).findFirst();
 
+        return result;
+    }
+
+    @Override
+    public int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
+            Optional<LocalDate> date) throws SQLException {
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
+        int result = queryTableCount(table, parameters, url, user, password);
         return result;
     }
 

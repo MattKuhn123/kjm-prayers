@@ -1,4 +1,4 @@
-<form id="PrayerRequest" hx-get="/prayers/ListPrayers">
+<form id="list-prayers" hx-get="/prayers/ListPrayers">
     <h3>Search</h3>
     <div class="row g-3">
         <div class="col-sm">
@@ -57,22 +57,23 @@
                 <td id="inmateLastName">Last Name</td>
                 <td id="county">County</td>
                 <td id="date">Date</td>
-                <td><a id="view" hx-get="" hx-target="#prayer" class="btn btn-primary">View</a></td>
+                <td><a id="view" hx-get="SET_ME" hx-target="#prayer" class="btn btn-primary">View</a></td>
             </tr>
         </tbody>
     </table>
-    <div id="noResult">
-        <p>No prayers found!</p>
-    </div>
-    <div class="row g-3">
+    <div id="noResult"></div>
+    <div id="pages" class="row g-3">
         <div class="col-sm">
             <label for="pageLength" class="form-label">Page</label>
             <select id="pageLength" name="pageLength" class="form-select">
-                <option>10</option>
-                <option>20</option>
-                <option>30</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
             </select>
-            <button class="btn btn-secondary">Previous</button>
+            <button class="btn btn-secondary"
+                hx-target="#list-prayers">Previous</button>
+            <select id="page" name="page" class="form-select">
+            </select>
             <button class="btn btn-primary">Next</button>
         </div>
     </div>
