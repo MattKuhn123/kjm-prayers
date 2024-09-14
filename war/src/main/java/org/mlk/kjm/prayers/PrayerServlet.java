@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 import org.jsoup.Jsoup;
@@ -38,6 +39,8 @@ public class PrayerServlet extends HttpServlet {
     public static final String noResultId = "noResult";
     public static final String pagesId = "pages";
 
+    public static final String toPageParam = "toPage";
+
     public static final String defaultPage = "0";
     public static final String defaultPageLength = "1";
 
@@ -45,6 +48,9 @@ public class PrayerServlet extends HttpServlet {
 
     private static final String createName = "/CreatePrayer";
     private static final String listName = "/ListPrayers";
+    private static final String listResetName = "/ListPrayers/Reset";
+    private static final String listPreviousName = "/ListPrayers/Previous";
+    private static final String listNextName = "/ListPrayers/Next";
     private static final String singleName = "/SinglePrayer";
 
     private static final String createFile = directory + createName + ".html";
@@ -64,8 +70,7 @@ public class PrayerServlet extends HttpServlet {
     private final PrayerRepository prayers;
 
     public PrayerServlet() {
-        this(ApplicationPropertiesImpl.getInstance(),
-                PrayerRepositoryImpl.getInstance(ApplicationPropertiesImpl.getInstance()));
+        this(new ApplicationPropertiesImpl(), new PrayerRepositoryImpl(new ApplicationPropertiesImpl()));
     }
 
     public PrayerServlet(ApplicationProperties props, PrayerRepository prayers) {
@@ -155,10 +160,8 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryOrderByStringIsAsc = getOptionalParameter(req, orderByIsAscId);
         Optional<OrderBy> orderBy = getOrderBy(queryOrderByString);
         Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
-        Optional<String> pageString = getOptionalParameter(req, orderByIsAscId);
-
-        int pageOffset = getPageOffset(req.getPathInfo());
-        int page = Integer.parseInt(pageString.orElse(defaultPage)) + pageOffset;
+        
+        int page = getPage(req);
 
         Optional<String> pageLengthString = getOptionalParameter(req, orderByIsAscId);
         int pageLength = Integer.parseInt(pageLengthString.orElse(defaultPageLength));
@@ -179,11 +182,11 @@ public class PrayerServlet extends HttpServlet {
         int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
         int pageCount = (int) Math.ceil((double) totalResults / (double) pageLength);
 
-        // TODO : How to indicate if paging?
         Element pageElement = prayerDocument.getElementById(pageId);
         for (int i = 0; i < pageCount; i++) {
-            String option = "<option value='" + i + "'>" + (i + 1) + "</option>";
-            pageElement.append(option);
+            int displayIndex = i + 1;
+            String btn = "<input type='submit' value='" + displayIndex + "' formaction='/prayers/ListPrayers?" + toPageParam + "=" + i + "'/>";
+            pageElement.append(btn);
         }
 
         prayerDocument.getElementById(pageId).val(String.valueOf(page));
@@ -275,7 +278,58 @@ public class PrayerServlet extends HttpServlet {
         return Optional.of(orderByIsAsc);
     }
 
-    private int getPageOffset(String pathInfo) {
+    private int getPage(HttpServletRequest req) {
+        if (isToPage(req)) {
+            int result = getToPage(req);
+            return result;
+        }
+
+        if (isPageReset(req.getPathInfo())) {
+            return 0;
+        }
+
+        try {
+            String page = getOptionalParameter(req, pageId).orElse(defaultPage);
+            int result = Integer.parseInt(page) + getPageDirection(req.getPathInfo());
+            return result;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    private boolean isPageReset(String pathInfo) {
+        boolean result = listResetName.equals(pathInfo);
+        return result;
+    }
+
+    private int getToPage(HttpServletRequest req) {
+        try {
+            Optional<String> toPage = getOptionalParameter(req, toPageParam);
+            int result = Integer.parseInt(toPage.get());
+            return result;
+        } catch (UnsupportedEncodingException e) {
+            return -1;
+        }
+    }
+
+    private boolean isToPage(HttpServletRequest req) {
+        try {
+            Optional<String> toPage = getOptionalParameter(req, toPageParam);
+            return toPage.isPresent();
+        } catch (UnsupportedEncodingException e) {
+            return false;
+        }
+    }
+
+    private int getPageDirection(String pathInfo) {
+        if (listPreviousName.equals(pathInfo)) {
+            return -1;
+        }
+
+        if (listNextName.equals(pathInfo)) {
+            return 1;
+        }
+
         return 0;
     }
 }

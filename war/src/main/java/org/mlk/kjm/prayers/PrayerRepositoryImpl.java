@@ -10,24 +10,13 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import org.mlk.kjm.ApplicationProperties;
+import org.mlk.kjm.OrderByClause;
 import org.mlk.kjm.QueryParameter;
 import org.mlk.kjm.QueryParameter.QueryOperator;
 
 import static org.mlk.kjm.RepositoryUtils.*;
 
 public class PrayerRepositoryImpl implements PrayerRepository {
-    private static PrayerRepositoryImpl instance;
-
-    public static PrayerRepositoryImpl getInstance(ApplicationProperties appProps) {
-        if (instance == null) {
-            String dbUrl = appProps.getDbUrl();
-            String dbUser = appProps.getDbUser();
-            String dbPassword = appProps.getDbPassword();
-            instance = new PrayerRepositoryImpl(dbUrl, dbUser, dbPassword);
-        }
-
-        return instance;
-    }
 
     private final String url;
     private final String user;
@@ -41,10 +30,10 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     private final String table = "kjm.prayers";
     private final String[] columns = { firstNameColumn, lastNameColumn, countyColumn, dateColumn, prayerColumn };
 
-    private PrayerRepositoryImpl(String url, String user, String password) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
+    public PrayerRepositoryImpl(ApplicationProperties appProps) {
+        this.url = appProps.getDbUrl();
+        this.user = appProps.getDbUser();
+        this.password = appProps.getDbPassword();
     }
 
     @Override
@@ -58,9 +47,10 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             Optional<Boolean> orderAsc)
             throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
-        Optional<String> orderBy = orderByEnum.isEmpty() ? Optional.empty() : Optional.of(orderByEnum.get().toString());
-        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength, orderBy,
-                orderAsc, url, user, password);
+
+        List<OrderByClause> orderBys = toOrderBys(orderByEnum, orderAsc);
+
+        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength, orderBys, url, user, password);
         List<Prayer> results = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;
@@ -74,8 +64,8 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, date);
         int page = 0;
         int pageLength = 1;
-        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength, Optional.empty(),
-                Optional.empty(), url, user, password);
+        List<Map<String, Object>> queryResults = queryTable(table, columns, parameters, page, pageLength,
+                new ArrayList<OrderByClause>(), url, user, password);
         Optional<Prayer> result = queryResults.stream().map(queryResult -> {
             Prayer prayer = mapToPrayer(queryResult);
             return prayer;
@@ -89,6 +79,24 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             Optional<LocalDate> date) throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
         int result = queryTableCount(table, parameters, url, user, password);
+        return result;
+    }
+
+    private List<OrderByClause> toOrderBys(Optional<OrderBy> orderByEnum, Optional<Boolean> isAsc) {
+        List<OrderByClause> result = new ArrayList<OrderByClause>();
+        if (orderByEnum.isPresent()) {
+            String orderBy = orderByEnum.get().toString();
+            boolean defaultIsAsc = true;
+            OrderByClause clause = new OrderByClause(orderBy, isAsc.orElse(defaultIsAsc));
+            result.add(clause);
+        }
+
+        if (orderByEnum.isPresent() && orderByEnum.get().equals(OrderBy.date)) {
+            return result;
+        }
+
+        boolean defaultIsAsc = true;
+        result.add(new OrderByClause(OrderBy.date.toString(), defaultIsAsc));
         return result;
     }
 

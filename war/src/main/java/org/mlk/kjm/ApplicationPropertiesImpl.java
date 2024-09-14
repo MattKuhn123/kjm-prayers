@@ -4,19 +4,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationPropertiesImpl implements ApplicationProperties {
-    private static ApplicationPropertiesImpl instance;
-    public static ApplicationPropertiesImpl getInstance() {
-        if (instance == null) {
-            instance = new ApplicationPropertiesImpl();
-        }
-
-        return instance;
-    }
-
-    private ApplicationPropertiesImpl() {
-
-    }
-
     private final String environmentProperty = "env";
     private final String dbUrlProperty = "dbUrl";
     private final String dbUserProperty = "dbUser";

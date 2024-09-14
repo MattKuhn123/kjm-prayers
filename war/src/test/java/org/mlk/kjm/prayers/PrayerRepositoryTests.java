@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesTestImpl;
+import org.mlk.kjm.ApplicationPropertiesTestImpl;
 import org.mlk.kjm.RepositoryUtils;
 import org.mlk.kjm.RepositoryUtilsTesting;
 import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
@@ -21,13 +22,13 @@ import junit.framework.TestCase;
 public class PrayerRepositoryTests extends TestCase {
 
     @Test
-    public void test_something() throws Exception {
+    public void testest_something() throws Exception {
         assertTrue(true);
     }
 
-    // @Before
+    @Before
     public void setUp() throws Exception {
-        ApplicationProperties props = ApplicationPropertiesTestImpl.getInstance();
+        ApplicationProperties props = new ApplicationPropertiesTestImpl();
         String url = props.getDbUrl();
         String username = props.getDbUser();
         String password = props.getDbPassword();
@@ -36,9 +37,9 @@ public class PrayerRepositoryTests extends TestCase {
         RepositoryUtilsTesting.populate(url, username, password);
     }
     
-    //@Test
-    public void t_BasicQuery() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
         int page = 0;
         int pageLength = 100;
         List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
@@ -48,9 +49,9 @@ public class PrayerRepositoryTests extends TestCase {
         
     }
 
-    //@Test
-    public void t_BasicQuery_WhereFirstName() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_WhereFirstName() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         String firstName = "al";
         int page = 0;
         int pageLength = 100;
@@ -60,9 +61,9 @@ public class PrayerRepositoryTests extends TestCase {
         Assert.assertEquals(expectedResults, results.size());
     }
 
-    //@Test
-    public void t_BasicQuery_WhereLastName() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_WhereLastName() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         String lastName = "Coan";
         int page = 0;
         int pageLength = 100;
@@ -72,9 +73,9 @@ public class PrayerRepositoryTests extends TestCase {
         Assert.assertEquals(expectedResults, results.size());
     }
 
-    //@Test
-    public void t_BasicQuery_WhereCounty() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_WhereCounty() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         String county = "Kenton";
         int page = 0;
         int pageLength = 100;
@@ -84,9 +85,9 @@ public class PrayerRepositoryTests extends TestCase {
         Assert.assertEquals(expectedResults, results.size());
     }
 
-    //@Test
-    public void t_BasicQuery_WhereDate() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_WhereDate() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         String dateString = "12/25/2023";
         LocalDate date = stringToDate(dateString);
         int page = 0;
@@ -97,9 +98,9 @@ public class PrayerRepositoryTests extends TestCase {
         Assert.assertEquals(expectedResults, results.size());
     }
 
-    //@Test
-    public void t_BasicQuery_limit() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_limit() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 0;
         int pageLength = 2;
         List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
@@ -108,9 +109,9 @@ public class PrayerRepositoryTests extends TestCase {
         Assert.assertEquals(expectedResults, results.size());
     }
 
-    //@Test
-    public void t_BasicQuery_orderAscFirstName_page1() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_orderAscFirstName_page1() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 0;
         int pageLength = 2;
         OrderBy orderBy = OrderBy.first_name;
@@ -134,9 +135,9 @@ public class PrayerRepositoryTests extends TestCase {
         assertEquals(expectedSecondLastName, actualSecondLastName);
     }
 
-    //@Test
-    public void t_BasicQuery_orderAscFirstName_page2() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_orderAscFirstName_page2() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 1;
         int pageLength = 2;
         OrderBy orderBy = OrderBy.first_name;
@@ -160,9 +161,9 @@ public class PrayerRepositoryTests extends TestCase {
         assertEquals(expectedSecondLastName, actualSecondLastName);
     }
 
-    //@Test
-    public void t_BasicQuery_orderDescFirstName_page1() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_orderDescFirstName_page1() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 0;
         int pageLength = 2;
         OrderBy orderBy = OrderBy.first_name;
@@ -186,9 +187,9 @@ public class PrayerRepositoryTests extends TestCase {
         assertEquals(expectedSecondLastName, actualSecondLastName);
     }
 
-    //@Test
-    public void t_BasicQuery_orderAscDate_page1() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_BasicQuery_orderAscDate_page1() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 0;
         int pageLength = 2;
         OrderBy orderBy = OrderBy.date;
@@ -212,9 +213,9 @@ public class PrayerRepositoryTests extends TestCase {
         assertEquals(expectedSecondLastName, actualSecondLastName);
     }
 
-    //@Test
-    public void t_getSingle() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_getSingle() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         String firstName = "Ralf";
         String lastName = "Grigoriev";
         String dateString = "12/26/2023";
@@ -227,9 +228,9 @@ public class PrayerRepositoryTests extends TestCase {
         assertEquals(dateString, dateToString(actual.get().getDate()));
     }
 
-    //@Test
-    public void t_Count() throws Exception {
-        PrayerRepository test = PrayerRepositoryImpl.getInstance(ApplicationPropertiesTestImpl.getInstance());
+    @Test
+    public void test_Count() throws Exception {
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int expected = 4;
         int actual = test.getCount(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 

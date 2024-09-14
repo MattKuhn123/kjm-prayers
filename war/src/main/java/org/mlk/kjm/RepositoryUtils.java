@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -90,8 +93,7 @@ public class RepositoryUtils {
             List<QueryParameter> parameters,
             int page,
             int pageLength,
-            Optional<String> orderBy,
-            Optional<Boolean> orderAsc,
+            List<OrderByClause> orderBys,
             String url,
             String user,
             String password)
@@ -105,7 +107,7 @@ public class RepositoryUtils {
             connection = Optional.of(DriverManager.getConnection(url, user, password));
             statement = Optional.of(
                     getQueryPreparedStatement(connection.get(), table, projection, parameters, page, pageLength,
-                            orderBy, orderAsc));
+                            orderBys));
             resultSet = Optional.of(statement.get().executeQuery());
 
             List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
@@ -152,12 +154,11 @@ public class RepositoryUtils {
             List<QueryParameter> parameters,
             int page,
             int pageLength,
-            Optional<String> orderBy,
-            Optional<Boolean> orderAsc) throws SQLException {
+            List<OrderByClause> orderBys) throws SQLException {
         String sql = toSelectClause(projection)
                 + toFromClause(table)
                 + toWhereClause(parameters)
-                + toOrderByClause(orderBy, orderAsc)
+                + toOrderByClause(orderBys)
                 + toLimitClause(page, pageLength);
 
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -172,7 +173,7 @@ public class RepositoryUtils {
             Connection connection,
             String table,
             List<QueryParameter> parameters) throws SQLException {
-        String sql = "SELECT COUNT(*) " 
+        String sql = "SELECT COUNT(*) "
                 + toFromClause(table)
                 + toWhereClause(parameters);
 
@@ -201,21 +202,20 @@ public class RepositoryUtils {
         List<String> list = parameters.stream().map(qp -> qp.toSqlStringValue()).collect(toList());
         String and = " AND ";
         String whereClause = String.join(and, list);
-        return " WHERE " + whereClause;
+        String result = " WHERE " + whereClause;
+        return result;
     }
 
-    private static String toOrderByClause(Optional<String> orderBy, Optional<Boolean> orderAsc) {
-        if (orderBy.isEmpty()) {
+    private static String toOrderByClause(List<OrderByClause> orderBys) {
+        if (orderBys.size() == 0) {
             return "";
         }
 
-        if (orderAsc.isEmpty()) {
-            String warning = "order direction is unexpectedly empty. Default to ASC";
-            System.out.println(warning);
-        }
-
-        Boolean defaultTo = true;
-        return " ORDER BY " + orderBy.get() + " " + (orderAsc.orElse(defaultTo) ? " ASC " : " DESC ");
+        List<String> list = orderBys.stream().map(ob -> ob.toSqlStringValue()).collect(toList());
+        String comma = " , ";
+        String orderByClause = String.join(comma, list);
+        String result = " ORDER BY " + orderByClause;
+        return result;
     }
 
     private static String toLimitClause(int page, int pageLength) {

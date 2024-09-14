@@ -38,7 +38,7 @@
     </div>
     <div class="row g-3">
         <div class="col-sm">
-            <button class="btn btn-primary">Search</button>
+            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset"/>
         </div>
     </div>
     <table class="table">
@@ -70,11 +70,11 @@
                 <option>2</option>
                 <option>3</option>
             </select>
-            <button class="btn btn-secondary"
-                hx-target="#list-prayers">Previous</button>
-            <select id="page" name="page" class="form-select">
-            </select>
-            <button class="btn btn-primary">Next</button>
+            <input class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous"/>
+            <div>
+                <input type="hidden" id="page" name="page" />
+            </div>
+            <input class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next"/>
         </div>
     </div>
     <div id="prayer"></div>
