@@ -1,44 +1,43 @@
 <form id="list-prayers" hx-get="/prayers/ListPrayers">
     <h3>Search</h3>
-    <div class="row g-3">
-        <div class="col-sm">
+    <div class="row">
+        <div class="col">
             <label for="inmateFirstName" class="form-label">Inmate First Name</label>
             <input id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
         </div>
-        <div class="col-sm">
+        <div class="col">
             <label for="inmateLastName" class="form-label">Inmate Last Name</label>
             <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
         </div>
-        <div class="col-sm">
+        <div class="col">
             <label for="county" class="form-label">County</label>
             <input id="county" name="county" type="text" class="form-control" />
         </div>
-        <div class="col-sm">
+        <div class="col">
             <label for="date" class="form-label">Date</label>
             <input id="date" name="date" type="text" class="form-control" />
         </div>
     </div>
-    <div class="row g-3">
-        <div class="col-sm">
-            <label for="orderBy" class="form-label">Sort Order</label>
-            <select id="orderBy" name="orderBy" class="form-select">
-                <option selected value="last_name">last name</option>
-                <option value="first_name">first name</option>
-                <option value="date">date</option>
-            </select>
-        </div>
-    </div>
-    <div class="row g-3">
-        <div class="col-sm">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
-                <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
+    <div class="row">
+        <div class="col-6">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
+                        <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
+                    </div>
+                </div>
+                <select id="orderBy" name="orderBy" class="form-select">
+                    <option selected value="last_name">last name</option>
+                    <option value="first_name">first name</option>
+                    <option value="date">date</option>
+                </select>
             </div>
         </div>
     </div>
-    <div class="row g-3">
-        <div class="col-sm">
-            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset"/>
+    <div class="row">
+        <div class="col">
+            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
         </div>
     </div>
     <table class="table">
@@ -64,19 +63,19 @@
     <div id="no-result">
         <p>No prayers found!</p>
     </div>
-    <div id="pages" class="row g-3">
-        <div class="col-sm">
+    <div id="pages" class="row">
+        <div class="col">
             <label for="pageLength" class="form-label">Page</label>
             <select id="pageLength" name="pageLength" class="form-select">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
             </select>
-            <input class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous"/>
+            <input class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous" />
             <div>
                 <input type="hidden" id="page" name="page" />
             </div>
-            <input class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next"/>
+            <input class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next" />
         </div>
     </div>
     <div id="prayer"></div>

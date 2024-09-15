@@ -18,22 +18,22 @@
 
 	<ul class="nav nav-tabs" role="tablist">
 		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="prayersMenuItemTab" data-bs-toggle="tab" data-bs-target="#prayersMenuItem"
-				type="button" role="tab" aria-controls="prayersMenuItem" aria-selected="true">Prayers</button>
+			<button class="nav-link active" id="prayers-menu-itemTab" data-bs-toggle="tab" data-bs-target="#prayers-menu-item"
+				type="button" role="tab">Prayers</button>
 		</li>
 		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="newPrayerMenuItemTab" data-bs-toggle="tab" data-bs-target="#newPrayerMenuItem"
-				type="button" role="tab" aria-controls="newPrayerMenuItem" aria-selected="false">New Prayer</button>
+			<button class="nav-link" id="new-prayer-menu-itemTab" data-bs-toggle="tab" data-bs-target="#new-prayer-menu-item"
+				type="button" role="tab">New Prayer</button>
 		</li>
 	</ul>
 
 	<div class="tab-content">
-		<div id="prayersMenuItem" class="tab-pane fade show active">
+		<div id="prayers-menu-item" class="tab-pane fade show active">
 			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
 		</div>
-		<div id="newPrayerMenuItem" class="tab-pane fade">
+		<div id="new-prayer-menu-item" class="tab-pane fade">
 			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
