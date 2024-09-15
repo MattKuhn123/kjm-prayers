@@ -15,7 +15,7 @@ public interface PrayerRepository {
         date
     }
 
-    void createPrayer(Prayer prayer) throws SQLException;
+    int createPrayer(Prayer prayer) throws SQLException;
 
     List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
             Optional<LocalDate> date, int page, int pageLength, Optional<OrderBy> orderByEnum,

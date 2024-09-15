@@ -1,12 +1,11 @@
 package org.mlk.kjm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -145,6 +144,58 @@ public class RepositoryUtils {
             } catch (SQLException e) {
             }
         }
+    }
+
+    public static int insert(String table,
+            InsertValue[] insertValues,
+            String url,
+            String user,
+            String password)
+            throws SQLException {
+        Optional<Connection> connection = Optional.empty();
+        Optional<PreparedStatement> statement = Optional.empty();
+
+        try {
+            Class.forName(driverName);
+            connection = Optional.of(DriverManager.getConnection(url, user, password));
+            statement = Optional.of(getInsertPreparedStatement(connection.get(), table, insertValues));
+            int result = statement.get().executeUpdate();
+            return result;
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        } finally {
+            try {
+                if (statement.isPresent()) {
+                    statement.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (connection.isPresent()) {
+                    connection.get().close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    private static PreparedStatement getInsertPreparedStatement(
+            Connection connection,
+            String table,
+            InsertValue[] insertValues) throws SQLException {
+        String comma = " , ";
+        List<String> columns = Arrays.stream(insertValues).map(qp -> qp.getColumn()).collect(toList());
+        String columnsSqlString = String.join(comma, columns);
+        List<String> values = Arrays.stream(insertValues).map(qp -> qp.toSqlStringValue()).collect(toList());
+        String valuesSqlString = String.join(comma, values);
+        String sql = " INSERT INTO " + table + "(" + columnsSqlString + ") VALUES (" + valuesSqlString + ")";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        for (int i = 0; i < insertValues.length; i++) {
+            statement.setString(i + 1, insertValues[i].toPreparedStatementValue());
+        }
+
+        return statement;
     }
 
     private static PreparedStatement getQueryPreparedStatement(

@@ -53,9 +53,9 @@ public class QueryParameter {
     }
 
     public String toSqlStringValue() {
-        String abc = (value instanceof LocalDate) 
+        String qMark = (value instanceof LocalDate) 
             ? " STR_TO_DATE(?, '%m/%d/%Y') " 
             : "?";
-        return column + " " + getOperator() + " " + abc;
+        return column + " " + getOperator() + " " + qMark;
     }
 }

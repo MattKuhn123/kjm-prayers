@@ -36,7 +36,7 @@ public class PrayerServlet extends HttpServlet {
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerId = "prayer";
-    public static final String noResultId = "noResult";
+    public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
 
     public static final String toPageParam = "toPage";
@@ -193,11 +193,10 @@ public class PrayerServlet extends HttpServlet {
         prayerDocument.getElementById(pageLengthId).val(String.valueOf(pageLength));
 
         if (prayers.size() == 0) {
-            String noPrayersFoundHtml = "<p>No prayers found!</p>";
-            prayerDocument.selectFirst(noResultId).text(noPrayersFoundHtml);
             prayerDocument.selectFirst(tableTag).remove();
             prayerDocument.selectFirst(pagesId).remove();
         } else {
+            prayerDocument.getElementById(noResultId).remove();
             Element tbody = prayerDocument.selectFirst(tbodyTag);
             for (Prayer prayer : prayers) {
                 Element tr = tbody.selectFirst(trTag).clone();

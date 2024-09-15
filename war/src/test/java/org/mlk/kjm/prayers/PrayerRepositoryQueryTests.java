@@ -12,17 +12,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesTestImpl;
-import org.mlk.kjm.ApplicationPropertiesTestImpl;
 import org.mlk.kjm.RepositoryUtils;
 import org.mlk.kjm.RepositoryUtilsTesting;
 import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
 
 import junit.framework.TestCase;
 
-public class PrayerRepositoryTests extends TestCase {
+public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
-    public void testest_something() throws Exception {
+    public void test_something() throws Exception {
         assertTrue(true);
     }
 

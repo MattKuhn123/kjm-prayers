@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import org.mlk.kjm.ApplicationProperties;
+import org.mlk.kjm.InsertValue;
 import org.mlk.kjm.OrderByClause;
 import org.mlk.kjm.QueryParameter;
 import org.mlk.kjm.QueryParameter.QueryOperator;
@@ -17,7 +18,6 @@ import org.mlk.kjm.QueryParameter.QueryOperator;
 import static org.mlk.kjm.RepositoryUtils.*;
 
 public class PrayerRepositoryImpl implements PrayerRepository {
-
     private final String url;
     private final String user;
     private final String password;
@@ -37,8 +37,10 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     }
 
     @Override
-    public void createPrayer(Prayer prayer) throws SQLException {
-        throw new UnsupportedOperationException("Unimplemented method 'createPrayer'");
+    public int createPrayer(Prayer prayer) throws SQLException {
+        InsertValue[] insertValue = toInsertValue(prayer);
+        int result = insert(table, insertValue, url, user, password);
+        return result;
     }
 
     @Override
@@ -146,5 +148,16 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         String prayer = (String) map.get(prayerColumn);
         Prayer result = new Prayer(firstName, lastName, county, date, prayer);
         return result;
+    }
+
+    private InsertValue[] toInsertValue(Prayer prayer) {
+        InsertValue firstNameIV = new InsertValue(firstNameColumn, prayer.getFirstName());
+        InsertValue lastNameIV = new InsertValue(lastNameColumn, prayer.getLastName());
+        InsertValue countyIV = new InsertValue(countyColumn, prayer.getCounty());
+        InsertValue dateIV = new InsertValue(dateColumn, prayer.getDate());
+        InsertValue prayerIV = new InsertValue(prayerColumn, prayer.getPrayer());
+        return new InsertValue[] {
+            firstNameIV, lastNameIV, countyIV, dateIV, prayerIV
+        };
     }
 }
