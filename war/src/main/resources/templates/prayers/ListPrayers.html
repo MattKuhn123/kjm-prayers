@@ -1,5 +1,4 @@
 <form id="list-prayers" hx-get="/prayers/ListPrayers">
-    <h3>Search</h3>
     <div class="row">
         <div class="col">
             <label for="inmateFirstName" class="form-label">Inmate First Name</label>
@@ -64,18 +63,10 @@
         <p>No prayers found!</p>
     </div>
     <div id="pages" class="row">
-        <div class="col">
-            <label for="pageLength" class="form-label">Page</label>
-            <select id="pageLength" name="pageLength" class="form-select">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-            </select>
-            <input class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous" />
-            <div>
-                <input type="hidden" id="page" name="page" />
-            </div>
-            <input class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next" />
+        <div id="page-actions" class="col">
+            <input id="previous-btn" class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous" />
+            <input type="hidden" id="page" name="page" />
+            <input id="next-btn" class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next" />
         </div>
     </div>
     <div id="prayer"></div>

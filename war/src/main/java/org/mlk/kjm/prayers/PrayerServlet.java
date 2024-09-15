@@ -31,18 +31,18 @@ public class PrayerServlet extends HttpServlet {
     public static final String orderById = "orderBy";
     public static final String orderByIsAscId = "orderByIsAsc";
     public static final String pageId = "page";
-    public static final String pageLengthId = "pageLength";
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerId = "prayer";
     public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
+    public static final String pageActionsId = "page-actions";
 
     public static final String toPageParam = "toPage";
 
     public static final String defaultPage = "0";
-    public static final String defaultPageLength = "1";
+    public static final int defaultPageLength = 5;
 
     private static final String directory = "prayers/";
 
@@ -162,16 +162,12 @@ public class PrayerServlet extends HttpServlet {
         Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
         
         int page = getPage(req);
-
-        Optional<String> pageLengthString = getOptionalParameter(req, orderByIsAscId);
-        int pageLength = Integer.parseInt(pageLengthString.orElse(defaultPageLength));
-
         Optional<LocalDate> queryDate = queryDateString.isPresent()
                 ? Optional.of(stringToDate(queryDateString.get()))
                 : Optional.empty();
 
         List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
-                pageLength, orderBy, orderByIsAsc);
+                defaultPageLength, orderBy, orderByIsAsc);
 
         Document prayerDocument = getHtmlDocument(listFile);
         prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(emptyString));
@@ -180,21 +176,28 @@ public class PrayerServlet extends HttpServlet {
         prayerDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
 
         int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
-        int pageCount = (int) Math.ceil((double) totalResults / (double) pageLength);
+        int pageCount = (int) Math.ceil((double) totalResults / (double) defaultPageLength);
 
-        Element pageElement = prayerDocument.getElementById(pageId);
+        Element pageActionsElement = prayerDocument.getElementById(pageActionsId);
         for (int i = 0; i < pageCount; i++) {
             int displayIndex = i + 1;
-            String btn = "<input type='submit' value='" + displayIndex + "' formaction='/prayers/ListPrayers?" + toPageParam + "=" + i + "'/>";
-            pageElement.append(btn);
+            String classes = i == page ? "btn btn-secondary" : "btn btn-link";
+            String btn = "<input type='submit' class='" + classes + "' value='" + displayIndex + "' formaction='/prayers/ListPrayers?" + toPageParam + "=" + i + "'/>";
+            pageActionsElement.append(btn);
+        }
+
+        if (page <= 0) {
+            prayerDocument.getElementById("previous-btn").attr("disabled", "true");
+        }
+        
+        if (page >= (pageCount - 1)) {
+            prayerDocument.getElementById("next-btn").attr("disabled", "true");
         }
 
         prayerDocument.getElementById(pageId).val(String.valueOf(page));
-        prayerDocument.getElementById(pageLengthId).val(String.valueOf(pageLength));
-
         if (prayers.size() == 0) {
             prayerDocument.selectFirst(tableTag).remove();
-            prayerDocument.selectFirst(pagesId).remove();
+            prayerDocument.getElementById(pagesId).remove();
         } else {
             prayerDocument.getElementById(noResultId).remove();
             Element tbody = prayerDocument.selectFirst(tbodyTag);
