@@ -1,21 +1,29 @@
 <form id="PrayerRequest" hx-post="/prayers" hx-target="#prayer-response">
-    <label for="inmateFirstName" class="form-label">Inmate First Name</label>
-    <input required id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
-
-    <label for="inmateLastName" class="form-label">Inmate Last Name</label>
-    <input required id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
-
-    <label for="county" class="form-label">County</label>
-    <input required id="county" name="county" type="text" class="form-control" />
-    
-    <label for="date" class="form-label">Date</label>
-    <input required id="date" name="date" type="text" class="form-control" />
-
-    <label for="prayer" class="form-label">Prayer</label>
-    <input required id="prayer" name="prayer" type="text" class="form-control" />
-    
-    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-        <button class="btn btn-primary">Submit</button>
-        <span class="pull-right" id="prayer-response"></span>
+    <div  class="form-control">
+        <label for="inmateFirstName">Inmate First Name</label>
+        <input required id="inmateFirstName" name="inmateFirstName" type="text"/>
     </div>
+    <div  class="form-control">
+        <label for="inmateLastName">Inmate Last Name</label>
+        <input required id="inmateLastName" name="inmateLastName" type="text" />
+    </div>
+    <div class="form-control">
+        <label for="county">County</label>
+        <select id="county" name="county">
+            <option value="Boone">Boone</option>
+            <option value="Campbell">Campbell</option>
+            <option value="Kenton">Kenton</option>
+            <option value="Grant">Grant</option>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="date">Date</label>
+        <input required id="date" name="date" type="date" />
+    </div>
+    <div class="form-control">
+        <label for="prayer">Prayer</label>
+        <textarea required id="prayer-text" name="prayer-text" rows="5"></textarea>
+    </div>
+    <input type="submit" class="btn btn-primary"></input>
+    <span id="prayer-response"></span>
 </form>

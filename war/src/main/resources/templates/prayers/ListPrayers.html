@@ -2,17 +2,17 @@
 <form id="list-prayers" hx-get="/prayers/ListPrayers">
     <details>
         <summary>Search Fields</summary>
-        <div>
-            <label for="inmateFirstName" class="form-label">First Name</label>
-            <input id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
+        <div class="form-control">
+            <label for="inmateFirstName">First Name</label>
+            <input id="inmateFirstName" name="inmateFirstName" type="text" />
         </div>
-        <div>
-            <label for="inmateLastName" class="form-label">Last Name</label>
-            <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
+        <div class="form-control">
+            <label for="inmateLastName">Last Name</label>
+            <input id="inmateLastName" name="inmateLastName" type="text" />
         </div>
-        <div>
-            <label for="county" class="form-label">County</label>
-            <select id="county" name="county" class="form-select">
+        <div class="form-control">
+            <label for="county">County</label>
+            <select id="county" name="county">
                 <option value=""></option>
                 <option value="Boone">Boone</option>
                 <option value="Campbell">Campbell</option>
@@ -20,33 +20,27 @@
                 <option value="Grant">Grant</option>
             </select>
         </div>
-        <div>
-            <label for="date" class="form-label">Date</label>
-            <input id="date" name="date" type="date" class="form-control" />
+        <div class="form-control">
+            <label for="date">Date</label>
+            <input id="date" name="date" type="date" />
         </div>
-        <div>
-            <div>
-                <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
-            </div>
-            <div>
-                <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
-            </div>
+        <div class="form-control">
+            <label for="orderByIsAsc">Sort Ascending?</label>
+            <input type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
         </div>
-        <div>
-            <label for="orderBy" class="form-check-label">Sort by</label>
-            <select id="orderBy" name="orderBy" class="form-select">
-                <option selected value="last_name">Last name</option>
+        <div class="form-control">
+            <label for="orderBy">Sort by</label>
+            <select id="orderBy" name="orderBy">
+                <option selected value="date">Date</option>
+                <option value="last_name">Last name</option>
                 <option value="first_name">First name</option>
-                <option value="date">Date</option>
             </select>
         </div>
         <div>
-            <div class="col">
-                <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
-            </div>
+            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
         </div>
     </details>
-    <table class="table">
+    <table>
         <thead>
             <tr>
                 <th>First Name</th>
@@ -69,8 +63,8 @@
     <div id="no-result">
         <p>No prayers found!</p>
     </div>
-    <div id="pages" class="row">
-        <div id="page-actions" class="col">
+    <div id="pages">
+        <div id="page-actions">
             <input id="previous-btn" class="btn btn-primary" type="submit" value="Previous"
                 formaction="/prayers/ListPrayers/Previous" />
             <input type="hidden" id="page" name="page" />
