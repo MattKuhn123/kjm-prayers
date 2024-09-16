@@ -12,21 +12,26 @@
 	<link rel="stylesheet" href="/styles.css">
 </head>
 
-<body class="container">
-	<h1>Prayer Board</h1>
-
-	<ul class="menu">
-		<li><a class="btn btn-link" href="#view-prayers">View Prayers</a></li>
-		<li><a class="btn btn-link" href="#create-prayer">Create Prayer</a></li>
-	</ul>
-	<div id="view-prayers" class="tab-content">
-		<div hx-get="/prayers/ListPrayers" hx-trigger="load">
-			<p class="htmx-indicator">Result loading...</p>
+<body>
+	<div class="container">
+		<h1>Prayer Board</h1>
+		<ul class="menu">
+			<li>
+				<a class="btn btn-secondary" href="#view-prayers">View Prayers</a>
+			</li>
+			<li>
+				<a class="btn btn-secondary" href="#create-prayer">Create Prayer</a>
+			</li>
+		</ul>
+		<div id="view-prayers" class="tab-content">
+			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
+				<p class="htmx-indicator">Result loading...</p>
+			</div>
 		</div>
-	</div>
-	<div id="create-prayer" class="tab-content">
-		<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
-			<p class="htmx-indicator">Result loading...</p>
+		<div id="create-prayer" class="tab-content">
+			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
+				<p class="htmx-indicator">Result loading...</p>
+			</div>
 		</div>
 	</div>
 </body>
