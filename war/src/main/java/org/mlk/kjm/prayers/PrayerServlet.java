@@ -181,7 +181,7 @@ public class PrayerServlet extends HttpServlet {
         for (int i = 0; i < pageCount; i++) {
             int displayIndex = i + 1;
             String classes = i == page ? "btn btn-secondary" : "btn btn-link";
-            String btn = "<input type='submit' class='" + classes + "' value='" + displayIndex + "' formaction='/prayers/ListPrayers?" + toPageParam + "=" + i + "'/>";
+            String btn = "<input type='submit' class='" + classes + " btn-small' value='" + displayIndex + "' formaction='/prayers/ListPrayers?" + toPageParam + "=" + i + "'/>";
             pageActionsElement.append(btn);
         }
 
