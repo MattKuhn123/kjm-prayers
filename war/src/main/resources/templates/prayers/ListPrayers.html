@@ -1,15 +1,16 @@
 <div id="prayer"></div>
 <form id="list-prayers" hx-get="/prayers/ListPrayers">
-    <div class="row">
-        <div class="col-2">
+    <details>
+        <summary>Search Fields</summary>
+        <div>
             <label for="inmateFirstName" class="form-label">First Name</label>
             <input id="inmateFirstName" name="inmateFirstName" type="text" class="form-control" />
         </div>
-        <div class="col-2">
+        <div>
             <label for="inmateLastName" class="form-label">Last Name</label>
             <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
         </div>
-        <div class="col-1">
+        <div>
             <label for="county" class="form-label">County</label>
             <select id="county" name="county" class="form-select">
                 <option value=""></option>
@@ -19,11 +20,11 @@
                 <option value="Grant">Grant</option>
             </select>
         </div>
-        <div class="col-2">
+        <div>
             <label for="date" class="form-label">Date</label>
             <input id="date" name="date" type="date" class="form-control" />
         </div>
-        <div class="col-2">
+        <div>
             <div>
                 <label for="orderByIsAsc" class="form-check-label">Sort Ascending?</label>
             </div>
@@ -31,7 +32,7 @@
                 <input class="form-check-input" type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
             </div>
         </div>
-        <div class="col-2">
+        <div>
             <label for="orderBy" class="form-check-label">Sort by</label>
             <select id="orderBy" name="orderBy" class="form-select">
                 <option selected value="last_name">Last name</option>
@@ -39,12 +40,13 @@
                 <option value="date">Date</option>
             </select>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
+        <div>
+            <div class="col">
+                <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
+            </div>
         </div>
-    </div>
+
+    </details>
     <table class="table">
         <thead>
             <tr>
