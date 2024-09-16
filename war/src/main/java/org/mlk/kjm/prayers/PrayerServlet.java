@@ -28,10 +28,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class PrayerServlet extends HttpServlet {
     public static final String contextPath = "/prayers";
-    public static final String inmateFirstNameId = "inmateFirstName";
-    public static final String inmateLastNameId = "inmateLastName";
-    public static final String orderById = "orderBy";
-    public static final String orderByIsAscId = "orderByIsAsc";
+    public static final String firstNameId = "first-name";
+    public static final String lastNameId = "last-name";
+    public static final String orderById = "order-by";
+    public static final String orderByIsAscId = "order-by-is-asc";
     public static final String pageId = "page";
     public static final String countyId = "county";
     public static final String dateId = "date";
@@ -123,20 +123,20 @@ public class PrayerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             Map<String, Optional<String>> postBody = getPostBodyMap(req);
-            String inmateFirstName = getRequiredFromPostBody(postBody, inmateFirstNameId);
-            String inmateLastName = getRequiredFromPostBody(postBody, inmateLastNameId);
+            String firstName = getRequiredFromPostBody(postBody, firstNameId);
+            String lastName = getRequiredFromPostBody(postBody, lastNameId);
             String county = getRequiredFromPostBody(postBody, countyId);
             String dateString = getRequiredFromPostBody(postBody, dateId);
             LocalDate date = stringToDate(dateString);
             String prayerText = getRequiredFromPostBody(postBody, prayerTextId);
 
-            Optional<Inmate> inmate = this.inmates.getInmate(inmateFirstName, inmateLastName, county);
+            Optional<Inmate> inmate = this.inmates.getInmate(firstName, lastName, county);
             if (inmate.isEmpty()) {
-                Inmate newInmate = new Inmate(inmateFirstName, inmateLastName, county, Optional.empty(), Optional.empty(), Optional.empty());
+                Inmate newInmate = new Inmate(firstName, lastName, county, Optional.empty(), Optional.empty(), Optional.empty());
                 this.inmates.createInmate(newInmate);
             }
 
-            Prayer prayer = new Prayer(inmateFirstName, inmateLastName, county, date, prayerText);
+            Prayer prayer = new Prayer(firstName, lastName, county, date, prayerText);
             this.prayers.createPrayer(prayer);
 
             String successMessage = "<p>Success!</p>";
@@ -162,8 +162,8 @@ public class PrayerServlet extends HttpServlet {
     }
 
     private Document getPrayerListDocument(HttpServletRequest req) throws IOException, SQLException {
-        Optional<String> queryFirstName = getOptionalParameter(req, inmateFirstNameId);
-        Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
+        Optional<String> queryFirstName = getOptionalParameter(req, firstNameId);
+        Optional<String> queryLastName = getOptionalParameter(req, lastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
@@ -179,8 +179,8 @@ public class PrayerServlet extends HttpServlet {
                 defaultPageLength, orderBy, orderByIsAsc);
 
         Document prayerDocument = getHtmlDocument(listFile);
-        prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(emptyString));
-        prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(emptyString));
+        prayerDocument.getElementById(firstNameId).val(queryFirstName.orElse(emptyString));
+        prayerDocument.getElementById(lastNameId).val(queryLastName.orElse(emptyString));
         prayerDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
         if (queryCounty.isPresent()) {
             prayerDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
@@ -224,11 +224,11 @@ public class PrayerServlet extends HttpServlet {
             for (Prayer prayer : prayers) {
                 Element tr = tbody.selectFirst(trTag).clone();
 
-                Element inmateFirstNameElement = tr.getElementById(inmateFirstNameId);
+                Element inmateFirstNameElement = tr.getElementById(firstNameId);
                 inmateFirstNameElement.text(prayer.getFirstName());
                 inmateFirstNameElement.removeAttr(idAttr);
 
-                Element inmateLastNameElement = tr.getElementById(inmateLastNameId);
+                Element inmateLastNameElement = tr.getElementById(lastNameId);
                 inmateLastNameElement.text(prayer.getLastName());
                 inmateLastNameElement.removeAttr(idAttr);
 
@@ -241,8 +241,8 @@ public class PrayerServlet extends HttpServlet {
                 dateElement.removeAttr(idAttr);
 
                 Map<String, String> params = new HashMap<String, String>();
-                params.put(inmateFirstNameId, prayer.getFirstName());
-                params.put(inmateLastNameId, prayer.getLastName());
+                params.put(firstNameId, prayer.getFirstName());
+                params.put(lastNameId, prayer.getLastName());
                 params.put(dateId, dateToString(prayer.getDate()));
 
                 String hxGetValue = createLink(contextPath + singleName, params);
@@ -261,8 +261,8 @@ public class PrayerServlet extends HttpServlet {
     }
 
     private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
-        String queryInmateFirstName = getRequiredParameter(req, inmateFirstNameId);
-        String queryInmateLastName = getRequiredParameter(req, inmateLastNameId);
+        String queryInmateFirstName = getRequiredParameter(req, firstNameId);
+        String queryInmateLastName = getRequiredParameter(req, lastNameId);
         String queryDateString = getRequiredParameter(req, dateId);
         LocalDate queryDate = stringToDate(queryDateString);
 
@@ -274,8 +274,8 @@ public class PrayerServlet extends HttpServlet {
         }
 
         Document getPrayerDocument = getHtmlDocument(singleFile);
-        getPrayerDocument.getElementById(inmateFirstNameId).text(prayer.get().getFirstName());
-        getPrayerDocument.getElementById(inmateLastNameId).text(prayer.get().getLastName());
+        getPrayerDocument.getElementById(firstNameId).text(prayer.get().getFirstName());
+        getPrayerDocument.getElementById(lastNameId).text(prayer.get().getLastName());
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
         getPrayerDocument.getElementById(prayerTextId).text(prayer.get().getPrayer());
         return getPrayerDocument;

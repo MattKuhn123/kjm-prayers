@@ -25,7 +25,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
     }
 
     @Before
-    public void zetUp() throws Exception {
+    public void setUp() throws Exception {
         ApplicationProperties props = new ApplicationPropertiesTestImpl();
         String url = props.getDbUrl();
         String username = props.getDbUser();

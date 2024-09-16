@@ -31,11 +31,11 @@ public class ServletUtilsTests extends TestCase{
         String contextPath = "myContextPath";
         // LinkedHashMap maintains insertion order, makes it easier for us to test
         Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("inmateFirstName", "Matt");
-        params.put("inmateLastName", "Kuhn");
+        params.put("first-name", "Matt");
+        params.put("last-name", "Kuhn");
         params.put("date", "01/01/1990");
 
-        String expected = "/myContextPath?inmateFirstName=Matt&inmateLastName=Kuhn&date=01%2F01%2F1990";
+        String expected = "/myContextPath?first-name=Matt&last-name=Kuhn&date=01%2F01%2F1990";
         String actual = ServletUtils.createLink(contextPath, params);
 
         Assert.assertEquals(expected, actual);

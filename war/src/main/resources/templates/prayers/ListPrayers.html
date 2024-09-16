@@ -1,43 +1,43 @@
-<div id="single-prayer"></div>
-<form id="list-prayers" hx-get="/prayers/ListPrayers">
+<div id='single-prayer'></div>
+<form hx-get='/prayers/ListPrayers'>
     <details>
         <summary>Search Fields</summary>
-        <div class="form-control">
-            <label for="inmateFirstName">First Name</label>
-            <input id="inmateFirstName" name="inmateFirstName" type="text" />
+        <div class='form-control'>
+            <label for='first-name'>First Name</label>
+            <input id='first-name' name='first-name' type='text' />
         </div>
-        <div class="form-control">
-            <label for="inmateLastName">Last Name</label>
-            <input id="inmateLastName" name="inmateLastName" type="text" />
+        <div class='form-control'>
+            <label for='last-name'>Last Name</label>
+            <input id='last-name' name='last-name' type='text' />
         </div>
-        <div class="form-control">
-            <label for="county">County</label>
-            <select id="county" name="county">
-                <option value=""></option>
-                <option value="Boone">Boone</option>
-                <option value="Campbell">Campbell</option>
-                <option value="Kenton">Kenton</option>
-                <option value="Grant">Grant</option>
+        <div class='form-control'>
+            <label for='county'>County</label>
+            <select id='county' name='county'>
+                <option value=''></option>
+                <option value='Boone'>Boone</option>
+                <option value='Campbell'>Campbell</option>
+                <option value='Kenton'>Kenton</option>
+                <option value='Grant'>Grant</option>
             </select>
         </div>
-        <div class="form-control">
-            <label for="date">Date</label>
-            <input id="date" name="date" type="date" />
+        <div class='form-control'>
+            <label for='date'>Date</label>
+            <input id='date' name='date' type='date' />
         </div>
-        <div class="form-control">
-            <label for="orderByIsAsc">Sort Ascending?</label>
-            <input type="checkbox" id="orderByIsAsc" name="orderByIsAsc">
+        <div class='form-control'>
+            <label for='order-by-is-asc'>Sort Ascending?</label>
+            <input type='checkbox' id='order-by-is-asc' name='order-by-is-asc'>
         </div>
-        <div class="form-control">
-            <label for="orderBy">Sort by</label>
-            <select id="orderBy" name="orderBy">
-                <option selected value="date">Date</option>
-                <option value="last_name">Last name</option>
-                <option value="first_name">First name</option>
+        <div class='form-control'>
+            <label for='order-by'>Sort by</label>
+            <select id='order-by' name='order-by'>
+                <option selected value='date'>Date</option>
+                <option value='last_name'>Last name</option>
+                <option value='first_name'>First name</option>
             </select>
         </div>
         <div>
-            <input class="btn btn-primary" type="submit" value="Search" formaction="/prayers/ListPrayers/Reset" />
+            <input class='btn btn-primary' type='submit' value='Search' formaction='/prayers/ListPrayers/Reset' />
         </div>
     </details>
     <table>
@@ -51,23 +51,23 @@
         </thead>
         <tbody>
             <tr>
-                <td><a class="btn btn-small btn-link" id="view" hx-get="SET_ME" hx-target="#single-prayer">View</a></td>
-                <td><span id="inmateFirstName">First Name</span> <span id="inmateLastName">Last Name</span></td>
-                <td id="county">County</td>
-                <td id="date">Date</td>
+                <td><a class='btn btn-small btn-link' id='view' hx-get='SET_ME' hx-target='#single-prayer'>View</a></td>
+                <td><span id='first-name'>First Name</span> <span id='last-name'>Last Name</span></td>
+                <td id='county'>County</td>
+                <td id='date'>Date</td>
             </tr>
         </tbody>
     </table>
-    <div id="no-result">
+    <div id='no-result'>
         <p>No prayers found!</p>
     </div>
-    <div id="pages">
-        <div id="page-actions">
-            <input id="previous-btn" class="btn btn-primary" type="submit" value="Previous"
-                formaction="/prayers/ListPrayers/Previous" />
-            <input type="hidden" id="page" name="page" />
-            <input id="next-btn" class="btn btn-primary" type="submit" value="Next"
-                formaction="/prayers/ListPrayers/Next" />
+    <div id='pages'>
+        <div id='page-actions'>
+            <input id='previous-btn' class='btn btn-primary' type='submit' value='Previous'
+                formaction='/prayers/ListPrayers/Previous' />
+            <input type='hidden' id='page' name='page' />
+            <input id='next-btn' class='btn btn-primary' type='submit' value='Next'
+                formaction='/prayers/ListPrayers/Next' />
         </div>
     </div>
 </form>

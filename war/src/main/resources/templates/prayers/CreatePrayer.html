@@ -1,29 +1,29 @@
-<form id="PrayerRequest" hx-post="/prayers" hx-target="#prayer-response">
-    <div  class="form-control">
-        <label for="inmateFirstName">First Name</label>
-        <input required id="inmateFirstName" name="inmateFirstName" type="text"/>
+<form hx-post='/prayers' hx-target='#prayer-response'>
+    <div  class='form-control'>
+        <label for='first-name'>First Name</label>
+        <input required id='first-name' name='first-name' type='text'/>
     </div>
-    <div  class="form-control">
-        <label for="inmateLastName">Last Name</label>
-        <input required id="inmateLastName" name="inmateLastName" type="text" />
+    <div  class='form-control'>
+        <label for='last-name'>Last Name</label>
+        <input required id='last-name' name='last-name' type='text' />
     </div>
-    <div class="form-control">
-        <label for="county">County</label>
-        <select id="county" name="county">
-            <option value="Boone">Boone</option>
-            <option value="Campbell">Campbell</option>
-            <option value="Kenton">Kenton</option>
-            <option value="Grant">Grant</option>
+    <div class='form-control'>
+        <label for='county'>County</label>
+        <select id='county' name='county'>
+            <option value='Boone'>Boone</option>
+            <option value='Campbell'>Campbell</option>
+            <option value='Kenton'>Kenton</option>
+            <option value='Grant'>Grant</option>
         </select>
     </div>
-    <div class="form-control">
-        <label for="date">Date</label>
-        <input required id="date" name="date" type="date" />
+    <div class='form-control'>
+        <label for='date'>Date</label>
+        <input required id='date' name='date' type='date' />
     </div>
-    <div class="form-control">
-        <label for="prayer">Prayer</label>
-        <textarea required id="prayer-text" name="prayer-text" rows="5"></textarea>
+    <div class='form-control'>
+        <label for='prayer'>Prayer</label>
+        <textarea required id='prayer-text' name='prayer-text' rows='5'></textarea>
     </div>
-    <input type="submit" class="btn btn-primary"></input>
-    <span id="prayer-response"></span>
+    <input type='submit' class='btn btn-primary'></input>
+    <span id='prayer-response'></span>
 </form>
