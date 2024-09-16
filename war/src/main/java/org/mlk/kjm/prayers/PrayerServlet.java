@@ -252,11 +252,11 @@ public class PrayerServlet extends HttpServlet {
             return empty;
         }
 
-        Document getPrayerDocument = getHtmlDocument(singleFile);
-        getPrayerDocument.getElementById(firstNameId).text(prayer.get().getFirstName());
-        getPrayerDocument.getElementById(lastNameId).text(prayer.get().getLastName());
-        getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
-        getPrayerDocument.getElementById(prayerTextId).text(prayer.get().getPrayer());
-        return getPrayerDocument;
+        Document prayerDocument = getHtmlDocument(singleFile);
+        prayerDocument.getElementById(firstNameId).text(prayer.get().getFirstName());
+        prayerDocument.getElementById(lastNameId).text(prayer.get().getLastName());
+        prayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
+        prayerDocument.getElementById(prayerTextId).text(prayer.get().getPrayer());
+        return prayerDocument;
     }
 }

@@ -2,10 +2,12 @@ package org.mlk.kjm.inmates;
 
 import static org.mlk.kjm.ServletUtils.*;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
+import org.mlk.kjm.prayers.Prayer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -13,6 +15,7 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.time.LocalDate;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -27,6 +30,7 @@ public class InmateServlet extends HttpServlet {
     private static final String directory = "inmates/";
 
     private static final String listFile = directory + listName + ".html";
+    private static final String singleFile = directory + singleName + ".html";
 
     public static final String contextPath = "/inmates";
     public static final String firstNameId = "first-name";
@@ -36,6 +40,7 @@ public class InmateServlet extends HttpServlet {
     public static final String pageId = "page";
     public static final String countyId = "county";
     public static final String isMaleId = "is-male";
+    public static final String infoTextId = "info-text";
     public static final String viewId = "view";
     public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
@@ -64,6 +69,13 @@ public class InmateServlet extends HttpServlet {
 
             if (pathInfo.startsWith(listName)) {
                 Document resultListDocument = getInmateListDocument(req);
+                String html = resultListDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+
+            if (singleName.equals(pathInfo)) {
+                Document resultListDocument = getPrayerSingleDocument(req);
                 String html = resultListDocument.html();
                 resp.getWriter().append(html).flush();
                 return;
@@ -171,4 +183,23 @@ public class InmateServlet extends HttpServlet {
         return inmatesDocument;
     }
 
+    private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
+        String queryInmateFirstName = getRequiredParameter(req, firstNameId);
+        String queryInmateLastName = getRequiredParameter(req, lastNameId);
+        String queryCounty = getRequiredParameter(req, countyId);
+
+        Optional<Inmate> inmate = this.inmates.getInmate(queryInmateFirstName, queryInmateLastName, queryCounty);
+        if (inmate.isEmpty()) {
+            String html = "<p>Inmate not found!</p>";
+            Document empty = Jsoup.parse(html);
+            return empty;
+        }
+
+        Document inmateDocument = getHtmlDocument(singleFile);
+        inmateDocument.getElementById(firstNameId).text(inmate.get().getFirstName());
+        inmateDocument.getElementById(lastNameId).text(inmate.get().getLastName());
+        inmateDocument.getElementById(countyId).text(inmate.get().getCounty());
+        inmateDocument.getElementById(infoTextId).text(inmate.get().getInfo().orElse(emptyString));
+        return inmateDocument;
+    }
 }
