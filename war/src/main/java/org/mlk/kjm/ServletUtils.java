@@ -74,6 +74,12 @@ public class ServletUtils {
 		return result;
 	}
 
+	public static boolean isParameterPresent(HttpServletRequest req, String parameter) {
+		String value = req.getParameter(parameter);
+		boolean result = value != null;
+		return result;
+	}
+
 	public static Optional<String> getOptionalParameter(HttpServletRequest req, String parameter) throws UnsupportedEncodingException {
 		String result = req.getParameter(parameter);
 		if (result == null || "".equals(result)) {

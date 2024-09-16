@@ -85,7 +85,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             }
 
             String orderBy = orderByColumn.get();
-            boolean defaultIsAsc = true;
+            boolean defaultIsAsc = false;
             OrderByClause clause = new OrderByClause(orderBy, isAsc.orElse(defaultIsAsc));
             result.add(clause);
         }
@@ -94,7 +94,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
             return result;
         }
 
-        boolean defaultIsAsc = true;
+        boolean defaultIsAsc = false;
         result.add(new OrderByClause(dateColumn, defaultIsAsc));
         return result;
     }

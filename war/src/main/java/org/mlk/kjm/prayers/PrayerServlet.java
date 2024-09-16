@@ -156,8 +156,8 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
-        Optional<String> queryOrderByStringIsAsc = getOptionalParameter(req, orderByIsAscId);
-        Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
+        boolean queryOrderByIsPresent = isParameterPresent(req, orderByIsAscId);
+        Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsPresent);
         
         int page = getPage(req);
         Optional<LocalDate> queryDate = queryDateString.isPresent()
@@ -171,7 +171,18 @@ public class PrayerServlet extends HttpServlet {
         prayerDocument.getElementById(inmateFirstNameId).val(queryFirstName.orElse(emptyString));
         prayerDocument.getElementById(inmateLastNameId).val(queryLastName.orElse(emptyString));
         prayerDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
+        if (queryCounty.isPresent()) {
+            prayerDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
+        }
+
         prayerDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
+        if (orderBy.isPresent()) {
+            prayerDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr("selected", "true");
+        }
+
+        if (queryOrderByIsPresent) {
+            prayerDocument.getElementById(orderByIsAscId).attr("checked", "true");
+        }
 
         int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
         int pageCount = (int) Math.ceil((double) totalResults / (double) defaultPageLength);
