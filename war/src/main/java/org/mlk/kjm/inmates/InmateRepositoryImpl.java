@@ -56,8 +56,7 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     @Override
     public int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> birthDay, Optional<Boolean> isMale, int page, int pageLength,
-            Optional<String> orderByEnum, Optional<Boolean> orderAsc) throws SQLException {
+            Optional<LocalDate> birthDay, Optional<Boolean> isMale) throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, birthDay, isMale);
         int result = queryTableCount(table, parameters, url, user, password);
         return result;
@@ -176,12 +175,24 @@ public class InmateRepositoryImpl implements InmateRepository {
         String firstName = (String) map.get(firstNameColumn);
         String lastName = (String) map.get(lastNameColumn);
         String county = (String) map.get(countyColumn);
-        Optional<Date> birthDaySql = (Optional<Date>) map.get(birthdayColumn);
+        Optional<Date> birthDaySql = map.containsKey(birthdayColumn) && map.get(birthdayColumn) != null
+            ? Optional.of((Date) map.get(birthdayColumn)) 
+            : Optional.empty();
         Optional<LocalDate> birthDay = birthDaySql.isPresent() 
             ? Optional.of(birthDaySql.get().toLocalDate()) 
             : Optional.empty();
-        Optional<Boolean> isMale = (Optional<Boolean>) map.get(isMaleColumn);
-        Optional<String> info = (Optional<String>) map.get(infoColumn);
+
+        Optional<Integer> isMaleByte = map.containsKey(isMaleColumn) && map.get(isMaleColumn) != null
+            ? Optional.of((Integer) map.get(isMaleColumn))
+            : Optional.empty();
+        
+        Optional<Boolean> isMale = isMaleByte.isPresent()
+            ? Optional.of(isMaleByte.get().intValue() == 1)
+            : Optional.empty();
+
+        Optional<String> info = map.containsKey(infoColumn) && map.get(infoColumn) != null
+            ? Optional.of((String) map.get(infoColumn))
+            : Optional.empty();
         Inmate result = new Inmate(firstName, lastName, county, birthDay, isMale, info);
         return result;
     }

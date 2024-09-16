@@ -23,8 +23,8 @@ public class PrayerRepositoryInsertTests extends TestCase {
         assertTrue(true);
     }
 
-    //@Before
-    public void zetUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
         ApplicationProperties props = new ApplicationPropertiesTestImpl();
         String url = props.getDbUrl();
         String username = props.getDbUser();
@@ -34,7 +34,7 @@ public class PrayerRepositoryInsertTests extends TestCase {
         RepositoryUtilsTesting.populate(url, username, password);
     }
 
-    //@Test
+    @Test
     public void zest_insertNonExistingInmate_expectError() throws Exception {
         PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
 
@@ -53,7 +53,7 @@ public class PrayerRepositoryInsertTests extends TestCase {
         assertNotNull(result);
     }
 
-    //@Test
+    @Test
     public void zest_insertRealInmate() throws Exception {
         PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
 

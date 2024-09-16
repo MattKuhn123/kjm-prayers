@@ -22,6 +22,9 @@
 			<li>
 				<a class="btn btn-secondary" href="#create-prayer">Create Prayer</a>
 			</li>
+			<li>
+				<a class="btn btn-secondary" href="#view-inmates">View Inmates</a>
+			</li>
 		</ul>
 		<div id="view-prayers" class="tab-content">
 			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
@@ -30,6 +33,11 @@
 		</div>
 		<div id="create-prayer" class="tab-content">
 			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
+				<p class="htmx-indicator">Result loading...</p>
+			</div>
+		</div>
+		<div id="view-inmates" class="tab-content">
+			<div hx-get="/inmates/ListInmates" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
 		</div>

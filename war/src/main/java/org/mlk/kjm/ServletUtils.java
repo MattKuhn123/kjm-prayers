@@ -23,6 +23,13 @@ import org.jsoup.nodes.Document;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ServletUtils {
+    public static final String tableTag = "table";
+    public static final String tbodyTag = "tbody";
+    public static final String trTag = "tr";
+    public static final String hxGetAttr = "hx-get";
+    public static final String idAttr = "id";
+    public static final String emptyString = "";
+
 	private static final String pattern = "MM/dd/yyyy";
 	private static final String htmlPattern = "yyyy-MM-dd";
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -129,4 +136,69 @@ public class ServletUtils {
 
 		return contextPath + "?" + result;
 	}
+
+	public static final String pageId = "page";
+	public static final String pagesId = "pages";
+	public static final String defaultPage = "0";
+    public static final int defaultPageLength = 5;
+    public static final String pageActionsId = "page-actions";
+	public static final String toPageParam = "toPage";
+    public static final String listResetName = "/Reset";
+    public static final String listPreviousName = "/Previous";
+    public static final String listNextName = "/Next";
+
+    public static boolean isPageReset(String pathInfo) {
+        boolean result = pathInfo.indexOf(listResetName) > -1;
+        return result;
+    }
+
+    public static int getToPage(HttpServletRequest req) {
+        try {
+            Optional<String> toPage = getOptionalParameter(req, toPageParam);
+            int result = Integer.parseInt(toPage.get());
+            return result;
+        } catch (UnsupportedEncodingException e) {
+            return -1;
+        }
+    }
+
+    public static boolean isToPage(HttpServletRequest req) {
+        try {
+            Optional<String> toPage = getOptionalParameter(req, toPageParam);
+            return toPage.isPresent();
+        } catch (UnsupportedEncodingException e) {
+            return false;
+        }
+    }
+
+    public static int getPageDirection(String pathInfo) {
+        if (pathInfo.indexOf(listPreviousName) > -1) {
+            return -1;
+        }
+
+        if (pathInfo.indexOf(listNextName) > -1) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+	public static int getPage(HttpServletRequest req) {
+        if (isToPage(req)) {
+            int result = getToPage(req);
+            return result;
+        }
+
+        if (isPageReset(req.getPathInfo())) {
+            return 0;
+        }
+
+        try {
+            String page = getOptionalParameter(req, pageId).orElse(defaultPage);
+            int result = Integer.parseInt(page) + getPageDirection(req.getPathInfo());
+            return result;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
 }

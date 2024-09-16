@@ -22,8 +22,7 @@ public interface InmateRepository {
             Optional<Boolean> orderAsc) throws SQLException;
 
     int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-        Optional<LocalDate> birthDay, Optional<Boolean> isMale, int page, int pageLength, Optional<String> orderByEnum,
-        Optional<Boolean> orderAsc) throws SQLException;
+        Optional<LocalDate> birthDay, Optional<Boolean> isMale) throws SQLException;
 
     Optional<Inmate> getInmate(String firstName, String lastName, String county) throws SQLException;
 }

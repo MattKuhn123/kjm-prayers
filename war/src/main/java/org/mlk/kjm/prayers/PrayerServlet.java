@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 
 import org.jsoup.Jsoup;
@@ -32,41 +31,21 @@ public class PrayerServlet extends HttpServlet {
     public static final String lastNameId = "last-name";
     public static final String orderById = "order-by";
     public static final String orderByIsAscId = "order-by-is-asc";
-    public static final String pageId = "page";
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
     public static final String prayerTextId = "prayer-text";
     public static final String noResultId = "no-result";
-    public static final String pagesId = "pages";
-    public static final String pageActionsId = "page-actions";
-
-    public static final String toPageParam = "toPage";
-
-    public static final String defaultPage = "0";
-    public static final int defaultPageLength = 5;
 
     private static final String directory = "prayers/";
 
     private static final String createName = "/CreatePrayer";
     private static final String listName = "/ListPrayers";
-    private static final String listResetName = "/ListPrayers/Reset";
-    private static final String listPreviousName = "/ListPrayers/Previous";
-    private static final String listNextName = "/ListPrayers/Next";
     private static final String singleName = "/SinglePrayer";
 
     private static final String createFile = directory + createName + ".html";
     private static final String listFile = directory + listName + ".html";
     private static final String singleFile = directory + singleName + ".html";
-
-    private static final String tableTag = "table";
-    private static final String tbodyTag = "tbody";
-    private static final String trTag = "tr";
-
-    private static final String hxGetAttr = "hx-get";
-    private static final String idAttr = "id";
-
-    private static final String emptyString = "";
 
     private final ApplicationProperties props;
     private final PrayerRepository prayers;
@@ -167,8 +146,8 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
-        boolean queryOrderByIsPresent = isParameterPresent(req, orderByIsAscId);
-        Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsPresent);
+        boolean queryOrderByIsAscIsPresent = isParameterPresent(req, orderByIsAscId);
+        Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsAscIsPresent);
         
         int page = getPage(req);
         Optional<LocalDate> queryDate = queryDateString.isPresent()
@@ -178,27 +157,27 @@ public class PrayerServlet extends HttpServlet {
         List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
                 defaultPageLength, orderBy, orderByIsAsc);
 
-        Document prayerDocument = getHtmlDocument(listFile);
-        prayerDocument.getElementById(firstNameId).val(queryFirstName.orElse(emptyString));
-        prayerDocument.getElementById(lastNameId).val(queryLastName.orElse(emptyString));
-        prayerDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
+        Document prayersDocument = getHtmlDocument(listFile);
+        prayersDocument.getElementById(firstNameId).val(queryFirstName.orElse(emptyString));
+        prayersDocument.getElementById(lastNameId).val(queryLastName.orElse(emptyString));
+        prayersDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
         if (queryCounty.isPresent()) {
-            prayerDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
+            prayersDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
         }
 
-        prayerDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
+        prayersDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
         if (orderBy.isPresent()) {
-            prayerDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr("selected", "true");
+            prayersDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr("selected", "true");
         }
 
-        if (queryOrderByIsPresent) {
-            prayerDocument.getElementById(orderByIsAscId).attr("checked", "true");
+        if (queryOrderByIsAscIsPresent) {
+            prayersDocument.getElementById(orderByIsAscId).attr("checked", "true");
         }
 
         int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
         int pageCount = (int) Math.ceil((double) totalResults / (double) defaultPageLength);
 
-        Element pageActionsElement = prayerDocument.getElementById(pageActionsId);
+        Element pageActionsElement = prayersDocument.getElementById(pageActionsId);
         for (int i = 0; i < pageCount; i++) {
             int displayIndex = i + 1;
             String classes = i == page ? "btn btn-secondary" : "btn btn-link";
@@ -207,30 +186,30 @@ public class PrayerServlet extends HttpServlet {
         }
 
         if (page <= 0) {
-            prayerDocument.getElementById("previous-btn").attr("disabled", "true");
+            prayersDocument.getElementById("previous-btn").attr("disabled", "true");
         }
         
         if (page >= (pageCount - 1)) {
-            prayerDocument.getElementById("next-btn").attr("disabled", "true");
+            prayersDocument.getElementById("next-btn").attr("disabled", "true");
         }
 
-        prayerDocument.getElementById(pageId).val(String.valueOf(page));
+        prayersDocument.getElementById(pageId).val(String.valueOf(page));
         if (prayers.size() == 0) {
-            prayerDocument.selectFirst(tableTag).remove();
-            prayerDocument.getElementById(pagesId).remove();
+            prayersDocument.selectFirst(tableTag).remove();
+            prayersDocument.getElementById(pagesId).remove();
         } else {
-            prayerDocument.getElementById(noResultId).remove();
-            Element tbody = prayerDocument.selectFirst(tbodyTag);
+            prayersDocument.getElementById(noResultId).remove();
+            Element tbody = prayersDocument.selectFirst(tbodyTag);
             for (Prayer prayer : prayers) {
                 Element tr = tbody.selectFirst(trTag).clone();
 
-                Element inmateFirstNameElement = tr.getElementById(firstNameId);
-                inmateFirstNameElement.text(prayer.getFirstName());
-                inmateFirstNameElement.removeAttr(idAttr);
+                Element firstNameElement = tr.getElementById(firstNameId);
+                firstNameElement.text(prayer.getFirstName());
+                firstNameElement.removeAttr(idAttr);
 
-                Element inmateLastNameElement = tr.getElementById(lastNameId);
-                inmateLastNameElement.text(prayer.getLastName());
-                inmateLastNameElement.removeAttr(idAttr);
+                Element lastNameElement = tr.getElementById(lastNameId);
+                lastNameElement.text(prayer.getLastName());
+                lastNameElement.removeAttr(idAttr);
 
                 Element countyElement = tr.getElementById(countyId);
                 countyElement.text(prayer.getCounty());
@@ -257,7 +236,7 @@ public class PrayerServlet extends HttpServlet {
             tbody.children().remove(first);
         }
 
-        return prayerDocument;
+        return prayersDocument;
     }
 
     private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
@@ -279,60 +258,5 @@ public class PrayerServlet extends HttpServlet {
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
         getPrayerDocument.getElementById(prayerTextId).text(prayer.get().getPrayer());
         return getPrayerDocument;
-    }
-
-    private int getPage(HttpServletRequest req) {
-        if (isToPage(req)) {
-            int result = getToPage(req);
-            return result;
-        }
-
-        if (isPageReset(req.getPathInfo())) {
-            return 0;
-        }
-
-        try {
-            String page = getOptionalParameter(req, pageId).orElse(defaultPage);
-            int result = Integer.parseInt(page) + getPageDirection(req.getPathInfo());
-            return result;
-        } catch (Exception e) {
-            return -1;
-        }
-    }
-
-    private boolean isPageReset(String pathInfo) {
-        boolean result = listResetName.equals(pathInfo);
-        return result;
-    }
-
-    private int getToPage(HttpServletRequest req) {
-        try {
-            Optional<String> toPage = getOptionalParameter(req, toPageParam);
-            int result = Integer.parseInt(toPage.get());
-            return result;
-        } catch (UnsupportedEncodingException e) {
-            return -1;
-        }
-    }
-
-    private boolean isToPage(HttpServletRequest req) {
-        try {
-            Optional<String> toPage = getOptionalParameter(req, toPageParam);
-            return toPage.isPresent();
-        } catch (UnsupportedEncodingException e) {
-            return false;
-        }
-    }
-
-    private int getPageDirection(String pathInfo) {
-        if (listPreviousName.equals(pathInfo)) {
-            return -1;
-        }
-
-        if (listNextName.equals(pathInfo)) {
-            return 1;
-        }
-
-        return 0;
     }
 }

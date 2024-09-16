@@ -114,11 +114,7 @@ public class RepositoryUtils {
                 Map<String, Object> row = new HashMap<String, Object>();
                 for (String column : projection) {
                     Object field = resultSet.get().getObject(column);
-                    if (field == null) {
-                        row.put(column, Optional.of(field));
-                    } else {
-                        row.put(column, field);
-                    }
+                    row.put(column, field);
                 }
 
                 rows.add(row);
