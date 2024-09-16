@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +23,6 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     private final String user;
     private final String password;
 
-    private final String firstNameColumn = "first_name";
-    private final String lastNameColumn = "last_name";
-    private final String countyColumn = "county";
-    private final String dateColumn = "date";
-    private final String prayerColumn = "prayer";
-    private final String table = "kjm.prayers";
-    private final String[] columns = { firstNameColumn, lastNameColumn, countyColumn, dateColumn, prayerColumn };
-
     public PrayerRepositoryImpl(ApplicationProperties appProps) {
         this.url = appProps.getDbUrl();
         this.user = appProps.getDbUser();
@@ -45,7 +38,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date, int page, int pageLength, Optional<OrderBy> orderByEnum,
+            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderByEnum,
             Optional<Boolean> orderAsc)
             throws SQLException {
         List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
@@ -84,21 +77,25 @@ public class PrayerRepositoryImpl implements PrayerRepository {
         return result;
     }
 
-    private List<OrderByClause> toOrderBys(Optional<OrderBy> orderByEnum, Optional<Boolean> isAsc) {
+    private List<OrderByClause> toOrderBys(Optional<String> orderByColumn, Optional<Boolean> isAsc) throws SQLException {
         List<OrderByClause> result = new ArrayList<OrderByClause>();
-        if (orderByEnum.isPresent()) {
-            String orderBy = orderByEnum.get().toString();
+        if (orderByColumn.isPresent()) {
+            if (Arrays.stream(columns).noneMatch(c -> c.equals(orderByColumn.get()))) {
+                throw new SQLException("Invalid order by column: " + orderByColumn.get());
+            }
+
+            String orderBy = orderByColumn.get();
             boolean defaultIsAsc = true;
             OrderByClause clause = new OrderByClause(orderBy, isAsc.orElse(defaultIsAsc));
             result.add(clause);
         }
 
-        if (orderByEnum.isPresent() && orderByEnum.get().equals(OrderBy.date)) {
+        if (orderByColumn.isPresent() && orderByColumn.get().equals(dateColumn)) {
             return result;
         }
 
         boolean defaultIsAsc = true;
-        result.add(new OrderByClause(OrderBy.date.toString(), defaultIsAsc));
+        result.add(new OrderByClause(dateColumn, defaultIsAsc));
         return result;
     }
 

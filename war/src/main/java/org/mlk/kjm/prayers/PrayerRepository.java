@@ -7,18 +7,18 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 public interface PrayerRepository {
-
-    public enum OrderBy {
-        first_name,
-        last_name,
-        county,
-        date
-    }
+    public final static String firstNameColumn = "first_name";
+    public final static String lastNameColumn = "last_name";
+    public final static String countyColumn = "county";
+    public final static String dateColumn = "date";
+    public final static String prayerColumn = "prayer";
+    public final static String table = "kjm.prayers";
+    public final static String[] columns = { firstNameColumn, lastNameColumn, countyColumn, dateColumn, prayerColumn };
 
     int createPrayer(Prayer prayer) throws SQLException;
 
     List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date, int page, int pageLength, Optional<OrderBy> orderByEnum,
+            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderByEnum,
             Optional<Boolean> orderAsc) throws SQLException;
 
     int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,

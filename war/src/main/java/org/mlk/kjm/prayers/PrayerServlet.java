@@ -17,7 +17,6 @@ import org.jsoup.nodes.Element;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
 import org.mlk.kjm.ServletUtils;
-import org.mlk.kjm.prayers.PrayerRepository.OrderBy;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -156,9 +155,8 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryLastName = getOptionalParameter(req, inmateLastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
-        Optional<String> queryOrderByString = getOptionalParameter(req, orderById);
+        Optional<String> orderBy = getOptionalParameter(req, orderById);
         Optional<String> queryOrderByStringIsAsc = getOptionalParameter(req, orderByIsAscId);
-        Optional<OrderBy> orderBy = getOrderBy(queryOrderByString);
         Optional<Boolean> orderByIsAsc = getOrderByIsAsc(queryOrderByStringIsAsc);
         
         int page = getPage(req);
@@ -259,15 +257,6 @@ public class PrayerServlet extends HttpServlet {
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
         getPrayerDocument.getElementById(prayerId).text(prayer.get().getPrayer());
         return getPrayerDocument;
-    }
-
-    private Optional<OrderBy> getOrderBy(Optional<String> orderByString) {
-        if (orderByString.isEmpty()) {
-            return Optional.empty();
-        }
-
-        OrderBy orderBy = OrderBy.valueOf(orderByString.get());
-        return Optional.of(orderBy);
     }
 
     private Optional<Boolean> getOrderByIsAsc(Optional<String> orderByIsAscString) {
