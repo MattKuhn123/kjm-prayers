@@ -33,7 +33,7 @@ public class PrayerServlet extends HttpServlet {
     public static final String countyId = "county";
     public static final String dateId = "date";
     public static final String viewId = "view";
-    public static final String prayerId = "prayer";
+    public static final String prayerTextId = "prayer-text";
     public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
     public static final String pageActionsId = "page-actions";
@@ -123,9 +123,9 @@ public class PrayerServlet extends HttpServlet {
             String county = getRequiredFromPostBody(postBody, countyId);
             String dateString = getRequiredFromPostBody(postBody, dateId);
             LocalDate date = stringToDate(dateString);
-            String prayerString = getRequiredFromPostBody(postBody, prayerId);
+            String prayerText = getRequiredFromPostBody(postBody, prayerTextId);
 
-            Prayer prayer = new Prayer(inmateFirstName, inmateLastName, county, date, prayerString);
+            Prayer prayer = new Prayer(inmateFirstName, inmateLastName, county, date, prayerText);
             this.prayers.createPrayer(prayer);
 
             String successMessage = "<p>Success!</p>";
@@ -266,18 +266,8 @@ public class PrayerServlet extends HttpServlet {
         getPrayerDocument.getElementById(inmateFirstNameId).text(prayer.get().getFirstName());
         getPrayerDocument.getElementById(inmateLastNameId).text(prayer.get().getLastName());
         getPrayerDocument.getElementById(dateId).text(dateToString(prayer.get().getDate()));
-        getPrayerDocument.getElementById(prayerId).text(prayer.get().getPrayer());
+        getPrayerDocument.getElementById(prayerTextId).text(prayer.get().getPrayer());
         return getPrayerDocument;
-    }
-
-    private Optional<Boolean> getOrderByIsAsc(Optional<String> orderByIsAscString) {
-        if (orderByIsAscString.isEmpty()) {
-            boolean defaultValue = false;
-            return Optional.of(defaultValue);
-        }
-
-        boolean orderByIsAsc = "on".equals(orderByIsAscString.get());
-        return Optional.of(orderByIsAsc);
     }
 
     private int getPage(HttpServletRequest req) {

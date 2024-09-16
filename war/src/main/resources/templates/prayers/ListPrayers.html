@@ -1,3 +1,4 @@
+<div id="prayer"></div>
 <form id="list-prayers" hx-get="/prayers/ListPrayers">
     <div class="row">
         <div class="col-2">
@@ -8,7 +9,7 @@
             <label for="inmateLastName" class="form-label">Last Name</label>
             <input id="inmateLastName" name="inmateLastName" type="text" class="form-control" />
         </div>
-        <div class="col-1" >
+        <div class="col-1">
             <label for="county" class="form-label">County</label>
             <select id="county" name="county" class="form-select">
                 <option value=""></option>
@@ -69,10 +70,11 @@
     </div>
     <div id="pages" class="row">
         <div id="page-actions" class="col">
-            <input id="previous-btn" class="btn btn-primary" type="submit" value="Previous" formaction="/prayers/ListPrayers/Previous" />
+            <input id="previous-btn" class="btn btn-primary" type="submit" value="Previous"
+                formaction="/prayers/ListPrayers/Previous" />
             <input type="hidden" id="page" name="page" />
-            <input id="next-btn" class="btn btn-primary" type="submit" value="Next" formaction="/prayers/ListPrayers/Next" />
+            <input id="next-btn" class="btn btn-primary" type="submit" value="Next"
+                formaction="/prayers/ListPrayers/Next" />
         </div>
     </div>
-    <div id="prayer"></div>
 </form>
