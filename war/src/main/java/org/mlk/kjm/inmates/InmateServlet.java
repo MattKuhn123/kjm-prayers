@@ -75,7 +75,7 @@ public class InmateServlet extends HttpServlet {
             }
 
             if (singleName.equals(pathInfo)) {
-                Document resultListDocument = getPrayerSingleDocument(req);
+                Document resultListDocument = getInmateSingleDocument(req);
                 String html = resultListDocument.html();
                 resp.getWriter().append(html).flush();
                 return;
@@ -183,7 +183,7 @@ public class InmateServlet extends HttpServlet {
         return inmatesDocument;
     }
 
-    private Document getPrayerSingleDocument(HttpServletRequest req) throws IOException, SQLException {
+    private Document getInmateSingleDocument(HttpServletRequest req) throws IOException, SQLException {
         String queryInmateFirstName = getRequiredParameter(req, firstNameId);
         String queryInmateLastName = getRequiredParameter(req, lastNameId);
         String queryCounty = getRequiredParameter(req, countyId);
