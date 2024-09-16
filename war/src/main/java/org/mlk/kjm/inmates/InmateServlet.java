@@ -95,8 +95,8 @@ public class InmateServlet extends HttpServlet {
         Optional<String> queryFirstName = getOptionalParameter(req, firstNameId);
         Optional<String> queryLastName = getOptionalParameter(req, lastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
-        boolean queryIsMaleIsPresent = isParameterPresent(req, isMaleId);
-        Optional<Boolean> isMale = queryIsMaleIsPresent ? Optional.of(queryIsMaleIsPresent) : Optional.empty();
+        Optional<String> queryIsMale = getOptionalParameter(req, isMaleId);
+        Optional<Boolean> isMale = getIsMale(queryIsMale);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
         boolean queryOrderByIsAscIsPresent = isParameterPresent(req, orderByIsAscId);
         Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsAscIsPresent);
@@ -113,9 +113,9 @@ public class InmateServlet extends HttpServlet {
         if (queryCounty.isPresent()) {
             inmatesDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
         }
-
-        if (queryIsMaleIsPresent) {
-            inmatesDocument.getElementById(isMaleId).attr("checked", "true");
+        
+        if (isMale.isPresent()) {
+            inmatesDocument.getElementById(isMaleId).selectFirst("option[value='" + queryIsMale.get()  + "']").attr("selected", "true");
         }
 
         if (queryOrderByIsAscIsPresent) {
@@ -201,5 +201,23 @@ public class InmateServlet extends HttpServlet {
         inmateDocument.getElementById(countyId).text(inmate.get().getCounty());
         inmateDocument.getElementById(infoTextId).text(inmate.get().getInfo().orElse(emptyString));
         return inmateDocument;
+    }
+
+    private Optional<Boolean> getIsMale(Optional<String> input) {
+        if (input.isEmpty()) {
+            return Optional.empty();
+        }
+
+        String yes = "Yes";
+        if (input.get().equals(yes)) {
+            return Optional.of(true);
+        }
+
+        String no = "No";
+        if (input.get().equals(no)) {
+            return Optional.of(false);
+        }
+
+        return Optional.empty();
     }
 }

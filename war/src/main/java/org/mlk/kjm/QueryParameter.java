@@ -45,11 +45,17 @@ public class QueryParameter {
             ? "%" 
             : "";
         
-        String str = (value instanceof LocalDate)
-            ? dateToString((LocalDate) value)
-            : value.toString();
+        if (value instanceof LocalDate) {
+            String str = dateToString((LocalDate) value);
+            return wildcard + str + wildcard;
+        }
         
-        return wildcard + str + wildcard;
+        if (value instanceof Boolean) {
+            String str = ((Boolean) value) ? "1" : "0";
+            return wildcard + str + wildcard;
+        }
+        
+        return wildcard + value.toString() + wildcard;
     }
 
     public String toSqlStringValue() {
