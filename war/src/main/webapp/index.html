@@ -9,6 +9,7 @@
 	<script src="https://unpkg.com/htmx.org@2.0.2"
 		integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ"
 		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="/styles.css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
 		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
@@ -16,27 +17,18 @@
 <body class="container">
 	<h1>Prayer Board</h1>
 
-	<ul class="nav nav-tabs" role="tablist">
-		<li class="nav-item" role="presentation">
-			<button class="nav-link active" id="prayers-menu-itemTab" data-bs-toggle="tab"
-				data-bs-target="#prayers-menu-item" type="button" role="tab">Prayers</button>
-		</li>
-		<li class="nav-item" role="presentation">
-			<button class="nav-link" id="new-prayer-menu-itemTab" data-bs-toggle="tab"
-				data-bs-target="#new-prayer-menu-item" type="button" role="tab">New Prayer</button>
-		</li>
+	<ul class="menu">
+		<li><a href="#view-prayers">View Prayers</a></li>
+		<li><a href="#create-prayer">Create Prayer</a></li>
 	</ul>
-
-	<div class="tab-content">
-		<div id="prayers-menu-item" class="tab-pane fade show active">
-			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
-				<p class="htmx-indicator">Result loading...</p>
-			</div>
+	<div id="view-prayers" class="tab-content">
+		<div hx-get="/prayers/ListPrayers" hx-trigger="load">
+			<p class="htmx-indicator">Result loading...</p>
 		</div>
-		<div id="new-prayer-menu-item" class="tab-pane fade">
-			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
-				<p class="htmx-indicator">Result loading...</p>
-			</div>
+	</div>
+	<div id="create-prayer" class="tab-content">
+		<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
+			<p class="htmx-indicator">Result loading...</p>
 		</div>
 	</div>
 
