@@ -21,17 +21,18 @@ public class InsertValue {
     }
 
     public String toSqlStringValue() {
-        String qMark = (value instanceof LocalDate) 
-            ? " STR_TO_DATE(?, '%m/%d/%Y') " 
-            : "?";
-        return qMark;
+        if (value instanceof LocalDate) {
+            return " STR_TO_DATE(?, '%m/%d/%Y') ";
+        }
+
+        return "?";
     }
 
     public String toPreparedStatementValue() {
-        String result = (value instanceof LocalDate)
-            ? dateToString((LocalDate) value)
-            : (String) value;
+        if (value instanceof LocalDate) {
+            return dateToString((LocalDate) value);
+        }
 
-        return result;
+        return value.toString();
     }
 }

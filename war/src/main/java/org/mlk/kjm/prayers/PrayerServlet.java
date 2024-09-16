@@ -17,6 +17,9 @@ import org.jsoup.nodes.Element;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
 import org.mlk.kjm.ServletUtils;
+import org.mlk.kjm.inmates.Inmate;
+import org.mlk.kjm.inmates.InmateRepository;
+import org.mlk.kjm.inmates.InmateRepositoryImpl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -67,14 +70,16 @@ public class PrayerServlet extends HttpServlet {
 
     private final ApplicationProperties props;
     private final PrayerRepository prayers;
+    private final InmateRepository inmates;
 
     public PrayerServlet() {
-        this(new ApplicationPropertiesImpl(), new PrayerRepositoryImpl(new ApplicationPropertiesImpl()));
+        this(new ApplicationPropertiesImpl(), new PrayerRepositoryImpl(new ApplicationPropertiesImpl()), new InmateRepositoryImpl(new ApplicationPropertiesImpl()));
     }
 
-    public PrayerServlet(ApplicationProperties props, PrayerRepository prayers) {
+    public PrayerServlet(ApplicationProperties props, PrayerRepository prayers, InmateRepository inmates) {
         this.props = props;
         this.prayers = prayers;
+        this.inmates = inmates;
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -124,6 +129,12 @@ public class PrayerServlet extends HttpServlet {
             String dateString = getRequiredFromPostBody(postBody, dateId);
             LocalDate date = stringToDate(dateString);
             String prayerText = getRequiredFromPostBody(postBody, prayerTextId);
+
+            Optional<Inmate> inmate = this.inmates.getInmate(inmateFirstName, inmateLastName, county);
+            if (inmate.isEmpty()) {
+                Inmate newInmate = new Inmate(inmateFirstName, inmateLastName, county, Optional.empty(), Optional.empty(), Optional.empty());
+                this.inmates.createInmate(newInmate);
+            }
 
             Prayer prayer = new Prayer(inmateFirstName, inmateLastName, county, date, prayerText);
             this.prayers.createPrayer(prayer);

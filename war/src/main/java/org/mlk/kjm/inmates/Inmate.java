@@ -2,7 +2,6 @@ package org.mlk.kjm.inmates;
 
 import java.util.Optional;
 import java.time.LocalDate;
-import org.mlk.kjm.jails.Jail;
 
 public class Inmate {
     private final String firstName;
@@ -10,16 +9,16 @@ public class Inmate {
     private final Optional<LocalDate> birthDay;
     private final Optional<Boolean> isMale;
     private final Optional<String> info;
-    private final Jail jail;
+    private final String county;
 
-    public Inmate(String firstName, String lastName, Optional<LocalDate> birthDay, Optional<Boolean> isMale,
-            Optional<String> info, Jail jail) {
+    public Inmate(String firstName, String lastName, String county, Optional<LocalDate> birthDay, Optional<Boolean> isMale,
+            Optional<String> info) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.county = county;
         this.birthDay = birthDay;
         this.isMale = isMale;
         this.info = info;
-        this.jail = jail;
     }
 
     public String getFirstName() {
@@ -28,6 +27,10 @@ public class Inmate {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getCounty() {
+        return county;
     }
 
     public Optional<LocalDate> getBirthDay() {
@@ -40,9 +43,5 @@ public class Inmate {
 
     public Optional<String> getInfo() {
         return info;
-    }
-
-    public Jail getJail() {
-        return jail;
     }
 }

@@ -47,7 +47,7 @@ public class QueryParameter {
         
         String str = (value instanceof LocalDate)
             ? dateToString((LocalDate) value)
-            : (String) value;
+            : value.toString();
         
         return wildcard + str + wildcard;
     }
