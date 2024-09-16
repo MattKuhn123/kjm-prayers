@@ -24,13 +24,23 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class ServletUtils {
 	private static final String pattern = "MM/dd/yyyy";
+	private static final String htmlPattern = "yyyy-MM-dd";
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+	private static DateTimeFormatter htmlFormatter = DateTimeFormatter.ofPattern(htmlPattern);
 	public static String dateToString(LocalDate date) {
-		return date.format(formatter);
+		try {
+			return date.format(formatter);
+		} catch (Exception  e) {
+			return date.format(htmlFormatter);
+		}
 	}
 
 	public static LocalDate stringToDate(String string) {
-		return LocalDate.parse(string, formatter);
+		try {
+			return LocalDate.parse(string, formatter);
+		} catch (Exception e) {
+			return LocalDate.parse(string, htmlFormatter);
+		}
 	}
 
     private static final String templatesDirectory = "/templates";
