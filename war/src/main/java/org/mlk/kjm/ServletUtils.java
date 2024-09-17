@@ -23,10 +23,13 @@ import org.jsoup.nodes.Document;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class ServletUtils {
+    public static final String inputSubmit = "input[type='submit']";
+    public static final String formTag = "form";
     public static final String tableTag = "table";
     public static final String tbodyTag = "tbody";
     public static final String trTag = "tr";
     public static final String hxGetAttr = "hx-get";
+    public static final String hxPutAttr = "hx-put";
     public static final String idAttr = "id";
     public static final String emptyString = "";
 

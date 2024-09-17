@@ -77,6 +77,14 @@ public class InmateRepositoryImpl implements InmateRepository {
         return result;
     }
 
+    @Override
+    public int updateInmate(Inmate inmate, Inmate newInmate) throws SQLException {
+        InsertValue[] insertValue = toInsertValue(newInmate);
+        List<QueryParameter> where = toQueryParameters(inmate.getFirstName(), inmate.getLastName(), inmate.getCounty());
+        int result = update(table, insertValue, where, url, user, password);
+        return result;
+    }
+
     private InsertValue[] toInsertValue(Inmate inmate) {
         List<InsertValue> ivs = new ArrayList<InsertValue>();
         InsertValue firstNameIV = new InsertValue(firstNameColumn, inmate.getFirstName());
@@ -93,6 +101,9 @@ public class InmateRepositoryImpl implements InmateRepository {
         
         if (inmate.isMale().isPresent()) {
             InsertValue isMaleIV = new InsertValue(isMaleColumn, inmate.isMale().get());
+            ivs.add(isMaleIV);
+        } else {
+            InsertValue isMaleIV = new InsertValue(isMaleColumn, null);
             ivs.add(isMaleIV);
         }
         
@@ -130,9 +141,9 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     private List<QueryParameter> toQueryParameters(String firstName, String lastName, String county) {
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
-        QueryParameter qp1 = new QueryParameter(firstNameColumn, QueryOperator.like, firstName);
+        QueryParameter qp1 = new QueryParameter(firstNameColumn, QueryOperator.equals, firstName);
         parameters.add(qp1);
-        QueryParameter qp2 = new QueryParameter(lastNameColumn, QueryOperator.like, lastName);
+        QueryParameter qp2 = new QueryParameter(lastNameColumn, QueryOperator.equals, lastName);
         parameters.add(qp2);
         QueryParameter qp3 = new QueryParameter(countyColumn, QueryOperator.equals, county);
         parameters.add(qp3);

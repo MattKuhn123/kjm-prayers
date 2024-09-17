@@ -1,4 +1,5 @@
-<div id='single-inmate'></div>
+<div id='single-inmate-view'></div>
+<div id='single-inmate-edit'></div>
 <form hx-get='/inmates/ListInmates'>
     <details>
         <summary>Search Fields</summary>
@@ -24,8 +25,8 @@
             <label for='is-male'>Is Male?</label>
             <select id='is-male' name='is-male'>
                 <option value=''></option>
-                <option value='Yes'>Yes</option>
-                <option value='No'>No</option>
+                <option value='true'>Yes</option>
+                <option value='false'>No</option>
             </select>
         </div>
         <div class='form-control'>
@@ -47,13 +48,15 @@
         <thead>
             <tr>
                 <th>View</th>
+                <th>Edit</th>
                 <th>Name</th>
                 <th>County</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><a class='btn btn-small btn-link' id='view' hx-get='SET_ME' hx-target='#single-inmate'>View</a></td>
+                <td><a class='btn btn-small btn-link' id='view' hx-get='SET_ME' hx-target='#single-inmate-view'>View</a></td>
+                <td><a class='btn btn-small btn-link' id='edit' hx-get='SET_ME' hx-target='#single-inmate-edit'>Edit</a></td>
                 <td><span id='first-name'>First Name</span> <span id='last-name'>Last Name</span></td>
                 <td id='county'>County</td>
             </tr>

@@ -33,6 +33,10 @@ public class InsertValue {
             return dateToString((LocalDate) value);
         }
 
+        if (value == null) {
+            return null;
+        }
+
         return value.toString();
     }
 }

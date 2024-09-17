@@ -24,11 +24,13 @@ public class InmateServlet extends HttpServlet {
 
     private static final String listName = "/ListInmates";
     private static final String singleName = "/SingleInmate";
+    private static final String editName = "/EditInmate";
 
     private static final String directory = "inmates/";
 
     private static final String listFile = directory + listName + ".html";
     private static final String singleFile = directory + singleName + ".html";
+    private static final String editFile = directory + editName + ".html";
 
     public static final String contextPath = "/inmates";
     public static final String firstNameId = "first-name";
@@ -39,9 +41,16 @@ public class InmateServlet extends HttpServlet {
     public static final String isMaleId = "is-male";
     public static final String infoTextId = "info-text";
     public static final String viewId = "view";
+    public static final String editId = "edit";
     public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
     public static final String pageActionsId = "page-actions";
+
+    public static final String newFirstNameId = "new-" + firstNameId;
+    public static final String newLastNameId = "new-" + lastNameId;
+    public static final String newCountyId = "new-" + countyId;
+    public static final String newIsMaleId = "new-" + isMaleId;
+    public static final String newInfoTextId = "new-" + infoTextId;
 
     private final InmateRepository inmates;
     private final ApplicationProperties props;
@@ -75,6 +84,51 @@ public class InmateServlet extends HttpServlet {
                 resp.getWriter().append(html).flush();
                 return;
             }
+
+            if (editName.equals(pathInfo)) {
+                Document resultListDocument = getInmateEditDocument(req);
+                String html = resultListDocument.html();
+                resp.getWriter().append(html).flush();
+                return;
+            }
+        } catch (SQLException se) {
+            if (props.isProduction()) {
+                String failMessage = "<p>Error! Please try again later</p>";
+                resp.getWriter().append(failMessage).flush();
+                return;
+            }
+
+            se.printStackTrace(resp.getWriter());
+        }
+    }
+
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        try {
+            Map<String, Optional<String>> postBody = getPostBodyMap(req);
+            String firstName = getRequiredFromPostBody(postBody, firstNameId);
+            String newFirstName = getRequiredFromPostBody(postBody, newFirstNameId);
+            
+            String lastName = getRequiredFromPostBody(postBody, lastNameId);
+            String newLastName = getRequiredFromPostBody(postBody, newLastNameId);
+            
+            String county = getRequiredFromPostBody(postBody, countyId);
+            String newCounty = getRequiredFromPostBody(postBody, newCountyId);
+            
+            Optional<String> newIsMaleString = getOptionalFromPostBody(postBody, newIsMaleId);
+            Optional<Boolean> newIsMale = getIsMale(newIsMaleString);
+            Optional<String> newInfoText = getOptionalFromPostBody(postBody, newInfoTextId);
+
+            Optional<Inmate> currentInmate = this.inmates.getInmate(firstName, lastName, county);
+            if (currentInmate.isEmpty()) {
+                String reason = "This inmate does not exist and cannot be updated";
+                throw new SQLException(reason);
+            }
+
+            Inmate newInmate = new Inmate(newFirstName, newLastName, newCounty, Optional.empty(), newIsMale, newInfoText);
+            this.inmates.updateInmate(currentInmate.get(), newInmate);
+
+            String successMessage = "<p>Success!</p>";
+            resp.getWriter().append(successMessage).flush();
         } catch (SQLException se) {
             if (props.isProduction()) {
                 String failMessage = "<p>Error! Please try again later</p>";
@@ -163,8 +217,11 @@ public class InmateServlet extends HttpServlet {
                 params.put(lastNameId, inmate.getLastName());
                 params.put(countyId, inmate.getCounty());
 
-                String hxGetValue = createLink(contextPath + singleName, params);
-                tr.getElementById(viewId).attr(hxGetAttr, hxGetValue);
+                String hxGetViewValue = createLink(contextPath + singleName, params);
+                tr.getElementById(viewId).attr(hxGetAttr, hxGetViewValue);
+
+                String hxGetEditValue = createLink(contextPath + editName, params);
+                tr.getElementById(editId).attr(hxGetAttr, hxGetEditValue);
 
                 tbody.appendChild(tr);
             }
@@ -195,7 +252,55 @@ public class InmateServlet extends HttpServlet {
         inmateDocument.getElementById(lastNameId).text(inmate.get().getLastName());
         inmateDocument.getElementById(countyId).text(inmate.get().getCounty());
         inmateDocument.getElementById(infoTextId).text(inmate.get().getInfo().orElse(emptyString));
+
+        if (inmate.get().isMale().isPresent()) {
+            String isMaleView = inmate.get().isMale().get() ? "Yes" : "No";
+            inmateDocument.getElementById(isMaleId).text(isMaleView);
+        }
         return inmateDocument;
+    }
+
+    private Document getInmateEditDocument(HttpServletRequest req) throws IOException, SQLException {
+        String queryInmateFirstName = getRequiredParameter(req, firstNameId);
+        String queryInmateLastName = getRequiredParameter(req, lastNameId);
+        String queryCounty = getRequiredParameter(req, countyId);
+
+        Optional<Inmate> inmate = this.inmates.getInmate(queryInmateFirstName, queryInmateLastName, queryCounty);
+        if (inmate.isEmpty()) {
+            String html = "<p>Inmate not found!</p>";
+            Document empty = Jsoup.parse(html);
+            return empty;
+        }
+
+        Document editDocument = getHtmlDocument(editFile);
+
+        Map<String, String> params = new HashMap<String, String>();
+        String hxPutEditValue = createLink(contextPath + singleName, params);
+        editDocument.selectFirst(inputSubmit).attr(hxPutAttr, hxPutEditValue);
+
+        editDocument.getElementById(firstNameId).val(inmate.get().getFirstName());
+        editDocument.getElementById(newFirstNameId).val(inmate.get().getFirstName());
+
+        editDocument.getElementById(lastNameId).val(inmate.get().getLastName());
+        editDocument.getElementById(newLastNameId).val(inmate.get().getLastName());
+        
+        editDocument.getElementById(countyId).val(inmate.get().getCounty());
+        editDocument.getElementById(newCountyId).selectFirst("option[value='" + inmate.get().getCounty()  + "']").attr(selectedAttr, trueVal);
+        
+        String isMaleValue = inmate.get().isMale().isPresent() 
+            ? inmate.get().isMale().get().toString()
+            : emptyString;
+
+        String isMaleView = inmate.get().isMale().isPresent() 
+            ? inmate.get().isMale().get() ? "Yes" : "No"
+            : emptyString;
+        editDocument.getElementById(isMaleId).val(isMaleView);
+        editDocument.getElementById(newIsMaleId).selectFirst("option[value='" + isMaleValue  + "']").attr(selectedAttr, trueVal);
+        
+        String infoTxt = inmate.get().getInfo().isPresent() ? inmate.get().getInfo().get() : emptyString;
+        editDocument.getElementById(infoTextId).val(infoTxt);
+        editDocument.getElementById(newInfoTextId).val(infoTxt);
+        return editDocument;
     }
 
     private Optional<Boolean> getIsMale(Optional<String> input) {
@@ -203,12 +308,12 @@ public class InmateServlet extends HttpServlet {
             return Optional.empty();
         }
 
-        String yes = "Yes";
+        String yes = "true";
         if (input.get().equals(yes)) {
             return Optional.of(true);
         }
 
-        String no = "No";
+        String no = "false";
         if (input.get().equals(no)) {
             return Optional.of(false);
         }

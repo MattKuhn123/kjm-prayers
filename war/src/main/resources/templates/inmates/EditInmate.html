@@ -1,0 +1,62 @@
+<dialog open>
+    <form method='dialog'>
+        <h5> Edit Inmate </h5>
+        <div class='form-control'>
+            <label for='first-name'>First Name</label>
+            <input readonly required id='first-name' name='first-name' type='text'/>
+        </div>
+        <div class='form-control'>
+            <label for='new-first-name'>First Name</label>
+            <input required id='new-first-name' name='new-first-name' type='text'/>
+        </div>
+
+        <div class='form-control'>
+            <label for='last-name'>Last Name</label>
+            <input readonly required id='last-name' name='last-name' type='text' />
+        </div>
+        <div class='form-control'>
+            <label for='new-last-name'>Last Name</label>
+            <input required id='new-last-name' name='new-last-name' type='text' />
+        </div>
+
+        <div class='form-control'>
+            <label for='county'>County</label>
+            <input readonly required id='county' name='county' type='text' />
+        </div>
+        <div class='form-control'>
+            <label for='new-county'>County</label>
+            <select id='new-county' name='new-county'>
+                <option value='Boone'>Boone</option>
+                <option value='Campbell'>Campbell</option>
+                <option value='Kenton'>Kenton</option>
+                <option value='Grant'>Grant</option>
+            </select>
+        </div>
+
+        <div class='form-control'>
+            <label for='is-male'>Is Male</label>
+            <input readonly id='is-male' name='is-male' type='text' />
+        </div>
+        <div class='form-control'>
+            <label for='new-is-male'>Is Male?</label>
+            <select id='new-is-male' name='new-is-male'>
+                <option value=''></option>
+                <option value='true'>Yes</option>
+                <option value='false'>No</option>
+            </select>
+        </div>
+
+        <div class='form-control'>
+            <label for='info-text'>Info</label>
+            <textarea readonly id='info-text' name='info-text' rows='5'></textarea>
+        </div>
+        <div class='form-control'>
+            <label for='new-info-text'>Info</label>
+            <textarea id='new-info-text' name='new-info-text' rows='5'></textarea>
+        </div>
+
+        <input type='submit' class='btn btn-primary' hx-put='SET_ME' hx-confirm='Are you sure?' hx-target='#edit-response'/>
+        <button class='btn btn-secondary' autofocus>OK</button>
+        <div id='edit-response'></div>
+    </form>
+</dialog>

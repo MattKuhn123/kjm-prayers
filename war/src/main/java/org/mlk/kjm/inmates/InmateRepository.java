@@ -24,5 +24,7 @@ public interface InmateRepository {
     int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
         Optional<LocalDate> birthDay, Optional<Boolean> isMale) throws SQLException;
 
+    int updateInmate(Inmate inmate, Inmate newInmate) throws SQLException;
+
     Optional<Inmate> getInmate(String firstName, String lastName, String county) throws SQLException;
 }

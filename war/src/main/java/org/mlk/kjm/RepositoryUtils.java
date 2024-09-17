@@ -180,6 +180,69 @@ public class RepositoryUtils {
         }
     }
 
+    public static int update(String table,
+            InsertValue[] insertValues,
+            List<QueryParameter> where,
+            String url,
+            String user,
+            String password)
+            throws SQLException {
+        Optional<Connection> connection = Optional.empty();
+        Optional<PreparedStatement> statement = Optional.empty();
+
+        try {
+            Class.forName(driverName);
+            connection = Optional.of(DriverManager.getConnection(url, user, password));
+            statement = Optional.of(getUpdatePreparedStatement(connection.get(), table, insertValues, where));
+            int result = statement.get().executeUpdate();
+            return result;
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            return -1;
+        } finally {
+            try {
+                if (statement.isPresent()) {
+                    statement.get().close();
+                }
+            } catch (SQLException e) {
+            }
+            try {
+                if (connection.isPresent()) {
+                    connection.get().close();
+                }
+            } catch (SQLException e) {
+            }
+        }
+    }
+
+    private static PreparedStatement getUpdatePreparedStatement(
+            Connection connection,
+            String table,
+            InsertValue[] insertValues,
+            List<QueryParameter> where
+    ) throws SQLException {
+        String comma = " , ";
+        List<String> updates = Arrays.stream(insertValues).map(qp -> {
+            String result = "`" + qp.getColumn() + "`" + " = " + qp.toSqlStringValue();
+            return result;
+        }).collect(toList());
+        String updateClause = String.join(comma, updates);
+        String whereClause = toWhereClause(where);
+        String sql = " UPDATE " + table + " SET " + updateClause + " " + whereClause;
+        
+        PreparedStatement statement = connection.prepareStatement(sql);
+        
+        for (int i = 0; i < insertValues.length; i++) {
+            statement.setString(i + 1, insertValues[i].toPreparedStatementValue());
+        }
+
+        for (int j = 0; j < where.size(); j++) {
+            statement.setString(insertValues.length + j + 1, where.get(j).toPreparedStatementValue());
+        }
+
+        return statement;
+    }
+
     private static PreparedStatement getInsertPreparedStatement(
             Connection connection,
             String table,
