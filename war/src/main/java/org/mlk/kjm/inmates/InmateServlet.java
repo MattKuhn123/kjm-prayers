@@ -106,15 +106,15 @@ public class InmateServlet extends HttpServlet {
         inmatesDocument.getElementById(lastNameId).val(queryLastName.orElse(emptyString));
         inmatesDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
         if (queryCounty.isPresent()) {
-            inmatesDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
+            inmatesDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr(selectedAttr, trueVal);
         }
         
         if (isMale.isPresent()) {
-            inmatesDocument.getElementById(isMaleId).selectFirst("option[value='" + queryIsMale.get()  + "']").attr("selected", "true");
+            inmatesDocument.getElementById(isMaleId).selectFirst("option[value='" + queryIsMale.get()  + "']").attr(selectedAttr, trueVal);
         }
 
         if (queryOrderByIsAscIsPresent) {
-            inmatesDocument.getElementById(orderByIsAscId).attr("checked", "true");
+            inmatesDocument.getElementById(orderByIsAscId).attr(checkedAttr, trueVal);
         }
 
         int totalResults = this.inmates.getCount(queryFirstName, queryLastName, queryCounty, Optional.empty(), isMale);
@@ -129,11 +129,11 @@ public class InmateServlet extends HttpServlet {
         }
 
         if (page <= 0) {
-            inmatesDocument.getElementById("previous-btn").attr("disabled", "true");
+            inmatesDocument.getElementById(previousBtnId).attr(disabledAttr, trueVal);
         }
         
         if (page >= (pageCount - 1)) {
-            inmatesDocument.getElementById("next-btn").attr("disabled", "true");
+            inmatesDocument.getElementById(nextBtnId).attr(disabledAttr, trueVal);
         }
 
         inmatesDocument.getElementById(pageId).val(String.valueOf(page));

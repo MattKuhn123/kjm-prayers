@@ -136,7 +136,14 @@ public class ServletUtils {
 
 		return contextPath + "?" + result;
 	}
-
+	
+	public static final String selectedAttr = "selected";
+	public static final String checkedAttr = "checked";
+	public static final String falseVal = "false";
+	public static final String trueVal = "true";
+	public static final String disabledAttr = "disabled";
+	public static final String previousBtnId = "previous-btn";
+	public static final String nextBtnId = "next-btn";
 	public static final String pageId = "page";
 	public static final String pagesId = "pages";
 	public static final String defaultPage = "0";

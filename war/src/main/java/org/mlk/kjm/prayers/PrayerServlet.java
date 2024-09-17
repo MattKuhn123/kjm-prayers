@@ -162,16 +162,16 @@ public class PrayerServlet extends HttpServlet {
         prayersDocument.getElementById(lastNameId).val(queryLastName.orElse(emptyString));
         prayersDocument.getElementById(countyId).val(queryCounty.orElse(emptyString));
         if (queryCounty.isPresent()) {
-            prayersDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr("selected", "true");
+            prayersDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr(selectedAttr, trueVal);
         }
 
         prayersDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
         if (orderBy.isPresent()) {
-            prayersDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr("selected", "true");
+            prayersDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr(selectedAttr, trueVal);
         }
 
         if (queryOrderByIsAscIsPresent) {
-            prayersDocument.getElementById(orderByIsAscId).attr("checked", "true");
+            prayersDocument.getElementById(orderByIsAscId).attr(checkedAttr, trueVal);
         }
 
         int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
@@ -186,11 +186,11 @@ public class PrayerServlet extends HttpServlet {
         }
 
         if (page <= 0) {
-            prayersDocument.getElementById("previous-btn").attr("disabled", "true");
+            prayersDocument.getElementById(previousBtnId).attr(disabledAttr, trueVal);
         }
         
         if (page >= (pageCount - 1)) {
-            prayersDocument.getElementById("next-btn").attr("disabled", "true");
+            prayersDocument.getElementById(nextBtnId).attr(disabledAttr, trueVal);
         }
 
         prayersDocument.getElementById(pageId).val(String.valueOf(page));
