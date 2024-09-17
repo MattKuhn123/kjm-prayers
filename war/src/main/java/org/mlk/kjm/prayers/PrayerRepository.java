@@ -18,11 +18,11 @@ public interface PrayerRepository {
     int createPrayer(Prayer prayer) throws SQLException;
 
     List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderByEnum,
+            Optional<LocalDate> date, Optional<String> queryPrayerText, int page, int pageLength, Optional<String> orderByEnum,
             Optional<Boolean> orderAsc) throws SQLException;
 
     int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date) throws SQLException;
+            Optional<LocalDate> date, Optional<String> prayerText) throws SQLException;
 
     Optional<Prayer> getPrayer(String firstName, String lastName, LocalDate date) throws SQLException;
 }

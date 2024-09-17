@@ -145,6 +145,7 @@ public class PrayerServlet extends HttpServlet {
         Optional<String> queryLastName = getOptionalParameter(req, lastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
         Optional<String> queryDateString = getOptionalParameter(req, dateId);
+        Optional<String> queryPrayerText = getOptionalParameter(req, prayerTextId);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
         boolean queryOrderByIsAscIsPresent = isParameterPresent(req, orderByIsAscId);
         Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsAscIsPresent);
@@ -154,7 +155,7 @@ public class PrayerServlet extends HttpServlet {
                 ? Optional.of(stringToDate(queryDateString.get()))
                 : Optional.empty();
 
-        List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, page,
+        List<Prayer> prayers = this.prayers.getPrayers(queryFirstName, queryLastName, queryCounty, queryDate, queryPrayerText, page,
                 defaultPageLength, orderBy, orderByIsAsc);
 
         Document prayersDocument = getHtmlDocument(listFile);
@@ -164,17 +165,19 @@ public class PrayerServlet extends HttpServlet {
         if (queryCounty.isPresent()) {
             prayersDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr(selectedAttr, trueVal);
         }
-
+        
         prayersDocument.getElementById(dateId).val(queryDateString.orElse(emptyString));
         if (orderBy.isPresent()) {
             prayersDocument.getElementById(orderById).selectFirst("option[value='" + orderBy.get()  + "']").attr(selectedAttr, trueVal);
         }
+        
+        prayersDocument.getElementById(prayerTextId).val(queryPrayerText.orElse(emptyString));
 
         if (queryOrderByIsAscIsPresent) {
             prayersDocument.getElementById(orderByIsAscId).attr(checkedAttr, trueVal);
         }
 
-        int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate);
+        int totalResults = this.prayers.getCount(queryFirstName, queryLastName, queryCounty, queryDate, queryPrayerText);
         int pageCount = (int) Math.ceil((double) totalResults / (double) defaultPageLength);
 
         Element pageActionsElement = prayersDocument.getElementById(pageActionsId);

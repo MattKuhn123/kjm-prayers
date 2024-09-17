@@ -40,7 +40,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
         int page = 0;
         int pageLength = 100;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 4;
         Assert.assertEquals(expectedResults, results.size());
@@ -53,7 +53,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         String firstName = "al";
         int page = 0;
         int pageLength = 100;
-        List<Prayer> results = test.getPrayers(Optional.of(firstName), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.of(firstName), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 2;
         Assert.assertEquals(expectedResults, results.size());
@@ -65,7 +65,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         String lastName = "Coan";
         int page = 0;
         int pageLength = 100;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.of(lastName), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.of(lastName), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 1;
         Assert.assertEquals(expectedResults, results.size());
@@ -77,7 +77,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         String county = "Kenton";
         int page = 0;
         int pageLength = 100;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.of(county), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.of(county), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 2;
         Assert.assertEquals(expectedResults, results.size());
@@ -90,7 +90,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         LocalDate date = stringToDate(dateString);
         int page = 0;
         int pageLength = 100;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(date), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(date), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 1;
         Assert.assertEquals(expectedResults, results.size());
@@ -101,7 +101,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int page = 0;
         int pageLength = 2;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
 
         int expectedResults = 2;
         Assert.assertEquals(expectedResults, results.size());
@@ -114,7 +114,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
         Boolean isAsc = true;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
 
         String expectedFirstFirstName = "Germana";
         String expectedFirstLastName = "Coan";
@@ -140,7 +140,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
         Boolean isAsc = true;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
 
         String expectedFirstFirstName = "Ralf";
         String expectedFirstLastName = "Grigoriev";
@@ -166,7 +166,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
         Boolean isAsc = false;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
 
         String expectedFirstFirstName = "Ralf";
         String expectedFirstLastName = "Grigoriev";
@@ -187,12 +187,12 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_orderAscDate_page1() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
         int page = 0;
         int pageLength = 2;
         String orderBy = PrayerRepository.dateColumn;
         Boolean isAsc = true;
-        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
+        List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.of(orderBy), Optional.of(isAsc));
 
         String expectedFirstFirstName = "Guthrie";
         String expectedFirstLastName = "Scain";
@@ -230,7 +230,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
     public void test_Count() throws Exception {
         PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
         int expected = 4;
-        int actual = test.getCount(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        int actual = test.getCount(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 
         assertEquals(expected, actual);
     }

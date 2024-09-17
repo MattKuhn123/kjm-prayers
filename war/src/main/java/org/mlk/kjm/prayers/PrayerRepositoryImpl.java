@@ -38,10 +38,10 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public List<Prayer> getPrayers(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date, int page, int pageLength, Optional<String> orderByEnum,
+            Optional<LocalDate> date, Optional<String> prayerText, int page, int pageLength, Optional<String> orderByEnum,
             Optional<Boolean> orderAsc)
             throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date, prayerText);
 
         List<OrderByClause> orderBys = toOrderBys(orderByEnum, orderAsc);
 
@@ -71,8 +71,8 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
     @Override
     public int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> date) throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date);
+            Optional<LocalDate> date, Optional<String> prayertext) throws SQLException {
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, date, prayertext);
         int result = queryTableCount(table, parameters, url, user, password);
         return result;
     }
@@ -100,7 +100,7 @@ public class PrayerRepositoryImpl implements PrayerRepository {
     }
 
     private List<QueryParameter> toQueryParameters(Optional<String> firstName, Optional<String> lastName,
-            Optional<String> county, Optional<LocalDate> date) {
+            Optional<String> county, Optional<LocalDate> date, Optional<String> prayerText) {
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         if (firstName.isPresent()) {
             QueryParameter qp = new QueryParameter(firstNameColumn, QueryOperator.like, firstName.get());
@@ -119,6 +119,11 @@ public class PrayerRepositoryImpl implements PrayerRepository {
 
         if (date.isPresent()) {
             QueryParameter qp = new QueryParameter(dateColumn, QueryOperator.equals, date.get());
+            parameters.add(qp);
+        }
+
+        if (prayerText.isPresent()) {
+            QueryParameter qp = new QueryParameter(prayerColumn, QueryOperator.like, prayerText.get());
             parameters.add(qp);
         }
 
