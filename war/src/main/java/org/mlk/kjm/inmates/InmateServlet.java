@@ -7,7 +7,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.mlk.kjm.ApplicationProperties;
 import org.mlk.kjm.ApplicationPropertiesImpl;
-import org.mlk.kjm.prayers.Prayer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -15,7 +14,6 @@ import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.time.LocalDate;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -37,7 +35,6 @@ public class InmateServlet extends HttpServlet {
     public static final String lastNameId = "last-name";
     public static final String orderById = "order-by";
     public static final String orderByIsAscId = "order-by-is-asc";
-    public static final String pageId = "page";
     public static final String countyId = "county";
     public static final String isMaleId = "is-male";
     public static final String infoTextId = "info-text";
@@ -45,8 +42,6 @@ public class InmateServlet extends HttpServlet {
     public static final String noResultId = "no-result";
     public static final String pagesId = "pages";
     public static final String pageActionsId = "page-actions";
-
-    public static final String toPageParam = "toPage";
 
     private final InmateRepository inmates;
     private final ApplicationProperties props;
