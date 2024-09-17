@@ -17,26 +17,26 @@
 		<h1>Prayer Board</h1>
 		<ul class="menu">
 			<li>
-				<a class="btn btn-small btn-secondary" href="#view-prayers">View Prayers</a>
+				<a class="btn btn-small btn-secondary" href="#prayers-tab">Prayers</a>
 			</li>
 			<li>
-				<a class="btn btn-small btn-secondary" href="#create-prayer">Create Prayer</a>
+				<a class="btn btn-small btn-secondary" href="#new-prayer-tab">New Prayer</a>
 			</li>
 			<li>
-				<a class="btn btn-small btn-secondary" href="#view-inmates">View Inmates</a>
+				<a class="btn btn-small btn-secondary" href="#inmates-tab">Inmates</a>
 			</li>
 		</ul>
-		<div id="view-prayers" class="tab-content">
+		<div id="prayers-tab" class="tab-content">
 			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
 		</div>
-		<div id="create-prayer" class="tab-content">
+		<div id="new-prayer-tab" class="tab-content">
 			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
 		</div>
-		<div id="view-inmates" class="tab-content">
+		<div id="inmates-tab" class="tab-content">
 			<div hx-get="/inmates/ListInmates" hx-trigger="load">
 				<p class="htmx-indicator">Result loading...</p>
 			</div>
