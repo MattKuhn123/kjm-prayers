@@ -219,8 +219,7 @@ public class RepositoryUtils {
             Connection connection,
             String table,
             InsertValue[] insertValues,
-            List<QueryParameter> where
-    ) throws SQLException {
+            List<QueryParameter> where) throws SQLException {
         String comma = " , ";
         List<String> updates = Arrays.stream(insertValues).map(qp -> {
             String result = "`" + qp.getColumn() + "`" + " = " + qp.toSqlStringValue();
@@ -229,9 +228,9 @@ public class RepositoryUtils {
         String updateClause = String.join(comma, updates);
         String whereClause = toWhereClause(where);
         String sql = " UPDATE " + table + " SET " + updateClause + " " + whereClause;
-        
+
         PreparedStatement statement = connection.prepareStatement(sql);
-        
+
         for (int i = 0; i < insertValues.length; i++) {
             statement.setString(i + 1, insertValues[i].toPreparedStatementValue());
         }
