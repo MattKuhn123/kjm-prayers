@@ -58,7 +58,7 @@ public class ServletUtils {
 	public static Document getHtmlDocument(String file) throws IOException {
 		String filePath = templatesDirectory + "/" + file;
 		InputStream inputStream = ServletUtils.class.getResourceAsStream(filePath);
-		byte[] bytes = inputStream.readAllBytes();
+		byte[] bytes = InputStreamUtils.readAllBytes(inputStream);
 		String html = new String(bytes);
 		Document htmlDocument = Jsoup.parseBodyFragment(html);
 		return htmlDocument;
@@ -66,7 +66,7 @@ public class ServletUtils {
 
 	public static String getRequiredFromPostBody(Map<String, Optional<String>> postBody, String parameter) throws IOException {
 		Optional<String> value = postBody.get(parameter);
-		if (value.isEmpty()) {
+		if (!value.isPresent()) {
 			throw new IllegalArgumentException(parameter + " is required!");
 		}
 

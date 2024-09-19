@@ -119,7 +119,7 @@ public class InmateServlet extends HttpServlet {
             Optional<String> newInfoText = getOptionalFromPostBody(postBody, newInfoTextId);
 
             Optional<Inmate> currentInmate = this.inmates.getInmate(firstName, lastName, county);
-            if (currentInmate.isEmpty()) {
+            if (!currentInmate.isPresent()) {
                 String reason = "This inmate does not exist and cannot be updated";
                 throw new SQLException(reason);
             }
@@ -241,7 +241,7 @@ public class InmateServlet extends HttpServlet {
         String queryCounty = getRequiredParameter(req, countyId);
 
         Optional<Inmate> inmate = this.inmates.getInmate(queryInmateFirstName, queryInmateLastName, queryCounty);
-        if (inmate.isEmpty()) {
+        if (!inmate.isPresent()) {
             String html = "<p>Inmate not found!</p>";
             Document empty = Jsoup.parse(html);
             return empty;
@@ -266,7 +266,7 @@ public class InmateServlet extends HttpServlet {
         String queryCounty = getRequiredParameter(req, countyId);
 
         Optional<Inmate> inmate = this.inmates.getInmate(queryInmateFirstName, queryInmateLastName, queryCounty);
-        if (inmate.isEmpty()) {
+        if (!inmate.isPresent()) {
             String html = "<p>Inmate not found!</p>";
             Document empty = Jsoup.parse(html);
             return empty;
@@ -304,7 +304,7 @@ public class InmateServlet extends HttpServlet {
     }
 
     private Optional<Boolean> getIsMale(Optional<String> input) {
-        if (input.isEmpty()) {
+        if (!input.isPresent()) {
             return Optional.empty();
         }
 

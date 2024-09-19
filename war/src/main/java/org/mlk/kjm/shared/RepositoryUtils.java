@@ -25,7 +25,7 @@ public class RepositoryUtils {
             throws IOException, SQLException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(file);
-        byte[] bytes = inputStream.readAllBytes();
+        byte[] bytes = InputStreamUtils.readAllBytes(inputStream);
         String sql = new String(bytes).replaceAll("/n", "");
         String[] statementSqls = sql.split(";");
 

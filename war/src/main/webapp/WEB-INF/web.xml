@@ -18,4 +18,13 @@
 		<servlet-name>InmateServlet</servlet-name>
 		<url-pattern>/inmates/*</url-pattern>
 	</servlet-mapping>
+	<filter>
+		<filter-name>AuthFilter</filter-name>
+		<filter-class>org.mlk.kjm.shared.AuthFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthFilter</filter-name>
+		<url-pattern>/prayers/*</url-pattern>
+		<url-pattern>/inmates/*</url-pattern>
+	</filter-mapping>
 </web-app>

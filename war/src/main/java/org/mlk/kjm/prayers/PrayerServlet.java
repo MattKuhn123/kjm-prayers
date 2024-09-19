@@ -111,7 +111,7 @@ public class PrayerServlet extends HttpServlet {
             String prayerText = getRequiredFromPostBody(postBody, prayerTextId);
 
             Optional<Inmate> inmate = this.inmates.getInmate(firstName, lastName, county);
-            if (inmate.isEmpty()) {
+            if (!inmate.isPresent()) {
                 Inmate newInmate = new Inmate(firstName, lastName, county, Optional.empty(), Optional.empty(), Optional.empty());
                 this.inmates.createInmate(newInmate);
             }
@@ -250,7 +250,7 @@ public class PrayerServlet extends HttpServlet {
         LocalDate queryDate = stringToDate(queryDateString);
 
         Optional<Prayer> prayer = this.prayers.getPrayer(queryInmateFirstName, queryInmateLastName, queryDate);
-        if (prayer.isEmpty()) {
+        if (!prayer.isPresent()) {
             String html = "<p>Prayer not found!</p>";
             Document empty = Jsoup.parse(html);
             return empty;

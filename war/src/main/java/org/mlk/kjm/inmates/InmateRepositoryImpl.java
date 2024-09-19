@@ -112,7 +112,11 @@ public class InmateRepositoryImpl implements InmateRepository {
             ivs.add(infoIV);
         }
 
-        InsertValue[] result = ivs.toArray(InsertValue[]::new);
+        InsertValue[] result = new InsertValue[ivs.size()];
+        for (int i = 0; i < ivs.size(); i++) {
+            result[i] = ivs.get(i);
+        }
+        
         return result;
     }
 
