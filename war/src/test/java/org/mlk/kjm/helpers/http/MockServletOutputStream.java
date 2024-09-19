@@ -1,4 +1,4 @@
-package org.mlk.http;
+package org.mlk.kjm.helpers.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

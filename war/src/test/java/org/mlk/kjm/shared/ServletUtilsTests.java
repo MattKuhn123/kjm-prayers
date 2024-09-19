@@ -1,4 +1,4 @@
-package org.mlk.kjm;
+package org.mlk.kjm.shared;
 
 import java.util.Map;
 import java.util.LinkedHashMap;

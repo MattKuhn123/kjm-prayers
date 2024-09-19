@@ -1,4 +1,4 @@
-package org.mlk.kjm;
+package org.mlk.kjm.shared;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,9 +1,11 @@
-package org.mlk.kjm;
+package org.mlk.kjm.helpers;
 
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ApplicationPropertiesTestImpl implements ApplicationProperties {
+import org.mlk.kjm.shared.ApplicationProperties;
+
+public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
     private final String dbUrlProperty = "dbUrl";
     private final String dbUserProperty = "dbUser";
     private final String dbPasswordProperty = "dbPassword";

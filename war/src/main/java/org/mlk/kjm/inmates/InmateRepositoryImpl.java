@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
-import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.InsertValue;
-import org.mlk.kjm.OrderByClause;
-import org.mlk.kjm.QueryParameter;
-import org.mlk.kjm.QueryParameter.QueryOperator;
+import org.mlk.kjm.shared.ApplicationProperties;
+import org.mlk.kjm.shared.InsertValue;
+import org.mlk.kjm.shared.OrderByClause;
+import org.mlk.kjm.shared.QueryParameter;
+import org.mlk.kjm.shared.QueryParameter.QueryOperator;
 
-import static org.mlk.kjm.RepositoryUtils.*;
+import static java.util.stream.Collectors.toList;
+import static org.mlk.kjm.shared.RepositoryUtils.*;
 
 public class InmateRepositoryImpl implements InmateRepository {
     private final String url;

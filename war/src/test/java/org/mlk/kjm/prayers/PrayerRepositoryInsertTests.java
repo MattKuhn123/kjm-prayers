@@ -1,7 +1,7 @@
 package org.mlk.kjm.prayers;
 
 import static org.junit.Assert.assertThrows;
-import static org.mlk.kjm.ServletUtils.stringToDate;
+import static org.mlk.kjm.shared.ServletUtils.stringToDate;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -9,10 +9,10 @@ import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.ApplicationPropertiesTestImpl;
-import org.mlk.kjm.RepositoryUtils;
-import org.mlk.kjm.RepositoryUtilsTesting;
+import org.mlk.kjm.helpers.ApplicationPropertiesTestingImpl;
+import org.mlk.kjm.helpers.RepositoryUtilsTesting;
+import org.mlk.kjm.shared.ApplicationProperties;
+import org.mlk.kjm.shared.RepositoryUtils;
 
 import junit.framework.TestCase;
 
@@ -25,7 +25,7 @@ public class PrayerRepositoryInsertTests extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        ApplicationProperties props = new ApplicationPropertiesTestImpl();
+        ApplicationProperties props = new ApplicationPropertiesTestingImpl();
         String url = props.getDbUrl();
         String username = props.getDbUser();
         String password = props.getDbPassword();
@@ -36,7 +36,7 @@ public class PrayerRepositoryInsertTests extends TestCase {
 
     @Test
     public void zest_insertNonExistingInmate_expectError() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());
 
         String firstName = "Matt";
         String lastName = "Kuhn";
@@ -55,7 +55,7 @@ public class PrayerRepositoryInsertTests extends TestCase {
 
     @Test
     public void zest_insertRealInmate() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());
 
         String firstName = "Bettina";
         String lastName = "Venditti";

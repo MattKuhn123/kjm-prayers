@@ -1,4 +1,4 @@
-package org.mlk.kjm;
+package org.mlk.kjm.shared;
 
 public class OrderByClause {
     private final String orderBy;

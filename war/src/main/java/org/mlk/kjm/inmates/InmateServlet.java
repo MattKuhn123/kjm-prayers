@@ -1,12 +1,12 @@
 package org.mlk.kjm.inmates;
 
-import static org.mlk.kjm.ServletUtils.*;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.ApplicationPropertiesImpl;
+import org.mlk.kjm.shared.ApplicationProperties;
+import org.mlk.kjm.shared.ApplicationPropertiesImpl;
+
+import static org.mlk.kjm.shared.ServletUtils.*;
 
 import java.io.IOException;
 import java.sql.SQLException;

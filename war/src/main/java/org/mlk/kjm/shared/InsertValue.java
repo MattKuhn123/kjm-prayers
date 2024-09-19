@@ -1,6 +1,6 @@
-package org.mlk.kjm;
+package org.mlk.kjm.shared;
 
-import static org.mlk.kjm.ServletUtils.dateToString;
+import static org.mlk.kjm.shared.ServletUtils.dateToString;
 
 import java.time.LocalDate;
 

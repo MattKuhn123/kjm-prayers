@@ -1,7 +1,7 @@
 package org.mlk.kjm.prayers;
 
-import static org.mlk.kjm.ServletUtils.dateToString;
-import static org.mlk.kjm.ServletUtils.stringToDate;
+import static org.mlk.kjm.shared.ServletUtils.dateToString;
+import static org.mlk.kjm.shared.ServletUtils.stringToDate;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -10,10 +10,10 @@ import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.ApplicationPropertiesTestImpl;
-import org.mlk.kjm.RepositoryUtils;
-import org.mlk.kjm.RepositoryUtilsTesting;
+import org.mlk.kjm.helpers.ApplicationPropertiesTestingImpl;
+import org.mlk.kjm.helpers.RepositoryUtilsTesting;
+import org.mlk.kjm.shared.ApplicationProperties;
+import org.mlk.kjm.shared.RepositoryUtils;
 
 import junit.framework.TestCase;
 
@@ -26,7 +26,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Before
     public void setUp() throws Exception {
-        ApplicationProperties props = new ApplicationPropertiesTestImpl();
+        ApplicationProperties props = new ApplicationPropertiesTestingImpl();
         String url = props.getDbUrl();
         String username = props.getDbUser();
         String password = props.getDbPassword();
@@ -37,7 +37,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
     
     @Test
     public void test_BasicQuery() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());
         int page = 0;
         int pageLength = 100;
         List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
@@ -49,7 +49,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_WhereFirstName() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         String firstName = "al";
         int page = 0;
         int pageLength = 100;
@@ -61,7 +61,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_WhereLastName() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         String lastName = "Coan";
         int page = 0;
         int pageLength = 100;
@@ -73,7 +73,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_WhereCounty() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         String county = "Kenton";
         int page = 0;
         int pageLength = 100;
@@ -85,7 +85,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_WhereDate() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         String dateString = "12/25/2023";
         LocalDate date = stringToDate(dateString);
         int page = 0;
@@ -98,7 +98,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_limit() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         int page = 0;
         int pageLength = 2;
         List<Prayer> results = test.getPrayers(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), page, pageLength, Optional.empty(), Optional.empty());
@@ -109,7 +109,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_orderAscFirstName_page1() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         int page = 0;
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
@@ -135,7 +135,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_orderAscFirstName_page2() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         int page = 1;
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
@@ -161,7 +161,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_orderDescFirstName_page1() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         int page = 0;
         int pageLength = 2;
         String orderBy = PrayerRepository.firstNameColumn;
@@ -187,7 +187,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_BasicQuery_orderAscDate_page1() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());
         int page = 0;
         int pageLength = 2;
         String orderBy = PrayerRepository.dateColumn;
@@ -213,7 +213,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_getSingle() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         String firstName = "Ralf";
         String lastName = "Grigoriev";
         String dateString = "12/26/2023";
@@ -228,7 +228,7 @@ public class PrayerRepositoryQueryTests extends TestCase {
 
     @Test
     public void test_Count() throws Exception {
-        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestImpl());;
+        PrayerRepository test = new PrayerRepositoryImpl(new ApplicationPropertiesTestingImpl());;
         int expected = 4;
         int actual = test.getCount(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 

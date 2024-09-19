@@ -1,24 +1,25 @@
 package org.mlk.kjm.prayers;
 
-import static org.mlk.kjm.ServletUtils.*;
-
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+
+import static org.mlk.kjm.shared.ServletUtils.*;
+
 import java.io.IOException;
 import java.sql.SQLException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.mlk.kjm.ApplicationProperties;
-import org.mlk.kjm.ApplicationPropertiesImpl;
-import org.mlk.kjm.ServletUtils;
 import org.mlk.kjm.inmates.Inmate;
 import org.mlk.kjm.inmates.InmateRepository;
 import org.mlk.kjm.inmates.InmateRepositoryImpl;
+import org.mlk.kjm.shared.ApplicationProperties;
+import org.mlk.kjm.shared.ApplicationPropertiesImpl;
+import org.mlk.kjm.shared.ServletUtils;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

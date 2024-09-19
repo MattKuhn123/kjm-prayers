@@ -1,7 +1,9 @@
-package org.mlk.kjm;
+package org.mlk.kjm.helpers;
 
 import java.io.IOException;
 import java.sql.*;
+
+import org.mlk.kjm.shared.RepositoryUtils;
 
 public class RepositoryUtilsTesting {
 
