@@ -12,6 +12,9 @@ repositories {
 dependencies {
     implementation 'org.jsoup:jsoup:1.18.1'
     implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+    implementation group: 'javax.mail', name: 'mail', version: '1.4.1'
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
+
 
     providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     testImplementation 'junit:junit:4.13.2'

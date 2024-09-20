@@ -9,6 +9,10 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
     private final String dbUrlProperty = "dbUrl";
     private final String dbUserProperty = "dbUser";
     private final String dbPasswordProperty = "dbPassword";
+    private final String mailHostProperty = "mailHost";
+    private final String mailFromProperty = "mailFrom";
+    private final String mailUserProperty = "mailUser";
+    private final String mailPasswordProperty = "mailPassword";
 
     @Override
     public String getDbUrl() {
@@ -53,4 +57,41 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         String result = properties.getProperty(property);
         return result;
     }
+
+    public String getMailHost() {
+        try {
+            String result = getProperty(mailHostProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getMailFrom() {
+        try {
+            String result = getProperty(mailFromProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getMailUser() {
+        try {
+            String result = getProperty(mailUserProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getMailPassword() {
+        try {
+            String result = getProperty(mailPasswordProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

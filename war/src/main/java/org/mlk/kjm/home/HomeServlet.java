@@ -45,7 +45,9 @@ public class HomeServlet extends HttpServlet {
     private final EmailService emails;
     private final ApplicationProperties props;
     public HomeServlet() {
-        this(new UserRepositoryImpl(new ApplicationPropertiesImpl()), new EmailService(), new ApplicationPropertiesImpl());
+        this(new UserRepositoryImpl(new ApplicationPropertiesImpl()), 
+            new EmailService(new ApplicationPropertiesImpl()), 
+            new ApplicationPropertiesImpl());
     }
 
     public HomeServlet(UserRepository users, EmailService emails, ApplicationProperties props) {
@@ -107,7 +109,10 @@ public class HomeServlet extends HttpServlet {
                 return;
             }
 
-            emails.sendAuthTokenEmail(authToken);
+
+            String subject = "KJM Prayer Board code";
+            String text = authToken.getCode().toString();
+            emails.sendEmail(authToken.getEmail(), subject, text);
             String msg = "Email sent!";
             resp.getWriter().append(msg).flush();
         } else if (useCode.equals(pathInfo)){
