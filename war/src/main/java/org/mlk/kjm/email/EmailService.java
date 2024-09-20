@@ -7,32 +7,40 @@ import javax.mail.internet.*;
 import org.mlk.kjm.shared.ApplicationProperties;
 
 public class EmailService {
-    private final String from;
 
+    private final String address = "";
+    private final String password = "";
     public EmailService(ApplicationProperties appProps) {
-        from = appProps.getMailFrom();
-        String host = appProps.getMailHost();
-        Properties properties = System.getProperties();
-        String mailHost = "mail.smtp.host";
-        // String mailUser = appProps.getMailUser();
-        // String mailPassword = appProps.getMailPassword();
-        properties.setProperty(mailHost, host);
-        // properties.setProperty(mailUser, host);
-        // properties.setProperty(mailPassword, host);
     }
     
-    public void sendEmail(String to, String subject, String text) {    
-        Properties properties = System.getProperties();
-        Session session = Session.getDefaultInstance(properties);
-        MimeMessage message = new MimeMessage(session);
+    public void sendEmail(String to, String subject, String text) {
+        Properties properies = new Properties();
+        properies.put("mail.smtp.host", "smtp.gmail.com");
+        properies.put("mail.smtp.port", "465");
+        properies.put("mail.smtp.auth", "true");
+        properies.put("mail.smtp.starttls.enable", "true");
+        properies.put("mail.smtp.starttls.required", "true");
+        properies.put("mail.smtp.ssl.protocols", "TLSv1.2");
+        properies.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+        Session session = Session.getInstance(properies,
+          new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(address, password);
+            }
+          });
+
         try {
-            message.setFrom(new InternetAddress(from));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(address));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(address));
             message.setSubject(subject);
             message.setText(text);
+
             Transport.send(message);
-        } catch (MessagingException mex) {
-            mex.printStackTrace();
+            System.out.println("Done");
+        } catch (MessagingException e) {
+            e.printStackTrace();
         }
     }
 }
