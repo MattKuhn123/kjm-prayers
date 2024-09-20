@@ -19,10 +19,20 @@ import java.nio.charset.StandardCharsets;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.mlk.kjm.home.HomeServlet;
+import org.mlk.kjm.users.AuthToken;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class ServletUtils {
+
+	public static final String selectedAttr = "selected";
+	public static final String checkedAttr = "checked";
+	public static final String falseVal = "false";
+	public static final String trueVal = "true";
+	public static final String disabledAttr = "disabled";
     public static final String inputSubmit = "input[type='submit']";
     public static final String formTag = "form";
     public static final String tableTag = "table";
@@ -33,6 +43,7 @@ public class ServletUtils {
     public static final String idAttr = "id";
     public static final String emptyString = "";
 
+	// DATES
 	private static final String pattern = "MM/dd/yyyy";
 	private static final String htmlPattern = "yyyy-MM-dd";
 	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
@@ -53,6 +64,7 @@ public class ServletUtils {
 		}
 	}
 
+	// HTML
     private static final String templatesDirectory = "/templates";
 
 	public static Document getHtmlDocument(String file) throws IOException {
@@ -64,7 +76,8 @@ public class ServletUtils {
 		return htmlDocument;
 	}
 
-	public static String getRequiredFromPostBody(Map<String, Optional<String>> postBody, String parameter) throws IOException {
+	// REQUEST PARAMETER HELPERS
+	public static String getRequiredFromPostBody(Map<String, Optional<String>> postBody, String parameter) throws IllegalArgumentException {
 		Optional<String> value = postBody.get(parameter);
 		if (!value.isPresent()) {
 			throw new IllegalArgumentException(parameter + " is required!");
@@ -118,6 +131,7 @@ public class ServletUtils {
 		return decode(result, StandardCharsets.UTF_8.name());
 	}
 
+	// RANDOM
 	public static String createLink(String contextPath, Map<String, String> params) throws UnsupportedEncodingException {
 		List<String> encodedParams = params.keySet().stream().map(k -> {
 			try {
@@ -140,11 +154,7 @@ public class ServletUtils {
 		return contextPath + "?" + result;
 	}
 	
-	public static final String selectedAttr = "selected";
-	public static final String checkedAttr = "checked";
-	public static final String falseVal = "false";
-	public static final String trueVal = "true";
-	public static final String disabledAttr = "disabled";
+	// PAGING
 	public static final String previousBtnId = "previous-btn";
 	public static final String nextBtnId = "next-btn";
 	public static final String pageId = "page";
@@ -211,4 +221,58 @@ public class ServletUtils {
             return -1;
         }
     }
+
+
+	// COOKIES
+	public static void setAuthCookie(HttpServletResponse resp, AuthToken authToken) {
+		int maxAge = HomeServlet.daysToExpires * 24 * 60 * 60;
+		setCookie(resp, authCookieName, authToken.toString(), maxAge);
+	}
+
+	public static void setCookie(HttpServletResponse resp, String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        
+        boolean isHttpOnly = true;
+        cookie.setHttpOnly(isHttpOnly);
+
+        boolean isSecure = true;
+        cookie.setSecure(isSecure);
+
+        cookie.setMaxAge(maxAge);
+
+		cookie.setPath("/");
+
+        resp.addCookie(cookie);;
+    }
+
+    public static Optional<String> getCookie(HttpServletRequest req, final String searchFor) {
+		Cookie[] cookies = req.getCookies();
+        if (cookies == null) {
+            return Optional.empty();
+        }
+
+        for (Cookie cookie : cookies) {
+            if (searchFor.equals(cookie.getName())) {
+                return Optional.of(cookie.getValue());
+            }
+        }
+
+        return Optional.empty();
+    }
+
+	public static String authCookieName = "z";
+
+	public static Optional<AuthToken> getAuthToken(HttpServletRequest req) {
+		Optional<String> authCookie = getAuthCookie(req);
+		if (!authCookie.isPresent()) {
+			return Optional.empty();
+		}
+
+		Optional<AuthToken> authToken = AuthToken.fromString(authCookie.get());
+		return authToken;
+	}
+
+	public static Optional<String> getAuthCookie(HttpServletRequest req) {
+		return getCookie(req, authCookieName);
+	}
 }

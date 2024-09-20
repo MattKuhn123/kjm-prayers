@@ -6,17 +6,25 @@
 		<servlet-name>PrayerServlet</servlet-name>
 		<servlet-class>org.mlk.kjm.prayers.PrayerServlet</servlet-class>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>PrayerServlet</servlet-name>
+		<url-pattern>/prayers/*</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>InmateServlet</servlet-name>
 		<servlet-class>org.mlk.kjm.inmates.InmateServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>PrayerServlet</servlet-name>
-		<url-pattern>/prayers/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>InmateServlet</servlet-name>
 		<url-pattern>/inmates/*</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>HomeServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.home.HomeServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>HomeServlet</servlet-name>
+		<url-pattern>/home/*</url-pattern>
 	</servlet-mapping>
 	<filter>
 		<filter-name>AuthFilter</filter-name>

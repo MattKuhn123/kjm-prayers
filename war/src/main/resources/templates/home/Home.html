@@ -1,0 +1,35 @@
+<ul class="menu">
+    <li>
+        <a hx-get="/prayers/ListPrayers" 
+            hx-target="#list-prayers-tab-content" 
+            class="btn btn-small btn-secondary" 
+            href="#prayers-tab">Prayers</a>
+    </li>
+    <li>
+        <a hx-get="/prayers/CreatePrayer" 
+            hx-target="#new-prayer-tab-content" 
+            class="btn btn-small btn-secondary" 
+            href="#new-prayer-tab">New Prayer</a>
+    </li>
+    <li>
+        <a hx-get="/inmates/ListInmates" 
+            hx-target="#inmates-tab-content" 
+            class="btn btn-small btn-secondary" 
+            href="#inmates-tab">Inmates</a>
+    </li>
+</ul>
+<div id="prayers-tab" class="tab-content">
+    <div id="list-prayers-tab-content">
+        <p class="htmx-indicator">Result loading...</p>
+    </div>
+</div>
+<div id="new-prayer-tab" class="tab-content">
+    <div id="new-prayer-tab-content">
+        <p class="htmx-indicator">Result loading...</p>
+    </div>
+</div>
+<div id="inmates-tab" class="tab-content">
+    <div id="inmates-tab-content">
+        <p class="htmx-indicator">Result loading...</p>
+    </div>
+</div>

@@ -35,7 +35,8 @@ public class RepositoryUtils {
                 continue;
             }
 
-            if ("".equals(statementSql.trim())) {
+            statementSql = statementSql.trim();
+            if ("".equals(statementSql)) {
                 continue;
             }
 

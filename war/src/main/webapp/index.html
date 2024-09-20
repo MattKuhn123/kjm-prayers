@@ -15,31 +15,8 @@
 <body>
 	<div class="container">
 		<h1>Prayer Board</h1>
-		<ul class="menu">
-			<li>
-				<a class="btn btn-small btn-secondary" href="#prayers-tab">Prayers</a>
-			</li>
-			<li>
-				<a class="btn btn-small btn-secondary" href="#new-prayer-tab">New Prayer</a>
-			</li>
-			<li>
-				<a class="btn btn-small btn-secondary" href="#inmates-tab">Inmates</a>
-			</li>
-		</ul>
-		<div id="prayers-tab" class="tab-content">
-			<div hx-get="/prayers/ListPrayers" hx-trigger="load">
-				<p class="htmx-indicator">Result loading...</p>
-			</div>
-		</div>
-		<div id="new-prayer-tab" class="tab-content">
-			<div hx-get="/prayers/CreatePrayer" hx-trigger="load">
-				<p class="htmx-indicator">Result loading...</p>
-			</div>
-		</div>
-		<div id="inmates-tab" class="tab-content">
-			<div hx-get="/inmates/ListInmates" hx-trigger="load">
-				<p class="htmx-indicator">Result loading...</p>
-			</div>
+		<div id="home" hx-get="/home" hx-trigger="load">
+			<p>Loading...</p>
 		</div>
 	</div>
 </body>

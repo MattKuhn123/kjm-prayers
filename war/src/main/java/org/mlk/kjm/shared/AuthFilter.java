@@ -1,21 +1,33 @@
 package org.mlk.kjm.shared;
 
+import static org.mlk.kjm.shared.ServletUtils.getAuthToken;
+
 import java.io.IOException;
-import java.time.Instant;
+import java.sql.SQLException;
 import java.util.Optional;
+
+import org.mlk.kjm.users.AuthToken;
+import org.mlk.kjm.users.UserRepository;
+import org.mlk.kjm.users.UserRepositoryImpl;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class AuthFilter implements Filter {
 
-    private final String cookieName = "TEST_COOKIE";
+    private final UserRepository users;
+    public AuthFilter() {
+        this(new UserRepositoryImpl(new ApplicationPropertiesImpl()));
+    }
+
+    public AuthFilter(UserRepository users) {
+        this.users = users;
+    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain)
@@ -28,42 +40,17 @@ public class AuthFilter implements Filter {
 
     private void doFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain)
             throws IOException, ServletException {
-        Optional<String> getCookie = getCookie(req.getCookies(), cookieName);
 
-        if (getCookie.isPresent()) {
-            System.out.println("Cookie is present!");
-            System.out.println(getCookie.get());
-        } else {
-            System.out.println("Cookie not present!");
+        Optional<AuthToken> authToken = getAuthToken(req);
+        boolean isAuthTokenValid = false;
+        try {
+            isAuthTokenValid = AuthUtils.isAuthTokenValid(authToken, users);
+        } catch (SQLException e) {
         }
-
-        Cookie cookie = createCookie();
-        resp.addCookie(cookie);
-        chain.doFilter(req, resp);
+        
+        if (isAuthTokenValid) {
+            chain.doFilter(req, resp);
+        }
     }
 
-    private Cookie createCookie() {
-        Long value = Instant.now().toEpochMilli();
-        Cookie result = new Cookie(cookieName, String.valueOf(value));
-        boolean isHttpOnly = true;
-        result.setHttpOnly(isHttpOnly);
-
-        boolean isSecure = true;
-        result.setSecure(isSecure);
-        return result;
-    }
-
-    private Optional<String> getCookie(Cookie[] cookies, final String searchFor) {
-        if (cookies == null) {
-            return Optional.empty();
-        }
-
-        for (Cookie cookie : cookies) {
-            if (searchFor.equals(cookie.getName())) {
-                return Optional.of(cookie.getValue());
-            }
-        }
-
-        return Optional.empty();
-    }
 }

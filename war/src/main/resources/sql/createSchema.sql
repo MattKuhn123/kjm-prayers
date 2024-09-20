@@ -35,3 +35,9 @@ ADD CONSTRAINT `fk_county`
   REFERENCES `kjm`.`jails` (`county`)
   ON DELETE CASCADE
   ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `kjm`.`users` (
+  `email` VARCHAR(64) NOT NULL,
+  `code` VARCHAR(64) NULL,
+  `code_expires` DATE NULL,
+  PRIMARY KEY (`email`));

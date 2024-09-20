@@ -1,6 +1,7 @@
 DELETE FROM `kjm`.`jails`;
 DELETE FROM `kjm`.`inmates`;
 DELETE FROM `kjm`.`prayers`;
+DELETE FROM `kjm`.`users`;
 
 INSERT INTO `kjm`.`jails` (`county`) VALUES ('Kenton'), ('Boone'), ('Grant'), ('Campbell');
 
@@ -21,3 +22,5 @@ INSERT INTO `kjm`.`prayers` (`first_name`, `last_name`, `county`, `date`, `praye
 ('Ralf', 'Grigoriev', 'Kenton', STR_TO_DATE('12/26/2023', '%m/%d/%Y'), 'I still need prayers for everything!'),
 ('Germana', 'Coan', 'Boone', STR_TO_DATE('10/05/2023', '%m/%d/%Y'), 'orci mauris lacinia sapien quis libero nullam sit'),
 ('Guthrie', 'Scain', 'Campbell', STR_TO_DATE('09/20/2020', '%m/%d/%Y'), 'tincidunt  id ligula suspendisse ornare consequat lectus in est risus auctor');
+
+INSERT INTO `kjm`.`users` (`email`) VALUES ('mlkuhn@tva.gov');
