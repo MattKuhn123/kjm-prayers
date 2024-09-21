@@ -23,4 +23,4 @@ INSERT INTO `kjm`.`prayers` (`first_name`, `last_name`, `county`, `date`, `praye
 ('Germana', 'Coan', 'Boone', STR_TO_DATE('10/05/2023', '%m/%d/%Y'), 'orci mauris lacinia sapien quis libero nullam sit'),
 ('Guthrie', 'Scain', 'Campbell', STR_TO_DATE('09/20/2020', '%m/%d/%Y'), 'tincidunt  id ligula suspendisse ornare consequat lectus in est risus auctor');
 
-INSERT INTO `kjm`.`users` (`email`) VALUES ('mlkuhn@tva.gov');
+INSERT INTO `kjm`.`users` (`email`) VALUES ('mlkuhn@tva.gov'), ('mlkkuhn@live.com');

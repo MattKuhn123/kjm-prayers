@@ -34,12 +34,13 @@ public class EmailService {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(address));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(address));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(text);
 
             Transport.send(message);
-            System.out.println("Done");
+            String msg = "sent code to " + to;
+            System.out.println(msg);
         } catch (MessagingException e) {
             e.printStackTrace();
         }
