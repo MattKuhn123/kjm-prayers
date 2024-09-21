@@ -6,15 +6,6 @@ import java.util.Properties;
 import org.mlk.kjm.shared.ApplicationProperties;
 
 public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
-    private final String dbUrlProperty = "dbUrl";
-    private final String dbUserProperty = "dbUser";
-    private final String dbPasswordProperty = "dbPassword";
-    private final String mailHostProperty = "mailHost";
-    private final String mailFromProperty = "mailFrom";
-    private final String mailUserProperty = "mailUser";
-    private final String mailPasswordProperty = "mailPassword";
-
-    @Override
     public String getDbUrl() {
         try {
             String result = getProperty(dbUrlProperty);
@@ -24,7 +15,6 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         }
     }
 
-    @Override
     public String getDbUser() {
         try {
             String result = getProperty(dbUserProperty);
@@ -34,7 +24,6 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         }
     }
 
-    @Override
     public String getDbPassword() {
         try {
             String result = getProperty(dbPasswordProperty);
@@ -44,7 +33,6 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         }
     }
 
-    @Override
     public boolean isProduction() {
         return false;
     }
@@ -58,25 +46,8 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         return result;
     }
 
-    public String getMailHost() {
-        try {
-            String result = getProperty(mailHostProperty);
-            return result;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public String getMailFrom() {
-        try {
-            String result = getProperty(mailFromProperty);
-            return result;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public String getMailUser() {
+    @Override
+    public String getEmailAddress() {
         try {
             String result = getProperty(mailUserProperty);
             return result;
@@ -85,7 +56,8 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
         }
     }
 
-    public String getMailPassword() {
+    @Override
+    public String getEmailPassword() {
         try {
             String result = getProperty(mailPasswordProperty);
             return result;
@@ -93,5 +65,4 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
             return null;
         }
     }
-
 }

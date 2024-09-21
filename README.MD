@@ -14,4 +14,5 @@ application.test.properties has all secrets, and has been ignored from the repo.
 1. -Denv=
 1. -DdbUser=
 1. -DdbPassword=
+1. -DDmailUser=
 1. -DmailPassword=
