@@ -1,7 +1,4 @@
-# TODO
-
-1. filter with auth
-1. real db repo
+# KJM Prayer Board
 
 ## Environment
 
@@ -14,11 +11,8 @@
 
 ### Tomcat
 
-Works with Tomcat 10.1.x
-
-#### Server.xml
-
 ``` xml
+<!-- Server.xml -->
 <Connector port="8080" protocol="HTTP/1.1"
     connectionTimeout="20000"
     redirectPort="443" />
