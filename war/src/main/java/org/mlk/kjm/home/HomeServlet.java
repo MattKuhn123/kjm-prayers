@@ -10,10 +10,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.jsoup.nodes.Document;
-import org.mlk.kjm.email.EmailService;
+import org.mlk.kjm.auth.AuthUtils;
+import org.mlk.kjm.auth.AuthCodeSender;
 import org.mlk.kjm.shared.ApplicationProperties;
 import org.mlk.kjm.shared.ApplicationPropertiesImpl;
-import org.mlk.kjm.shared.AuthUtils;
 import org.mlk.kjm.users.AuthToken;
 import org.mlk.kjm.users.UserRepository;
 import org.mlk.kjm.users.UserRepositoryImpl;
@@ -42,17 +42,17 @@ public class HomeServlet extends HttpServlet {
     private static final String useCode = "/UseCode";
 
     private final UserRepository users;
-    private final EmailService emails;
+    private final AuthCodeSender authCodeSender;
     private final ApplicationProperties props;
     public HomeServlet() {
         this(new UserRepositoryImpl(new ApplicationPropertiesImpl()), 
-            new EmailService(new ApplicationPropertiesImpl()), 
+            new AuthCodeSender(new ApplicationPropertiesImpl()), 
             new ApplicationPropertiesImpl());
     }
 
-    public HomeServlet(UserRepository users, EmailService emails, ApplicationProperties props) {
+    public HomeServlet(UserRepository users, AuthCodeSender authCodeSender, ApplicationProperties props) {
         this.users = users;
-        this.emails = emails;
+        this.authCodeSender = authCodeSender;
         this.props = props;
     }
     
@@ -78,7 +78,7 @@ public class HomeServlet extends HttpServlet {
             String html = homeDocument.html();
             resp.getWriter().append(html).flush();
         } else {
-            String loginMessage = "Welcome!";
+            String loginMessage = "Welcome! Please generate a token to continue.";
             Document loginDocument = getLoginDocument(loginMessage);
             String html = loginDocument.html();
             resp.getWriter().append(html).flush();
@@ -109,11 +109,8 @@ public class HomeServlet extends HttpServlet {
                 return;
             }
 
-
-            String subject = "KJM Prayer Board code";
-            String text = authToken.getCode().toString();
-            emails.sendEmail(authToken.getEmail(), subject, text);
-            String msg = "Email sent!";
+            authCodeSender.sendAuthCode(authToken);
+            String msg = "Email sent! (Check your junk folder)";
             resp.getWriter().append(msg).flush();
         } else if (useCode.equals(pathInfo)){
             Map<String, Optional<String>> postBody = getPostBodyMap(req);

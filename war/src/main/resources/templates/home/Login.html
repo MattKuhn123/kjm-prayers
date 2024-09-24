@@ -5,11 +5,12 @@
         <input required id='email' name='email' type='email' />
     </div>
     <input hx-post='/home/NewCode' value='New Code' type='button' hx-target='#send-email-response'
-        class='btn btn-primary' hx-confirm='Confirm email address?'/>
+        class='btn btn-primary btn-small' hx-confirm='Confirm email address?' />
     <div id='send-email-response'></div>
     <div class='form-control'>
         <label for='code'>Code</label>
         <input required id='code' name='code' type='text' />
     </div>
-    <input hx-post='/home/UseCode' value='Login' type='button' hx-target='#home' class='btn btn-primary' />
+    <input hx-post='/home/UseCode' value='Login' type='button' hx-target='#home'
+        class='btn btn-primary btn-small' />
 </form>
