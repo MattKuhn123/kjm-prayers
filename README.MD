@@ -8,6 +8,7 @@
 1. -DdbPassword=
 1. -DmailUser=
 1. -DmailPassword=
+1. -DapiKey=
 
 ### Tomcat
 

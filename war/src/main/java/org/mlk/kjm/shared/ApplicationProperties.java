@@ -7,6 +7,7 @@ public interface ApplicationProperties {
     final static String dbPasswordProperty = "dbPassword";
     final static String mailUserProperty = "mailUser";
     final static String mailPasswordProperty = "mailPassword";
+    final static String apiKeyProperty = "apiKey";
 
     String getDbUrl();
     String getDbUser();
@@ -14,4 +15,5 @@ public interface ApplicationProperties {
     boolean isProduction();
     String getEmailAddress();
     String getEmailPassword();
+    String getApiKey();
 }

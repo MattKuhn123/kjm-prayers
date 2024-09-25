@@ -65,4 +65,14 @@ public class ApplicationPropertiesTestingImpl implements ApplicationProperties {
             return null;
         }
     }
+
+    @Override
+    public String getApiKey() {
+        try {
+            String result = getProperty(apiKeyProperty);
+            return result;
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

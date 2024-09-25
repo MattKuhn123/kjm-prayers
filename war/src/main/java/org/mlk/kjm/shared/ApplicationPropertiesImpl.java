@@ -52,4 +52,9 @@ public class ApplicationPropertiesImpl implements ApplicationProperties {
         String result = System.getProperty(mailPasswordProperty);
         return result;
     }
+
+    public String getApiKey() {
+        String result = System.getProperty(apiKeyProperty);
+        return result;
+    }
 }
