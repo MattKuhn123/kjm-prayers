@@ -2,16 +2,21 @@ package org.mlk.kjm.ocr;
 
 import org.mlk.kjm.shared.ApplicationProperties;
 
+import java.util.Base64;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.net.*;
+import javax.net.ssl.HttpsURLConnection;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.io.InputStream;
 import java.util.Optional;
 
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -32,8 +37,9 @@ public class OcrService {
     }
 
     private String getRequestBody(byte[] bytes) {
+        String imageString = Base64.getEncoder().encodeToString(bytes);
         String raw = "{\"requests\": [{\"features\": [{\"type\": \"DOCUMENT_TEXT_DETECTION\"}],\"image\": {\"content\": \"REPLACE_ME\"}}]}";
-        String result = raw.replace("REPLACE_ME", new String(bytes));
+        String result = raw.replace("REPLACE_ME", imageString);
         return result;
     }
 
@@ -48,7 +54,7 @@ public class OcrService {
         try {
             URL url = new URL(targetURL);
             SSLContext sc = SSLContext.getInstance("TLS");
-            con = (HttpURLConnection) url.openConnection();
+            con = (HttpsURLConnection) url.openConnection();
 
             sc.init(null, getTrustAllCerts(), new java.security.SecureRandom());
             HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
@@ -67,17 +73,43 @@ public class OcrService {
             wr.close();
 
             InputStream is = con.getInputStream();
+
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-            StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
             String line;
+            String prefix = "          \"description\": \"";
             while ((line = rd.readLine()) != null) {
-                response.append(line);
-                response.append('\r');
+                if (line.startsWith(prefix)) {
+                    line = line.substring(prefix.length());
+                    line = line.replace("\\n", " ");
+                    line = line.substring(0, line.length() - 2);
+                    return Optional.of(line);
+                }
             }
 
             rd.close();
-            return Optional.of(response.toString());
-        } catch (Exception e) {
+            return Optional.empty();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            InputStream is = con.getErrorStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+            StringBuilder response = new StringBuilder();
+            String line;
+            try {
+                while ((line = rd.readLine()) != null) {
+                    response.append(line);
+                    response.append('\r');
+                }
+            } catch (IOException ioe) {
+            }
+
+            String result = response.toString();
+            System.out.println(result);
+            return Optional.empty();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             return Optional.empty();
         } finally {
@@ -88,12 +120,18 @@ public class OcrService {
     }
 
     private static TrustManager[] getTrustAllCerts() {
-        TrustManager[] trustAllCerts = new TrustManager[] { 
-            new X509TrustManager() {
-                public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException { }
-                public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException { }
-                public X509Certificate[] getAcceptedIssuers() { return new X509Certificate[0]; }
-            } 
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                new X509TrustManager() {
+                    public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                    }
+
+                    public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                    }
+
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return new X509Certificate[0];
+                    }
+                }
         };
 
         return trustAllCerts;
