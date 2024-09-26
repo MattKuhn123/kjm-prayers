@@ -26,6 +26,20 @@
 		<servlet-name>HomeServlet</servlet-name>
 		<url-pattern>/home/*</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>OcrServlet</servlet-name>
+		<servlet-class>org.mlk.kjm.ocr.OcrServlet</servlet-class>
+		<multipart-config>
+			<location>.</location>
+			<max-file-size>3145728</max-file-size>
+			<max-request-size>-1</max-request-size>
+			<file-size-threshold>0</file-size-threshold>
+		</multipart-config>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>OcrServlet</servlet-name>
+		<url-pattern>/ocr/*</url-pattern>
+	</servlet-mapping>
 	<filter>
 		<filter-name>AuthFilter</filter-name>
 		<filter-class>org.mlk.kjm.auth.AuthFilter</filter-class>
@@ -34,5 +48,6 @@
 		<filter-name>AuthFilter</filter-name>
 		<url-pattern>/prayers/*</url-pattern>
 		<url-pattern>/inmates/*</url-pattern>
+		<url-pattern>/ocr/*</url-pattern>
 	</filter-mapping>
 </web-app>

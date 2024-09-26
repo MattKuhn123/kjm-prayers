@@ -76,9 +76,10 @@ public class OcrService {
 
             BufferedReader rd = new BufferedReader(new InputStreamReader(is));
             String line;
-            String prefix = "          \"description\": \"";
+            String prefix = "\"description\": \"";
             String suffix = ",\"";
             while ((line = rd.readLine()) != null) {
+                line = line.trim();
                 if (line.startsWith(prefix)) {
                     int length = line.length() - suffix.length();
                     line = line.substring(prefix.length(), length);
