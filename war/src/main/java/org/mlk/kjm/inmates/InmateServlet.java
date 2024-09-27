@@ -38,7 +38,7 @@ public class InmateServlet extends HttpServlet {
     public static final String orderById = "order-by";
     public static final String orderByIsAscId = "order-by-is-asc";
     public static final String countyId = "county";
-    public static final String isMaleId = "is-male";
+    public static final String sexId = "sex";
     public static final String infoTextId = "info-text";
     public static final String viewId = "view";
     public static final String editId = "edit";
@@ -49,7 +49,7 @@ public class InmateServlet extends HttpServlet {
     public static final String newFirstNameId = "new-" + firstNameId;
     public static final String newLastNameId = "new-" + lastNameId;
     public static final String newCountyId = "new-" + countyId;
-    public static final String newIsMaleId = "new-" + isMaleId;
+    public static final String newSexId = "new-" + sexId;
     public static final String newInfoTextId = "new-" + infoTextId;
 
     private final InmateRepository inmates;
@@ -114,8 +114,7 @@ public class InmateServlet extends HttpServlet {
             String county = getRequiredFromPostBody(postBody, countyId);
             String newCounty = getRequiredFromPostBody(postBody, newCountyId);
             
-            Optional<String> newIsMaleString = getOptionalFromPostBody(postBody, newIsMaleId);
-            Optional<Boolean> newIsMale = getIsMale(newIsMaleString);
+            Optional<String> newSex = getOptionalFromPostBody(postBody, newSexId);
             Optional<String> newInfoText = getOptionalFromPostBody(postBody, newInfoTextId);
 
             Optional<Inmate> currentInmate = this.inmates.getInmate(firstName, lastName, county);
@@ -124,7 +123,7 @@ public class InmateServlet extends HttpServlet {
                 throw new SQLException(reason);
             }
 
-            Inmate newInmate = new Inmate(newFirstName, newLastName, newCounty, Optional.empty(), newIsMale, newInfoText);
+            Inmate newInmate = new Inmate(newFirstName, newLastName, newCounty, Optional.empty(), newSex, newInfoText);
             this.inmates.updateInmate(currentInmate.get(), newInmate);
 
             String successMessage = "<p>Success!</p>";
@@ -144,15 +143,14 @@ public class InmateServlet extends HttpServlet {
         Optional<String> queryFirstName = getOptionalParameter(req, firstNameId);
         Optional<String> queryLastName = getOptionalParameter(req, lastNameId);
         Optional<String> queryCounty = getOptionalParameter(req, countyId);
-        Optional<String> queryIsMale = getOptionalParameter(req, isMaleId);
-        Optional<Boolean> isMale = getIsMale(queryIsMale);
+        Optional<String> querySex = getOptionalParameter(req, sexId);
         Optional<String> orderBy = getOptionalParameter(req, orderById);
         boolean queryOrderByIsAscIsPresent = isParameterPresent(req, orderByIsAscId);
         Optional<Boolean> orderByIsAsc = Optional.of(queryOrderByIsAscIsPresent);
         
         int page = getPage(req);
 
-        List<Inmate> inmates = this.inmates.getInmates(queryFirstName, queryLastName, queryCounty, Optional.empty(), isMale, page,
+        List<Inmate> inmates = this.inmates.getInmates(queryFirstName, queryLastName, queryCounty, Optional.empty(), querySex, page,
                 defaultPageLength, orderBy, orderByIsAsc);
 
         Document inmatesDocument = getHtmlDocument(listFile);
@@ -163,15 +161,15 @@ public class InmateServlet extends HttpServlet {
             inmatesDocument.getElementById(countyId).selectFirst("option[value='" + queryCounty.get()  + "']").attr(selectedAttr, trueVal);
         }
         
-        if (isMale.isPresent()) {
-            inmatesDocument.getElementById(isMaleId).selectFirst("option[value='" + queryIsMale.get()  + "']").attr(selectedAttr, trueVal);
+        if (querySex.isPresent()) {
+            inmatesDocument.getElementById(sexId).selectFirst("option[value='" + querySex.get()  + "']").attr(selectedAttr, trueVal);
         }
 
         if (queryOrderByIsAscIsPresent) {
             inmatesDocument.getElementById(orderByIsAscId).attr(checkedAttr, trueVal);
         }
 
-        int totalResults = this.inmates.getCount(queryFirstName, queryLastName, queryCounty, Optional.empty(), isMale);
+        int totalResults = this.inmates.getCount(queryFirstName, queryLastName, queryCounty, Optional.empty(), querySex);
         int pageCount = (int) Math.ceil((double) totalResults / (double) defaultPageLength);
 
         Element pageActionsElement = inmatesDocument.getElementById(pageActionsId);
@@ -253,9 +251,8 @@ public class InmateServlet extends HttpServlet {
         inmateDocument.getElementById(countyId).text(inmate.get().getCounty());
         inmateDocument.getElementById(infoTextId).text(inmate.get().getInfo().orElse(emptyString));
 
-        if (inmate.get().isMale().isPresent()) {
-            String isMaleView = inmate.get().isMale().get() ? "Yes" : "No";
-            inmateDocument.getElementById(isMaleId).text(isMaleView);
+        if (inmate.get().sex().isPresent()) {
+            inmateDocument.getElementById(sexId).text(inmate.get().sex().get());
         }
         return inmateDocument;
     }
@@ -287,37 +284,15 @@ public class InmateServlet extends HttpServlet {
         editDocument.getElementById(countyId).val(inmate.get().getCounty());
         editDocument.getElementById(newCountyId).selectFirst("option[value='" + inmate.get().getCounty()  + "']").attr(selectedAttr, trueVal);
         
-        String isMaleValue = inmate.get().isMale().isPresent() 
-            ? inmate.get().isMale().get().toString()
+        String sexValue = inmate.get().sex().isPresent() 
+            ? inmate.get().sex().get()
             : emptyString;
-
-        String isMaleView = inmate.get().isMale().isPresent() 
-            ? inmate.get().isMale().get() ? "Yes" : "No"
-            : emptyString;
-        editDocument.getElementById(isMaleId).val(isMaleView);
-        editDocument.getElementById(newIsMaleId).selectFirst("option[value='" + isMaleValue  + "']").attr(selectedAttr, trueVal);
+        editDocument.getElementById(sexId).val(sexValue);
+        editDocument.getElementById(newSexId).selectFirst("option[value='" + sexValue  + "']").attr(selectedAttr, trueVal);
         
         String infoTxt = inmate.get().getInfo().isPresent() ? inmate.get().getInfo().get() : emptyString;
         editDocument.getElementById(infoTextId).val(infoTxt);
         editDocument.getElementById(newInfoTextId).val(infoTxt);
         return editDocument;
-    }
-
-    private Optional<Boolean> getIsMale(Optional<String> input) {
-        if (!input.isPresent()) {
-            return Optional.empty();
-        }
-
-        String yes = "true";
-        if (input.get().equals(yes)) {
-            return Optional.of(true);
-        }
-
-        String no = "false";
-        if (input.get().equals(no)) {
-            return Optional.of(false);
-        }
-
-        return Optional.empty();
     }
 }

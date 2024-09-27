@@ -38,9 +38,9 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     @Override
     public List<Inmate> getInmates(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> releaseDate, Optional<Boolean> isMale, int page, int pageLength,
+            Optional<LocalDate> releaseDate, Optional<String> sex, int page, int pageLength,
             Optional<String> orderByEnum, Optional<Boolean> orderAsc) throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, isMale);
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, sex);
 
         List<OrderByClause> orderBys = toOrderBys(orderByEnum, orderAsc);
 
@@ -56,8 +56,8 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     @Override
     public int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> releaseDate, Optional<Boolean> isMale) throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, isMale);
+            Optional<LocalDate> releaseDate, Optional<String> sex) throws SQLException {
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, sex);
         int result = queryTableCount(table, parameters, url, user, password);
         return result;
     }
@@ -99,12 +99,12 @@ public class InmateRepositoryImpl implements InmateRepository {
             ivs.add(releaseDateIV);
         }
         
-        if (inmate.isMale().isPresent()) {
-            InsertValue isMaleIV = new InsertValue(isMaleColumn, inmate.isMale().get());
-            ivs.add(isMaleIV);
+        if (inmate.sex().isPresent()) {
+            InsertValue sexIV = new InsertValue(sexColumn, inmate.sex().get());
+            ivs.add(sexIV);
         } else {
-            InsertValue isMaleIV = new InsertValue(isMaleColumn, null);
-            ivs.add(isMaleIV);
+            InsertValue sexIV = new InsertValue(sexColumn, null);
+            ivs.add(sexIV);
         }
         
         if (inmate.getInfo().isPresent()) {
@@ -156,7 +156,7 @@ public class InmateRepositoryImpl implements InmateRepository {
     }
 
     private List<QueryParameter> toQueryParameters(Optional<String> firstName, Optional<String> lastName,
-            Optional<String> county, Optional<LocalDate> releaseDate, Optional<Boolean> isMale) {
+            Optional<String> county, Optional<LocalDate> releaseDate, Optional<String> sex) {
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         if (firstName.isPresent()) {
             QueryParameter qp = new QueryParameter(firstNameColumn, QueryOperator.like, firstName.get());
@@ -178,8 +178,8 @@ public class InmateRepositoryImpl implements InmateRepository {
             parameters.add(qp);
         }
 
-        if (isMale.isPresent()) {
-            QueryParameter qp = new QueryParameter(isMaleColumn, QueryOperator.equals, isMale.get());
+        if (sex.isPresent()) {
+            QueryParameter qp = new QueryParameter(sexColumn, QueryOperator.equals, sex.get());
             parameters.add(qp);
         }
 
@@ -197,18 +197,14 @@ public class InmateRepositoryImpl implements InmateRepository {
             ? Optional.of(releaseDateSql.get().toLocalDate()) 
             : Optional.empty();
 
-        Optional<Integer> isMaleByte = map.containsKey(isMaleColumn) && map.get(isMaleColumn) != null
-            ? Optional.of((Integer) map.get(isMaleColumn))
-            : Optional.empty();
-        
-        Optional<Boolean> isMale = isMaleByte.isPresent()
-            ? Optional.of(isMaleByte.get().intValue() == 1)
+        Optional<String> sex = map.containsKey(sexColumn) && map.get(sexColumn) != null
+            ? Optional.of((String) map.get(sexColumn))
             : Optional.empty();
 
         Optional<String> info = map.containsKey(infoColumn) && map.get(infoColumn) != null
             ? Optional.of((String) map.get(infoColumn))
             : Optional.empty();
-        Inmate result = new Inmate(firstName, lastName, county, releaseDate, isMale, info);
+        Inmate result = new Inmate(firstName, lastName, county, releaseDate, sex, info);
         return result;
     }
 }

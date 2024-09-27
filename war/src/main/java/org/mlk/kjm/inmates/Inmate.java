@@ -7,17 +7,17 @@ public class Inmate {
     private final String firstName;
     private final String lastName;
     private final Optional<LocalDate> releaseDate;
-    private final Optional<Boolean> isMale;
+    private final Optional<String> sex;
     private final Optional<String> info;
     private final String county;
 
-    public Inmate(String firstName, String lastName, String county, Optional<LocalDate> releaseDate, Optional<Boolean> isMale,
+    public Inmate(String firstName, String lastName, String county, Optional<LocalDate> releaseDate, Optional<String> sex,
             Optional<String> info) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.county = county;
         this.releaseDate = releaseDate;
-        this.isMale = isMale;
+        this.sex = sex;
         this.info = info;
     }
 
@@ -37,8 +37,8 @@ public class Inmate {
         return releaseDate;
     }
 
-    public Optional<Boolean> isMale() {
-        return isMale;
+    public Optional<String> sex() {
+        return sex;
     }
 
     public Optional<String> getInfo() {

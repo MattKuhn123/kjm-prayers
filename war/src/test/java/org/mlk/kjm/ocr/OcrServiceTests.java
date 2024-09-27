@@ -1,10 +1,10 @@
 package org.mlk.kjm.ocr;
 
-import java.io.InputStream;
-import java.util.Optional;
 import org.junit.Test;
-import org.mlk.kjm.helpers.ApplicationPropertiesTestingImpl;
-import org.mlk.kjm.shared.InputStreamUtils;
+// import java.io.InputStream;
+// import java.util.Optional;
+// import org.mlk.kjm.helpers.ApplicationPropertiesTestingImpl;
+// import org.mlk.kjm.shared.InputStreamUtils;
 
 import junit.framework.TestCase;
 
