@@ -30,6 +30,10 @@ dialog {
     border: none;
 }
 
+details {
+    margin: 5px;
+}
+
 #pages {
     margin-top: 5px;
 }
