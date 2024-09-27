@@ -1,6 +1,37 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
-    border: 2px solid rgb(140 140 140);
+}
+
+table {
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, .2), 0px 2px 2px 0px rgba(0, 0, 0, .14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+}
+
+th {
+    border-bottom: 1px solid rgb(140 140 140);
+}
+
+tr:nth-child(2n) {
+    background-color: rgb(220 220 220);
+}
+
+input[type='text']:read-only,
+textarea:read-only {
+    font-style: italic;
+    background-color: rgb(220 220 220);
+}
+
+h1 {
+    display: flex;
+    justify-content: center;
+}
+
+dialog {
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, .2), 0px 2px 2px 0px rgba(0, 0, 0, .14), 0px 1px 5px 0px rgba(0, 0, 0, .12);
+    border: none;
+}
+
+#pages {
+    margin-top: 5px;
 }
 
 .tab-content {
@@ -28,20 +59,15 @@ body {
     margin-bottom: 5px;
 }
 
-table {
-    border: 2px solid rgb(140 140 140);
-}
-
-th, td {
-    border: 1px solid rgb(160 160 160);
-}
-
 .btn {
     padding: 15px 32px;
     text-align: center;
     display: inline-block;
     margin: 4px 2px;
     cursor: pointer;
+    border-radius: 7px;
+    border: 1px solid rgb(140 140 140);
+    text-decoration: none;
 }
 
 .btn-small {
@@ -50,24 +76,15 @@ th, td {
 }
 
 .btn-primary {
-    border: none;
     color: black;
     background-color: #f9831b;
 }
 
 .btn-secondary {
-    border: 2px solid rgb(140 140 140);
     color: #f9831b;
     background-color: white;
 }
 
 .btn-link {
-    border: 2px solid rgb(140 140 140);
     color: blue;
-}
-
-input[type='text']:read-only,
-textarea:read-only {
-    font-style: italic;
-    background-color: lightgray;
 }

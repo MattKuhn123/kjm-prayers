@@ -34,11 +34,8 @@ public class OcrServlet extends HttpServlet {
         byte[] bytes = InputStreamUtils.readAllBytes(fileContent);
         Optional<String> result = ocr.getTextFromImage(bytes);
 
-        if (result.isPresent()) {
-            resp.getWriter().append(result.get()).flush();
-        } else {
-            final String defaultText = "Could not get text from image.";
-            resp.getWriter().append(defaultText).flush();
-        }
+        String text = result.isPresent() ? result.get() : "Could not get text from image.";
+        String textarea = "<textarea required id='prayer-text' name='prayer-text' rows='5'>" + text + "</textarea>";
+        resp.getWriter().append(textarea).flush();
     }
 }

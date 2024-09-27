@@ -1,10 +1,12 @@
-<form hx-encoding='multipart/form-data' hx-post='/ocr' hx-target='#prayer-text'>
-    <div class='form-control'>
-        <label for='file'>Prayer:</label>
-        <input type='file' id='file' name='file'>
-    </div>
-    <input type='submit' class='btn btn-secondary btn-small' value='Upload'/>
-</form>
+<details>
+    <summary>Upload from image?</summary>
+    <form hx-encoding='multipart/form-data' hx-post='/ocr' hx-target='#prayer-text' hx-swap="outerHTML">
+        <div class='form-control'>
+            <input type='file' id='file' name='file'>
+        </div>
+        <input type='submit' class='btn btn-secondary btn-small' value='Convert image to text'/>
+    </form>
+</details>
 <form hx-post='/prayers' hx-target='#prayer-response'>
     <div class='form-control'>
         <label for='first-name'>First Name</label>
