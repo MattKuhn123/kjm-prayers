@@ -160,7 +160,7 @@ public class ServletUtils {
 	public static final String pageId = "page";
 	public static final String pagesId = "pages";
 	public static final String defaultPage = "0";
-    public static final int defaultPageLength = 5;
+    public static final int defaultPageLength = 15;
     public static final String pageActionsId = "page-actions";
 	public static final String toPageParam = "toPage";
     public static final String listResetName = "/Reset";
