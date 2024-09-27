@@ -100,6 +100,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     private User mapToUser(Map<String, Object> map) {
         String email = (String) map.get(emailColumn);
+
+        int canLogin = (int) map.get(canLoginColumn);
+        int canEditInmates = (int) map.get(canEditInmatesColumn);
+        int canEditUsers = (int) map.get(canEditUsersColumn);
         
         Optional<String> code = map.containsKey(codeColumn) && map.get(codeColumn) != null
             ? Optional.of((String) map.get(codeColumn))
@@ -113,7 +117,7 @@ public class UserRepositoryImpl implements UserRepository {
             ? Optional.of(codeExpiresSql.get().toLocalDate())
             : Optional.empty();
         
-        User result = new User(email, code, codeExpires);
+        User result = new User(email, code, codeExpires, canLogin, canEditInmates, canEditUsers);
         return result;
     }
 

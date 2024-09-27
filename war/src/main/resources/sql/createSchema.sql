@@ -40,4 +40,7 @@ CREATE TABLE IF NOT EXISTS `kjm`.`users` (
   `email` VARCHAR(64) NOT NULL,
   `code` VARCHAR(64) NULL,
   `code_expires` DATE NULL,
+  `can_login` INT NOT NULL DEFAULT 0,
+  `can_edit_inmates` INT NOT NULL DEFAULT 0,
+  `can_edit_users` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`email`));
