@@ -38,9 +38,9 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     @Override
     public List<Inmate> getInmates(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> birthDay, Optional<Boolean> isMale, int page, int pageLength,
+            Optional<LocalDate> releaseDate, Optional<Boolean> isMale, int page, int pageLength,
             Optional<String> orderByEnum, Optional<Boolean> orderAsc) throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, birthDay, isMale);
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, isMale);
 
         List<OrderByClause> orderBys = toOrderBys(orderByEnum, orderAsc);
 
@@ -56,8 +56,8 @@ public class InmateRepositoryImpl implements InmateRepository {
 
     @Override
     public int getCount(Optional<String> firstName, Optional<String> lastName, Optional<String> county,
-            Optional<LocalDate> birthDay, Optional<Boolean> isMale) throws SQLException {
-        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, birthDay, isMale);
+            Optional<LocalDate> releaseDate, Optional<Boolean> isMale) throws SQLException {
+        List<QueryParameter> parameters = toQueryParameters(firstName, lastName, county, releaseDate, isMale);
         int result = queryTableCount(table, parameters, url, user, password);
         return result;
     }
@@ -94,9 +94,9 @@ public class InmateRepositoryImpl implements InmateRepository {
         InsertValue countyIV = new InsertValue(countyColumn, inmate.getCounty());
         ivs.add(countyIV);
         
-        if (inmate.getBirthDay().isPresent()) {
-            InsertValue birthDayIV = new InsertValue(birthdayColumn, inmate.getBirthDay().getClass());
-            ivs.add(birthDayIV);
+        if (inmate.getReleaseDate().isPresent()) {
+            InsertValue releaseDateIV = new InsertValue(releaseDateColumn, inmate.getReleaseDate().getClass());
+            ivs.add(releaseDateIV);
         }
         
         if (inmate.isMale().isPresent()) {
@@ -134,12 +134,12 @@ public class InmateRepositoryImpl implements InmateRepository {
             result.add(clause);
         }
 
-        if (orderByColumn.isPresent() && orderByColumn.get().equals(birthdayColumn)) {
+        if (orderByColumn.isPresent() && orderByColumn.get().equals(releaseDateColumn)) {
             return result;
         }
 
         boolean defaultIsAsc = false;
-        result.add(new OrderByClause(birthdayColumn, defaultIsAsc));
+        result.add(new OrderByClause(releaseDateColumn, defaultIsAsc));
         return result;
     }
 
@@ -156,7 +156,7 @@ public class InmateRepositoryImpl implements InmateRepository {
     }
 
     private List<QueryParameter> toQueryParameters(Optional<String> firstName, Optional<String> lastName,
-            Optional<String> county, Optional<LocalDate> birthDay, Optional<Boolean> isMale) {
+            Optional<String> county, Optional<LocalDate> releaseDate, Optional<Boolean> isMale) {
         List<QueryParameter> parameters = new ArrayList<QueryParameter>();
         if (firstName.isPresent()) {
             QueryParameter qp = new QueryParameter(firstNameColumn, QueryOperator.like, firstName.get());
@@ -173,8 +173,8 @@ public class InmateRepositoryImpl implements InmateRepository {
             parameters.add(qp);
         }
 
-        if (birthDay.isPresent()) {
-            QueryParameter qp = new QueryParameter(birthdayColumn, QueryOperator.equals, birthDay.get());
+        if (releaseDate.isPresent()) {
+            QueryParameter qp = new QueryParameter(releaseDateColumn, QueryOperator.equals, releaseDate.get());
             parameters.add(qp);
         }
 
@@ -190,11 +190,11 @@ public class InmateRepositoryImpl implements InmateRepository {
         String firstName = (String) map.get(firstNameColumn);
         String lastName = (String) map.get(lastNameColumn);
         String county = (String) map.get(countyColumn);
-        Optional<Date> birthDaySql = map.containsKey(birthdayColumn) && map.get(birthdayColumn) != null
-            ? Optional.of((Date) map.get(birthdayColumn)) 
+        Optional<Date> releaseDateSql = map.containsKey(releaseDateColumn) && map.get(releaseDateColumn) != null
+            ? Optional.of((Date) map.get(releaseDateColumn)) 
             : Optional.empty();
-        Optional<LocalDate> birthDay = birthDaySql.isPresent() 
-            ? Optional.of(birthDaySql.get().toLocalDate()) 
+        Optional<LocalDate> releaseDate = releaseDateSql.isPresent() 
+            ? Optional.of(releaseDateSql.get().toLocalDate()) 
             : Optional.empty();
 
         Optional<Integer> isMaleByte = map.containsKey(isMaleColumn) && map.get(isMaleColumn) != null
@@ -208,7 +208,7 @@ public class InmateRepositoryImpl implements InmateRepository {
         Optional<String> info = map.containsKey(infoColumn) && map.get(infoColumn) != null
             ? Optional.of((String) map.get(infoColumn))
             : Optional.empty();
-        Inmate result = new Inmate(firstName, lastName, county, birthDay, isMale, info);
+        Inmate result = new Inmate(firstName, lastName, county, releaseDate, isMale, info);
         return result;
     }
 }

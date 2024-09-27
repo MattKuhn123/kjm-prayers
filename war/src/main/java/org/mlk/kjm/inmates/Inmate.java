@@ -6,17 +6,17 @@ import java.time.LocalDate;
 public class Inmate {
     private final String firstName;
     private final String lastName;
-    private final Optional<LocalDate> birthDay;
+    private final Optional<LocalDate> releaseDate;
     private final Optional<Boolean> isMale;
     private final Optional<String> info;
     private final String county;
 
-    public Inmate(String firstName, String lastName, String county, Optional<LocalDate> birthDay, Optional<Boolean> isMale,
+    public Inmate(String firstName, String lastName, String county, Optional<LocalDate> releaseDate, Optional<Boolean> isMale,
             Optional<String> info) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.county = county;
-        this.birthDay = birthDay;
+        this.releaseDate = releaseDate;
         this.isMale = isMale;
         this.info = info;
     }
@@ -33,8 +33,8 @@ public class Inmate {
         return county;
     }
 
-    public Optional<LocalDate> getBirthDay() {
-        return birthDay;
+    public Optional<LocalDate> getReleaseDate() {
+        return releaseDate;
     }
 
     public Optional<Boolean> isMale() {

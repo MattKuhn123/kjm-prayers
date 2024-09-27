@@ -5,7 +5,7 @@ DELETE FROM `kjm`.`users`;
 
 INSERT INTO `kjm`.`jails` (`county`) VALUES ('Kenton'), ('Boone'), ('Grant'), ('Campbell');
 
-INSERT INTO `kjm`.`inmates` (`first_name`, `last_name`, `county`, `birth_day`, `is_male`, `info`) VALUES
+INSERT INTO `kjm`.`inmates` (`first_name`, `last_name`, `county`, `release_date`, `is_male`, `info`) VALUES
 ('Ralf','Grigoriev','Kenton',STR_TO_DATE('08/04/1990', '%m/%d/%Y'),TRUE,'et commodo vulputate justo in blandit ultrices enim lorem ipsum dolor sit amet consectetuer adipiscing elit proin'),
 ('Bettina','Venditti','Grant',STR_TO_DATE('09/29/1980', '%m/%d/%Y'),TRUE,'sit  ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae nulla dapibus dolor vel est donec odio justo sollicitudin  tristique fusce congue diam id ornare'),
 ('Germana','Coan','Boone',STR_TO_DATE('11/18/1965', '%m/%d/%Y'),TRUE,'tincidunt  id ligula suspendisse ornare consequat lectus in est risus auctor'),

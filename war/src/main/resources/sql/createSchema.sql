@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `kjm`.`inmates` (
   `first_name` VARCHAR(32) NOT NULL,
   `last_name` VARCHAR(32) NOT NULL,
   `county` VARCHAR(16) NOT NULL,
-  `birth_day` DATE NULL,
+  `release_date` DATE NULL,
   `is_male` TINYINT NULL,
   `info` VARCHAR(256) NULL,
   PRIMARY KEY (`first_name`, `last_name`, `county`));
